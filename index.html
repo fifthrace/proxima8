@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proximal</title>
+    <title>Proxima 8</title>
     <link rel="icon" type="image/png" href="assets/icon-192.png">
     <style>
         body {
@@ -218,7 +218,7 @@
     </style>
 </head>
 <body>
-    <h1 id="main-header">Proximal</h1>
+    <h1 id="main-header">Proxima 8</h1>
 
     <div id="controls-row">
         <span id="back-btn" class="text-btn" onclick="showMenu()" style="display: none;">← Exit</span>
@@ -341,7 +341,7 @@
 
         function showMenu() {
             window.history.pushState({}, '', window.location.pathname);
-            document.getElementById('main-header').innerText = "Proximal";
+            document.getElementById('main-header').innerText = "Proxima 8";
             
             document.getElementById('back-btn').style.display = 'none';
             document.getElementById('undo-btn').style.display = 'none';
@@ -621,11 +621,11 @@
                 gridEmoji += "\n";
             }
 
-            const text = `Proximal: ${currentLevel.title}\nUID: ${uid}\nMoves: ${moves}\n${status}\n\n${url}`;
+            const text = `Proxima 8: ${currentLevel.title}\nUID: ${uid}\nMoves: ${moves}\n${status}\n\n${url}`;
             
             if (navigator.share) {
                 navigator.share({
-                    title: 'Proximal Mapping',
+                    title: 'Proxima 8 Mapping',
                     text: text,
                     url: url
                 }).catch(console.error);
