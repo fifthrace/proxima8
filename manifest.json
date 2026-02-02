@@ -1,7 +1,7 @@
 [
   {
     "id": "852ed0c89942",
-    "title": "Nodal Force",
+    "title": "Vector Array",
     "width": 3,
     "height": 3,
     "difficulty": "medium",
@@ -9,7 +9,7 @@
   },
   {
     "id": "403de4c6948e",
-    "title": "Nodal Field",
+    "title": "Spectral Circuit",
     "width": 5,
     "height": 5,
     "difficulty": "medium",
@@ -17,7 +17,7 @@
   },
   {
     "id": "853ee36b9339",
-    "title": "Inverse Singularity",
+    "title": "Atomic Core",
     "width": 3,
     "height": 3,
     "difficulty": "medium",
@@ -25,7 +25,7 @@
   },
   {
     "id": "7114cc38784f",
-    "title": "Binary Catalyst",
+    "title": "Flux Node",
     "width": 15,
     "height": 15,
     "difficulty": "medium",
@@ -33,7 +33,7 @@
   },
   {
     "id": "e272c6a45c79",
-    "title": "Synthetic Core",
+    "title": "Inverse Force",
     "width": 10,
     "height": 10,
     "difficulty": "medium",
@@ -41,7 +41,7 @@
   },
   {
     "id": "df81929a156c",
-    "title": "Inverse Force",
+    "title": "Inert Mass",
     "width": 15,
     "height": 15,
     "difficulty": "medium",
@@ -49,7 +49,7 @@
   },
   {
     "id": "bfcfaeef9252",
-    "title": "Primal Nexus",
+    "title": "Linear Array",
     "width": 15,
     "height": 15,
     "difficulty": "medium",
@@ -57,7 +57,7 @@
   },
   {
     "id": "5cb9df42f9a7",
-    "title": "Tidal Matrix",
+    "title": "Quantum Field",
     "width": 10,
     "height": 10,
     "difficulty": "medium",
@@ -65,7 +65,7 @@
   },
   {
     "id": "02858fd35bb2",
-    "title": "Atomic Entropy",
+    "title": "Vortex Fabric",
     "width": 3,
     "height": 3,
     "difficulty": "medium",
@@ -73,7 +73,7 @@
   },
   {
     "id": "4fc04d0e8002",
-    "title": "Flux Force",
+    "title": "Scalar Vertex",
     "width": 15,
     "height": 15,
     "difficulty": "medium",
@@ -81,7 +81,7 @@
   },
   {
     "id": "a82b433dddee",
-    "title": "Primal Singularity",
+    "title": "Vector Mass",
     "width": 10,
     "height": 10,
     "difficulty": "medium",
@@ -89,7 +89,7 @@
   },
   {
     "id": "486fff14b84f",
-    "title": "Static Pulse",
+    "title": "Scalar Mass",
     "width": 10,
     "height": 10,
     "difficulty": "medium",
@@ -97,7 +97,7 @@
   },
   {
     "id": "53da6057b466",
-    "title": "Focal Vertex",
+    "title": "Axial Pulse",
     "width": 5,
     "height": 5,
     "difficulty": "medium",
@@ -105,7 +105,7 @@
   },
   {
     "id": "22c94fbeab29",
-    "title": "Spectral Shell",
+    "title": "Focal Edge",
     "width": 5,
     "height": 5,
     "difficulty": "medium",
@@ -113,7 +113,7 @@
   },
   {
     "id": "45272b5b869d",
-    "title": "Nodal Catalyst",
+    "title": "Isotope Matrix",
     "width": 3,
     "height": 3,
     "difficulty": "medium",
@@ -121,7 +121,7 @@
   },
   {
     "id": "88409738fbb2",
-    "title": "Binary Matrix",
+    "title": "Atomic Entropy",
     "width": 3,
     "height": 3,
     "difficulty": "medium",
@@ -129,7 +129,7 @@
   },
   {
     "id": "076e995dfbc6",
-    "title": "Orbital Isotope",
+    "title": "Spectral Horizon",
     "width": 5,
     "height": 5,
     "difficulty": "medium",
@@ -137,7 +137,7 @@
   },
   {
     "id": "10d6d3ac2796",
-    "title": "Vortex Shell",
+    "title": "Primal Nexus",
     "width": 3,
     "height": 3,
     "difficulty": "medium",
@@ -145,7 +145,7 @@
   },
   {
     "id": "81b03866b6fa",
-    "title": "Kinetic Anomaly",
+    "title": "Linear Shell",
     "width": 15,
     "height": 15,
     "difficulty": "medium",
@@ -153,7 +153,7 @@
   },
   {
     "id": "db02c0d91a5e",
-    "title": "Vortex Core",
+    "title": "Focal Node",
     "width": 15,
     "height": 15,
     "difficulty": "medium",
@@ -161,7 +161,7 @@
   },
   {
     "id": "ea873bf26427",
-    "title": "Quantum Wave",
+    "title": "Tidal Nexus",
     "width": 10,
     "height": 10,
     "difficulty": "medium",
@@ -169,7 +169,7 @@
   },
   {
     "id": "0ad3a694ecb5",
-    "title": "Orbital Force",
+    "title": "Tidal Strata",
     "width": 5,
     "height": 5,
     "difficulty": "medium",
@@ -177,7 +177,7 @@
   },
   {
     "id": "96fee75231f4",
-    "title": "Orbital Anomaly",
+    "title": "Inverse Mass",
     "width": 10,
     "height": 10,
     "difficulty": "medium",
@@ -185,7 +185,7 @@
   },
   {
     "id": "681d8b6bdfa1",
-    "title": "Primal Mass",
+    "title": "Binary Force",
     "width": 10,
     "height": 10,
     "difficulty": "medium",
@@ -193,7 +193,7 @@
   },
   {
     "id": "8c863678a6ec",
-    "title": "Vortex Cluster",
+    "title": "Flux Matrix",
     "width": 5,
     "height": 5,
     "difficulty": "medium",
@@ -201,7 +201,7 @@
   },
   {
     "id": "64e8457d7c8a",
-    "title": "Quantum Lattice",
+    "title": "Inverse Array",
     "width": 15,
     "height": 15,
     "difficulty": "medium",
@@ -209,7 +209,7 @@
   },
   {
     "id": "0322bc428bfb",
-    "title": "Vortex Fabric",
+    "title": "Vector Field",
     "width": 5,
     "height": 5,
     "difficulty": "medium",
@@ -217,7 +217,7 @@
   },
   {
     "id": "b5a09f9f2f6f",
-    "title": "Lateral Pulse",
+    "title": "Scalar Point",
     "width": 15,
     "height": 15,
     "difficulty": "medium",
@@ -225,7 +225,7 @@
   },
   {
     "id": "8e374a198c60",
-    "title": "Static Entropy",
+    "title": "Flux Isotope",
     "width": 10,
     "height": 10,
     "difficulty": "medium",
@@ -233,7 +233,7 @@
   },
   {
     "id": "2c9aeb68ceae",
-    "title": "Radial Shell",
+    "title": "Inverse Nexus",
     "width": 10,
     "height": 10,
     "difficulty": "medium",
@@ -241,7 +241,7 @@
   },
   {
     "id": "4add925264e6",
-    "title": "Axial Field",
+    "title": "Inert Vertex",
     "width": 15,
     "height": 15,
     "difficulty": "medium",
@@ -249,7 +249,7 @@
   },
   {
     "id": "7228f4adbedc",
-    "title": "Focal Fabric",
+    "title": "Nodal Point",
     "width": 15,
     "height": 15,
     "difficulty": "medium",
@@ -257,7 +257,7 @@
   },
   {
     "id": "6e6c314cb04f",
-    "title": "Orbital Entropy",
+    "title": "Primal Mass",
     "width": 10,
     "height": 10,
     "difficulty": "medium",
@@ -265,7 +265,7 @@
   },
   {
     "id": "a23b7a6482af",
-    "title": "Kinetic Circuit",
+    "title": "Primal Edge",
     "width": 5,
     "height": 5,
     "difficulty": "medium",
@@ -273,7 +273,7 @@
   },
   {
     "id": "a52c069f0ba6",
-    "title": "Flux Shell",
+    "title": "Scalar Field",
     "width": 3,
     "height": 3,
     "difficulty": "medium",
@@ -281,7 +281,7 @@
   },
   {
     "id": "afe14c35068e",
-    "title": "Primal Pulse",
+    "title": "Vector Nexus",
     "width": 5,
     "height": 5,
     "difficulty": "medium",
@@ -289,7 +289,7 @@
   },
   {
     "id": "1e4f7d9e8759",
-    "title": "Atomic Vertex",
+    "title": "Vortex Mass",
     "width": 5,
     "height": 5,
     "difficulty": "medium",
@@ -297,7 +297,7 @@
   },
   {
     "id": "9782f0635802",
-    "title": "Inert Circuit",
+    "title": "Radial Force",
     "width": 10,
     "height": 10,
     "difficulty": "medium",
@@ -305,7 +305,7 @@
   },
   {
     "id": "7bd85e337017",
-    "title": "Static Singularity",
+    "title": "Static Field",
     "width": 15,
     "height": 15,
     "difficulty": "medium",
@@ -313,7 +313,7 @@
   },
   {
     "id": "45268846256f",
-    "title": "Axial Vertex",
+    "title": "Linear Core",
     "width": 10,
     "height": 10,
     "difficulty": "medium",
@@ -321,7 +321,7 @@
   },
   {
     "id": "342450494a90",
-    "title": "Oscillating Vertex",
+    "title": "Inverse Pulse",
     "width": 10,
     "height": 10,
     "difficulty": "medium",
@@ -329,7 +329,7 @@
   },
   {
     "id": "1a01c7254b2c",
-    "title": "Tectonic Fabric",
+    "title": "Focal Force",
     "width": 3,
     "height": 3,
     "difficulty": "medium",
@@ -337,7 +337,7 @@
   },
   {
     "id": "5dc45ea51eeb",
-    "title": "Flux Circuit",
+    "title": "Axial Circuit",
     "width": 15,
     "height": 15,
     "difficulty": "medium",
@@ -345,7 +345,7 @@
   },
   {
     "id": "a90bb92567a0",
-    "title": "Radial Circuit",
+    "title": "Static Mass",
     "width": 3,
     "height": 3,
     "difficulty": "medium",
@@ -353,7 +353,7 @@
   },
   {
     "id": "a402dd825c97",
-    "title": "Tidal Wave",
+    "title": "Spectral Vertex",
     "width": 5,
     "height": 5,
     "difficulty": "medium",
@@ -361,7 +361,7 @@
   },
   {
     "id": "40f2d868ea43",
-    "title": "Thermal Horizon",
+    "title": "Axial Horizon",
     "width": 3,
     "height": 3,
     "difficulty": "medium",
@@ -369,7 +369,7 @@
   },
   {
     "id": "247cf52e863b",
-    "title": "Scalar Nexus",
+    "title": "Vortex Array",
     "width": 5,
     "height": 5,
     "difficulty": "medium",
@@ -377,7 +377,7 @@
   },
   {
     "id": "f3546a574f50",
-    "title": "Inverse Vertex",
+    "title": "Scalar Horizon",
     "width": 15,
     "height": 15,
     "difficulty": "medium",
