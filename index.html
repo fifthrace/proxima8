@@ -329,7 +329,7 @@
         let currentLevel = null;
         let state = [];
         let history = [];
-        let moveLog = []; // Tracks moves: { moveIndex, solvedCluesCount, hasErrors }
+        let moveLog = []; // Tracks moves: { solvedCount, hasErrors }
 
         async function fetchManifest() {
             try {
@@ -376,7 +376,6 @@
             document.getElementById('back-btn').style.display = 'none';
             document.getElementById('undo-btn').style.display = 'none';
             document.getElementById('reset-btn').style.display = 'none';
-            document.getElementById('share-btn').style.display = 'none';
             document.getElementById('level-menu').style.display = 'flex';
             document.getElementById('game-view').style.display = 'none';
             initMenu();
@@ -479,6 +478,28 @@
             checkWin(true);
         }
 
+        function getBoardStats() {
+            let solvedCount = 0;
+            let hasErrors = false;
+            for (let y = 0; y < currentLevel.height; y++) {
+                for (let x = 0; x < currentLevel.width; x++) {
+                    let neighbors = 0;
+                    for (let dy = -1; dy <= 1; dy++) {
+                        for (let dx = -1; dx <= 1; dx++) {
+                            if (dx === 0 && dy === 0) continue;
+                            let nx = x + dx, ny = y + dy;
+                            if (nx >= 0 && nx < currentLevel.width && ny >= 0 && ny < currentLevel.height) {
+                                if (state[ny][nx] === 1) neighbors++;
+                            }
+                        }
+                    }
+                    if (neighbors === currentLevel.clues[y][x]) solvedCount++;
+                    if (neighbors > currentLevel.clues[y][x]) hasErrors = true;
+                }
+            }
+            return { solvedCount, hasErrors };
+        }
+
         function toggleCell(x, y) {
             history.push(JSON.stringify(state));
             if (history.length > 50) history.shift();
@@ -502,28 +523,6 @@
             checkWin();
         }
 
-        function getBoardStats() {
-            let solvedCount = 0;
-            let hasErrors = false;
-            for (let y = 0; y < currentLevel.height; y++) {
-                for (let x = 0; x < currentLevel.width; x++) {
-                    let neighbors = 0;
-                    for (let dy = -1; dy <= 1; dy++) {
-                        for (let dx = -1; dx <= 1; dx++) {
-                            if (dx === 0 && dy === 0) continue;
-                            let nx = x + dx, ny = y + dy;
-                            if (nx >= 0 && nx < currentLevel.width && ny >= 0 && ny < currentLevel.height) {
-                                if (state[ny][nx] === 1) neighbors++;
-                            }
-                        }
-                    }
-                    if (neighbors === currentLevel.clues[y][x]) solvedCount++;
-                    if (neighbors > currentLevel.clues[y][x]) hasErrors = true;
-                }
-            }
-            return { solvedCount, hasErrors };
-        }
-
         function updateUI() {
             if (!currentLevel) return;
             for (let y = 0; y < currentLevel.height; y++) {
@@ -540,9 +539,28 @@
             if (!currentLevel) return;
             let solved = true;
             let totalActive = 0;
+            const stats = getBoardStats();
+            totalActive = state.flat().filter(v => v === 1).length;
+            solved = stats.solvedCount === (currentLevel.width * currentLevel.height);
+
+            if (solved && totalActive > 0) {
+                if (!silent) {
+                    const statusEl = document.getElementById('status');
+                    if (statusEl.innerText !== "✨ Clarity Achieved!") {
+                        statusEl.innerText = "✨ Clarity Achieved!";
+                        document.getElementById('share-btn').style.display = 'block';
+                        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#4dabf7', '#40c057', '#fab005'] });
+                    }
+                }
+                markCompleted(currentLevel.id);
+            } else if (!silent) {
+                document.getElementById('status').innerText = "Solve the pattern!";
+                document.getElementById('share-btn').style.display = 'none';
+            }
+            
+            // Still update the individual cell visual classes
             for (let y = 0; y < currentLevel.height; y++) {
                 for (let x = 0; x < currentLevel.width; x++) {
-                    if (state[y][x] === 1) totalActive++;
                     let neighbors = 0;
                     for (let dy = -1; dy <= 1; dy++) {
                         for (let dx = -1; dx <= 1; dx++) {
@@ -562,52 +580,33 @@
                         cell.classList.remove('correct');
                         if (neighbors > currentLevel.clues[y][x]) cell.classList.add('too-many');
                         else cell.classList.remove('too-many');
-                        solved = false;
                     }
                 }
-            }
-            if (solved && totalActive > 0) {
-                if (!silent) {
-                    const statusEl = document.getElementById('status');
-                    if (statusEl.innerText !== "✨ Clarity Achieved!") {
-                        statusEl.innerText = "✨ Clarity Achieved!";
-                        document.getElementById('share-btn').style.display = 'block';
-                        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#4dabf7', '#40c057', '#fab005'] });
-                    }
-                }
-                markCompleted(currentLevel.id);
-            } else if (!silent) {
-                document.getElementById('status').innerText = "Solve the pattern!";
-                document.getElementById('share-btn').style.display = 'none';
             }
         }
 
         function shareZenPath() {
             if (!currentLevel) return;
-            
-            const totalCells = currentLevel.width * currentLevel.height;
             const minMoves = currentLevel.solution ? currentLevel.solution.flat().filter(v => v === 1).length : 0;
             const actualMoves = moveLog.length;
             const efficiency = minMoves > 0 ? Math.round((minMoves / actualMoves) * 100) : 100;
             
-            // Build Zen Path visual (5 blocks)
             let visual = "";
-            const segmentSize = Math.max(1, Math.floor(actualMoves / 5));
-            for (let i = 0; i < 5; i++) {
-                const segment = moveLog.slice(i * segmentSize, (i + 1) * segmentSize);
-                if (segment.length === 0) continue;
-                
-                const hasError = segment.some(s => s.hasErrors);
-                const progress = segment[segment.length-1].solvedCount - segment[0].solvedCount;
-                
-                if (hasError) visual += "🟥";
-                else if (progress > 0) visual += "🟩";
-                else visual += "🟧";
+            if (actualMoves > 0) {
+                const segmentSize = Math.max(1, Math.floor(actualMoves / 5));
+                for (let i = 0; i < 5; i++) {
+                    const segment = moveLog.slice(i * segmentSize, (i + 1) * segmentSize);
+                    if (segment.length === 0) continue;
+                    const hasError = segment.some(s => s.hasErrors);
+                    const startStats = i === 0 ? { solvedCount: 0 } : moveLog[i * segmentSize - 1];
+                    const progress = segment[segment.length-1].solvedCount - startStats.solvedCount;
+                    if (hasError) visual += "🟥";
+                    else if (progress > 0) visual += "🟩";
+                    else visual += "🟧";
+                }
             }
             visual += "✨";
-
             const text = `Zen Logic: ${currentLevel.title}\nUID: ${currentLevel.id}\nEfficiency: ${efficiency}%\nMoves: ${actualMoves} (Min: ${minMoves})\n\n${visual}\nhttps://fifthrace.github.io/zenlogic/`;
-            
             navigator.clipboard.writeText(text);
             const btn = document.getElementById('share-btn');
             const originalText = btn.innerText;
