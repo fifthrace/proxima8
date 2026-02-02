@@ -279,9 +279,7 @@
         }
 
         let levelManifest = [];
-        const levelsCache = {
-            "tutorial": { "id": "tutorial", "title": "Calibration", "display": "3x3", "width": 3, "height": 3, "clues": [[2, 2, 1], [2, 2, 2], [3, 2, 2]], "difficulty": "easy", "targetActive": 3 }
-        };
+        const levelsCache = {};
 
         let currentLevel = null;
         let state = [];
@@ -357,9 +355,7 @@
             ];
 
             categories.forEach(cat => {
-                const filtered = levelManifest.filter(cat.filter);
-                // Also add tutorial to training if manifest is empty or missing it
-                const allInCat = cat.name.includes('3x3') ? [levelsCache.tutorial, ...filtered] : filtered;
+                const allInCat = levelManifest.filter(cat.filter);
 
                 if (allInCat.length > 0) {
                     const header = document.createElement('h2');
