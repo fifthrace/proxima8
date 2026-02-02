@@ -300,7 +300,10 @@
         function saveInProgress(id, state) {
             const hasActiveCells = state.some(row => row.some(cell => cell === 1));
             let inProgress = JSON.parse(localStorage.getItem('zen_in_progress') || '{}');
-            if (hasActiveCells) inProgress[id] = state;
+            if (hasActiveCells) {
+                inProgress[id] = state;
+                unmarkCompleted(id); // If we're working on it, it's not "complete" anymore
+            }
             else delete inProgress[id];
             localStorage.setItem('zen_in_progress', JSON.stringify(inProgress));
         }
@@ -325,6 +328,12 @@
             clearInProgress(id);
             document.getElementById('share-controls').style.display = 'flex';
             document.getElementById('override-btn').style.display = 'none';
+        }
+
+        function unmarkCompleted(id) {
+            let completed = getCompleted();
+            completed = completed.filter(item => item !== id);
+            localStorage.setItem('zen_completed', JSON.stringify(completed));
         }
 
         function showMenu() {
@@ -629,6 +638,7 @@
                 history = [];
                 state = Array(currentLevel.height).fill().map(() => Array(currentLevel.width).fill(0));
                 clearInProgress(currentLevel.id);
+                unmarkCompleted(currentLevel.id);
                 updateUI();
                 checkWin();
             }
