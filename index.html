@@ -434,6 +434,14 @@
             }
             if (!levelData || !levelData.clues) return showMenu();
             currentLevel = levelData;
+            
+            // Calculate Min Moves (active cells in solution) on load
+            if (currentLevel.solution) {
+                currentLevel.minMoves = currentLevel.solution.flat().filter(v => v === 1).length;
+            } else {
+                currentLevel.minMoves = 0;
+            }
+
             document.getElementById('main-header').innerText = currentLevel.title;
             document.getElementById('back-btn').style.display = 'inline';
             document.getElementById('undo-btn').style.display = 'inline';
@@ -587,19 +595,27 @@
 
         function shareZenPath() {
             if (!currentLevel) return;
-            const minMoves = currentLevel.solution ? currentLevel.solution.flat().filter(v => v === 1).length : 0;
+            const minMoves = currentLevel.minMoves || 0;
             const actualMoves = moveLog.length;
-            const efficiency = minMoves > 0 ? Math.round((minMoves / actualMoves) * 100) : 100;
+            const efficiency = actualMoves > 0 ? Math.round((minMoves / actualMoves) * 100) : 100;
             
             let visual = "";
             if (actualMoves > 0) {
-                const segmentSize = Math.max(1, Math.floor(actualMoves / 5));
-                for (let i = 0; i < 5; i++) {
-                    const segment = moveLog.slice(i * segmentSize, (i + 1) * segmentSize);
+                // Ensure we show at least 1 block and at most 5
+                const numBlocks = Math.min(actualMoves, 5);
+                const segmentSize = actualMoves / numBlocks;
+                
+                for (let i = 0; i < numBlocks; i++) {
+                    const startIdx = Math.floor(i * segmentSize);
+                    const endIdx = Math.floor((i + 1) * segmentSize);
+                    const segment = moveLog.slice(startIdx, endIdx);
+                    
                     if (segment.length === 0) continue;
+                    
                     const hasError = segment.some(s => s.hasErrors);
-                    const startStats = i === 0 ? { solvedCount: 0 } : moveLog[i * segmentSize - 1];
+                    const startStats = startIdx === 0 ? { solvedCount: 0 } : moveLog[startIdx - 1];
                     const progress = segment[segment.length-1].solvedCount - startStats.solvedCount;
+                    
                     if (hasError) visual += "🟥";
                     else if (progress > 0) visual += "🟩";
                     else visual += "🟧";
