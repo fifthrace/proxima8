@@ -105,7 +105,7 @@
             background: #40c057;
             color: white;
             border-radius: 50%;
-            width: 200px;
+            width: 20px;
             height: 20px;
             font-size: 12px;
             display: flex;
@@ -247,8 +247,11 @@
     <div id="game-view" style="display: none; flex-direction: column; align-items: center;">
         <div id="grid"></div>
         <div id="status">Map the proximities</div>
-        <div id="share-controls" style="margin-top: 15px; display: none; gap: 10px;">
-            <button onclick="shareResult()" style="padding: 8px 16px; border-radius: 20px; border: 1px solid #4dabf7; background: white; color: #4dabf7; cursor: pointer; font-weight: 600;">Share Mapping</button>
+        <div id="action-row" style="margin-top: 15px; display: flex; gap: 10px;">
+            <div id="share-controls" style="display: none; gap: 10px;">
+                <button onclick="shareResult()" style="padding: 8px 16px; border-radius: 20px; border: 1px solid #4dabf7; background: white; color: #4dabf7; cursor: pointer; font-weight: 600;">Share Mapping</button>
+            </div>
+            <button id="override-btn" onclick="requestOverride()" style="padding: 8px 16px; border-radius: 20px; border: 1px solid #fab005; background: white; color: #fab005; cursor: pointer; font-weight: 600;">Neural Override (3)</button>
         </div>
         <div id="level-id-display" onclick="copyUID()" style="cursor: pointer; font-size: 10px; color: #ccc; margin-top: 10px; font-family: monospace;" title="Click to copy UID"></div>
     </div>
@@ -284,6 +287,7 @@
         let currentLevel = null;
         let state = [];
         let history = [];
+        let overridesLeft = 3;
 
         async function fetchManifest() {
             try {
@@ -325,6 +329,7 @@
             }
             clearInProgress(id);
             document.getElementById('share-controls').style.display = 'flex';
+            document.getElementById('override-btn').style.display = 'none';
         }
 
         function showMenu() {
@@ -423,6 +428,9 @@
             document.getElementById('game-view').style.display = 'flex';
             document.getElementById('level-id-display').innerText = `UID: ${key}`;
             document.getElementById('status').innerText = "Map the proximities";
+            document.getElementById('share-controls').style.display = 'none';
+            document.getElementById('override-btn').style.display = 'block';
+            updateOverrideButton();
             
             createGrid();
             updateUI();
@@ -542,6 +550,52 @@
             } else if (silent && solved && totalActive === 0) {
                  document.getElementById('status').innerText = "Map the proximities";
             }
+        }
+
+        function updateOverrideButton() {
+            const btn = document.getElementById('override-btn');
+            btn.innerText = `Neural Override (${overridesLeft})`;
+            btn.disabled = overridesLeft <= 0;
+            btn.style.opacity = overridesLeft <= 0 ? 0.3 : 1;
+        }
+
+        function requestOverride() {
+            if (overridesLeft <= 0 || !currentLevel || !currentLevel.solution) return;
+            
+            // Find all cells that are currently WRONG compared to the solution
+            const incorrectCells = [];
+            for (let y = 0; y < currentLevel.height; y++) {
+                for (let x = 0; x < currentLevel.width; x++) {
+                    if (state[y][x] !== currentLevel.solution[y][x]) {
+                        incorrectCells.push({x, y});
+                    }
+                }
+            }
+
+            if (incorrectCells.length === 0) return;
+
+            // Highlight up to 3 random incorrect cells
+            const toHighlight = [];
+            const count = Math.min(3, incorrectCells.length);
+            for (let i = 0; i < count; i++) {
+                const idx = Math.floor(Math.random() * incorrectCells.length);
+                toHighlight.push(incorrectCells.splice(idx, 1)[0]);
+            }
+
+            overridesLeft--;
+            updateOverrideButton();
+
+            // Flash the cells
+            toHighlight.forEach(pos => {
+                const cell = document.getElementById(`cell-${pos.x}-${pos.y}`);
+                cell.style.transition = "none";
+                cell.style.backgroundColor = "#fab005";
+                setTimeout(() => {
+                    cell.style.transition = "all 0.5s ease";
+                    cell.style.backgroundColor = "";
+                    updateUI(); // Restore proper active/inactive color
+                }, 1000);
+            });
         }
 
         function shareResult() {
