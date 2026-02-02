@@ -180,17 +180,24 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             z-index: 100;
-            width: 200px;
+            width: 240px;
         }
+        #settings-panel h3 { margin-top: 0; margin-bottom: 15px; }
+        #settings-panel .section { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        #settings-panel .section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         #settings-panel button {
             width: 100%;
-            margin-top: 10px;
+            margin-top: 8px;
             padding: 10px;
             border-radius: 6px;
             border: none;
             cursor: pointer;
             font-weight: 600;
+            font-size: 13px;
         }
+        .btn-primary { background: #4dabf7; color: white; }
+        .btn-danger { background: #fa5252; color: white; }
+        .btn-ghost { background: #e9ecef; color: #333; }
     </style>
 </head>
 <body>
@@ -205,9 +212,19 @@
     <div id="settings-toggle" onclick="toggleSettings()" title="Settings">⚙</div>
 
     <div id="settings-panel">
-        <h3 style="margin-top: 0;">Settings</h3>
-        <button onclick="clearAllProgress()" style="background: #fa5252; color: white;">Clear All Progress</button>
-        <button onclick="toggleSettings()" style="background: #e9ecef; color: #333;">Close</button>
+        <h3>Settings</h3>
+        
+        <div class="section">
+            <div style="font-size: 12px; color: #888; margin-bottom: 8px;">DATA MANAGEMENT</div>
+            <button class="btn-primary" onclick="exportData()">Export Progress</button>
+            <button class="btn-primary" onclick="document.getElementById('import-file').click()">Import Progress</button>
+            <input type="file" id="import-file" style="display: none" accept=".json" onchange="importData(event)">
+        </div>
+
+        <div class="section">
+            <button class="btn-danger" onclick="clearAllProgress()">Clear All Progress</button>
+            <button class="btn-ghost" onclick="toggleSettings()">Close</button>
+        </div>
     </div>
     
     <div id="level-menu"></div>
@@ -227,12 +244,52 @@
         }
 
         function clearAllProgress() {
-            if (confirm("Clear all progress?")) {
+            if (confirm("Clear all progress? This cannot be undone.")) {
                 localStorage.removeItem('zen_completed');
                 localStorage.removeItem('zen_in_progress');
                 toggleSettings();
                 showMenu();
             }
+        }
+
+        function exportData() {
+            const data = {
+                completed: getCompleted(),
+                inProgress: JSON.parse(localStorage.getItem('zen_in_progress') || '{}'),
+                version: 1,
+                timestamp: new Date().toISOString()
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `zen_logic_save_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.completed) {
+                        localStorage.setItem('zen_completed', JSON.stringify(data.completed));
+                    }
+                    if (data.inProgress) {
+                        localStorage.setItem('zen_in_progress', JSON.stringify(data.inProgress));
+                    }
+                    alert("Progress imported successfully!");
+                    location.reload();
+                } catch (err) {
+                    alert("Failed to import data. Please check the file format.");
+                    console.error(err);
+                }
+            };
+            reader.readAsText(file);
         }
 
         let levelManifest = [];
@@ -314,7 +371,6 @@
 
             categories.forEach(cat => {
                 const filtered = levelManifest.filter(cat.filter);
-                // Also add tutorial to training if manifest is empty or missing it
                 const allInCat = cat.name.includes('3x3') ? [levelsCache.tutorial, ...filtered] : filtered;
 
                 if (allInCat.length > 0) {
@@ -518,19 +574,14 @@
         // Boot
         async function boot() {
             await fetchManifest();
-            
             window.onpopstate = () => {
                 const urlParams = new URLSearchParams(window.location.search);
                 loadLevel(urlParams.get('level'));
             };
-            
             const urlParams = new URLSearchParams(window.location.search);
             const initialLevel = urlParams.get('level');
-            if (initialLevel) {
-                loadLevel(initialLevel);
-            } else {
-                showMenu();
-            }
+            if (initialLevel) loadLevel(initialLevel);
+            else showMenu();
         }
         
         boot();
