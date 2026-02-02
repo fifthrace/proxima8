@@ -572,13 +572,13 @@
 
         function updateOverrideButton() {
             const btn = document.getElementById('override-btn');
-            btn.innerText = `Neural Override (${overridesLeft})`;
-            btn.disabled = overridesLeft <= 0;
-            btn.style.opacity = overridesLeft <= 0 ? 0.3 : 1;
+            btn.innerText = `Neural Override (∞)`;
+            btn.disabled = false;
+            btn.style.opacity = 1;
         }
 
         function requestOverride() {
-            if (overridesLeft <= 0 || !currentLevel || !currentLevel.solution) return;
+            if (!currentLevel || !currentLevel.solution) return;
             
             // Find all cells that are currently WRONG compared to the solution
             // AND not already currently highlighted by a previous override
@@ -601,7 +601,6 @@
                 overridePending.push(incorrectCells.splice(idx, 1)[0]);
             }
 
-            overridesLeft--;
             updateOverrideButton();
             updateUI();
         }
