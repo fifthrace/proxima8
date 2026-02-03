@@ -1,30 +1,24 @@
 {
   "name": "Proxima 8",
   "short_name": "Proxima 8",
-  "start_url": "/proxima8/",
+  "start_url": "https://fifthrace.github.io/proxima8/index.html",
   "display": "standalone",
   "background_color": "#f8f9fa",
-  "theme_color": "#4dabf7",
-  "description": "Identify the hidden neural pattern in this pure deduction logic puzzle.",
+  "theme_color": "#343a40",
+  "description": "Map the hidden neural patterns in this pure logic challenge.",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "assets/icon_192.png",
+      "src": "https://fifthrace.github.io/proxima8/assets/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "assets/icon_512.png",
+      "src": "https://fifthrace.github.io/proxima8/assets/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "assets/icon_512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ]
 }

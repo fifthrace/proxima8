@@ -3,7 +3,7 @@ const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './manifest.webmanifest',
+  './level_manifest.json',
   './assets/icon-192.png',
   './assets/icon-512.png',
   'https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js'

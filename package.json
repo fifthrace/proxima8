@@ -1,0 +1,24 @@
+{
+  "name": "proxima8",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sw.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fifthrace/proxima8.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/fifthrace/proxima8/issues"
+  },
+  "homepage": "https://github.com/fifthrace/proxima8#readme",
+  "dependencies": {
+    "@bubblewrap/cli": "^1.24.1"
+  }
+}

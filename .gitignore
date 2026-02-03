@@ -1,0 +1,12 @@
+node_modules/
+.DS_Store
+Thumbs.db
+.bubblewrap/
+.gradle/
+build/
+app/build/
+*.apk
+*.aab
+*.keystore
+*.jks
+twa-manifest.json
