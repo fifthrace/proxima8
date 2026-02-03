@@ -1,0 +1,53 @@
+{
+  "packageId": "io.bajo.proxima8",
+  "host": "proxima8.bajo.io",
+  "name": "Proxima 8",
+  "launcherName": "Proxima 8",
+  "display": "standalone",
+  "themeColor": "#343A40",
+  "themeColorDark": "#000000",
+  "navigationColor": "#343A40",
+  "navigationColorDark": "#343A40",
+  "navigationDividerColor": "#343A40",
+  "navigationDividerColorDark": "#343A40",
+  "backgroundColor": "#F8F9FA",
+  "enableNotifications": true,
+  "startUrl": "/index.html",
+  "iconUrl": "https://proxima8.bajo.io/assets/icon-512.png",
+  "maskableIconUrl": "https://proxima8.bajo.io/assets/icon-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "Y",
+  "appVersionCode": 4,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://proxima8.bajo.io/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {
+    "playBilling": {
+      "enabled": false
+    },
+    "locationDelegation": {
+      "enabled": false
+    },
+    "core": {
+      "enabled": false
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "minSdkVersion": 21,
+  "orientation": "portrait",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "displayOverride": [],
+  "appVersion": "Y"
+}
