@@ -443,7 +443,22 @@
             updateSectorStatus();
         }
 
+        function performExitGame() {
+            document.getElementById('game-overlay').style.display = 'none'; 
+        }
+
+        function exitGame() { 
+            if (window.history.state && window.history.state.view === 'game') {
+                window.history.back();
+            } else {
+                performExitGame();
+            }
+        }
+
         async function loadLevel(id) {
+            // Push state for level view
+            window.history.pushState({view: 'game', id: id}, '', `?node=${id}`);
+
             let data = levelsCache[id];
             if (!data) {
                 const res = await fetch(`levels/${id}.json`);
