@@ -842,6 +842,14 @@
                 history = [];
                 state = Array(currentLevel.height).fill().map(() => Array(currentLevel.width).fill(0));
                 clearInProgress(currentLevel.id);
+                
+                // If it was completed, remove it from completed list
+                let completed = getCompleted();
+                if (completed.includes(currentLevel.id)) {
+                    completed = completed.filter(id => id !== currentLevel.id);
+                    localStorage.setItem('zen_completed', JSON.stringify(completed));
+                }
+                
                 updateUI();
                 checkWin();
             }
