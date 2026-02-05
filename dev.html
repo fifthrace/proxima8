@@ -199,10 +199,10 @@
             width: fit-content; max-width: 95vw; margin: 0 auto; box-sizing: border-box;
         }
         .cell {
-            --max-grid-size: min(95vw, 500px);
-            --paddings: calc(min(4vw, 20px) * 2);
+            --paddings: 40px;
             --gaps: calc(8px * (var(--grid-width, 8) - 1));
-            --calculated-size: calc((var(--max-grid-size) - var(--paddings) - var(--gaps)) / var(--grid-width, 8));
+            --available-width: calc(100vw - var(--paddings) - var(--gaps));
+            --calculated-size: calc(var(--available-width) / var(--grid-width, 8));
             
             width: min(var(--calculated-size), 80px);
             height: min(var(--calculated-size), 80px);
