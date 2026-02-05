@@ -146,12 +146,11 @@
 
         .planet-sphere {
             border-radius: 50%;
-            box-shadow: inset -8px -8px 15px rgba(0,0,0,0.6), 0 0 10px rgba(255,255,255,0.1);
+            box-shadow: inset -8px -8px 15px rgba(0,0,0,0.6);
             border: 1px solid rgba(255,255,255,0.15);
         }
         .planet-wrapper.completed .planet-sphere {
-            box-shadow: inset -8px -8px 15px rgba(0,0,0,0.6), 0 0 20px var(--accent-green);
-            background: var(--accent-green) !important;
+            box-shadow: inset -8px -8px 15px rgba(0,0,0,0.6), 0 0 0 4px var(--accent-green);
         }
 
         .type-rocky { background: linear-gradient(135deg, #a8a095, #5d5751); }
@@ -532,17 +531,8 @@
                 // Go to next planet in THIS sector
                 loadLevel(sectorLevels[localIdx + 1].id);
             } else {
-                // We are on the 13th planet of this sector
-                const completed = getCompleted();
-                const allDone = sectorLevels.every(l => completed.includes(l.id));
-
-                if (allDone) {
-                    exitGame();
-                    showModal("Sector Stabilized", `All nodes in the ${currentLevel.sector} are now active. Returning to Galactic Chart.`, "Acknowledge", () => {}, true);
-                } else {
-                    // Just return to chart if it's the last planet but sector isn't fully done
-                    exitGame();
-                }
+                // We are on the 13th planet, loop back to the 1st
+                loadLevel(sectorLevels[0].id);
             }
         }
 
