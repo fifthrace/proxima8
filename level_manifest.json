@@ -1,14 +1,5 @@
 [
   {
-    "id": "4c1275c14420",
-    "title": "Orbital Core",
-    "width": 10,
-    "height": 10,
-    "difficulty_rating": 50,
-    "steps": 49,
-    "sector": "Alpha Sector"
-  },
-  {
     "id": "772de419e48e",
     "title": "Atomic Pulse",
     "width": 5,
@@ -90,24 +81,6 @@
     "sector": "Alpha Sector"
   },
   {
-    "id": "fc326019f44f",
-    "title": "Axial Point",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 115,
-    "sector": "Alpha Sector"
-  },
-  {
-    "id": "b4a5fc89f44a",
-    "title": "Primal Array",
-    "width": 10,
-    "height": 10,
-    "difficulty_rating": 50,
-    "steps": 65,
-    "sector": "Alpha Sector"
-  },
-  {
     "id": "853ee36b9339",
     "title": "Atomic Core",
     "width": 3,
@@ -117,22 +90,13 @@
     "sector": "Alpha Sector"
   },
   {
-    "id": "7114cc38784f",
-    "title": "Flux Node",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 139,
-    "sector": "Crimson Void"
-  },
-  {
     "id": "170909786b48",
     "title": "Inverse Horizon",
     "width": 3,
     "height": 3,
     "difficulty_rating": 50,
     "steps": 4,
-    "sector": "Crimson Void"
+    "sector": "Alpha Sector"
   },
   {
     "id": "d7e21052ed32",
@@ -141,25 +105,7 @@
     "height": 3,
     "difficulty_rating": 50,
     "steps": 4,
-    "sector": "Crimson Void"
-  },
-  {
-    "id": "66edbf561399",
-    "title": "Primal Circuit",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 117,
-    "sector": "Crimson Void"
-  },
-  {
-    "id": "e272c6a45c79",
-    "title": "Inverse Force",
-    "width": 10,
-    "height": 10,
-    "difficulty_rating": 50,
-    "steps": 65,
-    "sector": "Crimson Void"
+    "sector": "Alpha Sector"
   },
   {
     "id": "244d0ee550ea",
@@ -168,7 +114,7 @@
     "height": 5,
     "difficulty_rating": 50,
     "steps": 17,
-    "sector": "Crimson Void"
+    "sector": "Alpha Sector"
   },
   {
     "id": "c227065f574b",
@@ -177,33 +123,6 @@
     "height": 8,
     "difficulty_rating": 50,
     "steps": 34,
-    "sector": "Crimson Void"
-  },
-  {
-    "id": "20dbf736acf8",
-    "title": "Atomic Matrix",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 116,
-    "sector": "Crimson Void"
-  },
-  {
-    "id": "df81929a156c",
-    "title": "Inert Mass",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 123,
-    "sector": "Crimson Void"
-  },
-  {
-    "id": "076bc035cd2a",
-    "title": "Kinetic Mass",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 138,
     "sector": "Crimson Void"
   },
   {
@@ -225,22 +144,13 @@
     "sector": "Crimson Void"
   },
   {
-    "id": "32e081ec34cd",
-    "title": "Inert Force",
-    "width": 10,
-    "height": 10,
-    "difficulty_rating": 50,
-    "steps": 60,
-    "sector": "Crimson Void"
-  },
-  {
     "id": "95ff249650e2",
     "title": "Lateral Lattice",
     "width": 5,
     "height": 5,
     "difficulty_rating": 50,
     "steps": 13,
-    "sector": "Azure Reach"
+    "sector": "Crimson Void"
   },
   {
     "id": "cc86ec6e963c",
@@ -249,7 +159,7 @@
     "height": 3,
     "difficulty_rating": 50,
     "steps": 4,
-    "sector": "Azure Reach"
+    "sector": "Crimson Void"
   },
   {
     "id": "e5cb68d0c783",
@@ -258,16 +168,7 @@
     "height": 3,
     "difficulty_rating": 50,
     "steps": 5,
-    "sector": "Azure Reach"
-  },
-  {
-    "id": "bfcfaeef9252",
-    "title": "Linear Array",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 145,
-    "sector": "Azure Reach"
+    "sector": "Crimson Void"
   },
   {
     "id": "583b5b924698",
@@ -276,16 +177,7 @@
     "height": 8,
     "difficulty_rating": 50,
     "steps": 31,
-    "sector": "Azure Reach"
-  },
-  {
-    "id": "b0884535a130",
-    "title": "Axial Isotope",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 140,
-    "sector": "Azure Reach"
+    "sector": "Crimson Void"
   },
   {
     "id": "9aa94514e0fe",
@@ -294,7 +186,7 @@
     "height": 8,
     "difficulty_rating": 50,
     "steps": 36,
-    "sector": "Azure Reach"
+    "sector": "Crimson Void"
   },
   {
     "id": "18a9aedb69ba",
@@ -303,25 +195,7 @@
     "height": 5,
     "difficulty_rating": 50,
     "steps": 13,
-    "sector": "Azure Reach"
-  },
-  {
-    "id": "0d8a96b65835",
-    "title": "Isotope Pulse",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 140,
-    "sector": "Azure Reach"
-  },
-  {
-    "id": "5cb9df42f9a7",
-    "title": "Quantum Field",
-    "width": 10,
-    "height": 10,
-    "difficulty_rating": 50,
-    "steps": 60,
-    "sector": "Azure Reach"
+    "sector": "Crimson Void"
   },
   {
     "id": "c361a6e7cbe5",
@@ -330,7 +204,7 @@
     "height": 3,
     "difficulty_rating": 50,
     "steps": 4,
-    "sector": "Azure Reach"
+    "sector": "Crimson Void"
   },
   {
     "id": "02858fd35bb2",
@@ -339,7 +213,7 @@
     "height": 3,
     "difficulty_rating": 50,
     "steps": 6,
-    "sector": "Azure Reach"
+    "sector": "Crimson Void"
   },
   {
     "id": "31e6683c8870",
@@ -348,16 +222,7 @@
     "height": 3,
     "difficulty_rating": 50,
     "steps": 5,
-    "sector": "Azure Reach"
-  },
-  {
-    "id": "4fc04d0e8002",
-    "title": "Scalar Vertex",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 155,
-    "sector": "Obsidian Gate"
+    "sector": "Crimson Void"
   },
   {
     "id": "eb154f249143",
@@ -366,25 +231,7 @@
     "height": 8,
     "difficulty_rating": 50,
     "steps": 37,
-    "sector": "Obsidian Gate"
-  },
-  {
-    "id": "a82b433dddee",
-    "title": "Vector Mass",
-    "width": 10,
-    "height": 10,
-    "difficulty_rating": 50,
-    "steps": 64,
-    "sector": "Obsidian Gate"
-  },
-  {
-    "id": "c1f3e5d28db0",
-    "title": "Linear Matrix",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 136,
-    "sector": "Obsidian Gate"
+    "sector": "Crimson Void"
   },
   {
     "id": "f9b4df1bd4d3",
@@ -393,16 +240,7 @@
     "height": 8,
     "difficulty_rating": 50,
     "steps": 40,
-    "sector": "Obsidian Gate"
-  },
-  {
-    "id": "52253bfb97b3",
-    "title": "Linear Node",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 111,
-    "sector": "Obsidian Gate"
+    "sector": "Azure Reach"
   },
   {
     "id": "46b53e10e133",
@@ -411,16 +249,7 @@
     "height": 8,
     "difficulty_rating": 50,
     "steps": 36,
-    "sector": "Obsidian Gate"
-  },
-  {
-    "id": "9875bbfe97d2",
-    "title": "Tidal Field",
-    "width": 10,
-    "height": 10,
-    "difficulty_rating": 50,
-    "steps": 64,
-    "sector": "Obsidian Gate"
+    "sector": "Azure Reach"
   },
   {
     "id": "3a755f4e276b",
@@ -429,7 +258,7 @@
     "height": 3,
     "difficulty_rating": 50,
     "steps": 5,
-    "sector": "Obsidian Gate"
+    "sector": "Azure Reach"
   },
   {
     "id": "5f3dadf1077c",
@@ -438,25 +267,7 @@
     "height": 5,
     "difficulty_rating": 50,
     "steps": 15,
-    "sector": "Obsidian Gate"
-  },
-  {
-    "id": "c712e54455d4",
-    "title": "Axial Edge",
-    "width": 10,
-    "height": 10,
-    "difficulty_rating": 50,
-    "steps": 66,
-    "sector": "Obsidian Gate"
-  },
-  {
-    "id": "19f3b498dfa1",
-    "title": "Flux Nexus",
-    "width": 10,
-    "height": 10,
-    "difficulty_rating": 50,
-    "steps": 60,
-    "sector": "Obsidian Gate"
+    "sector": "Azure Reach"
   },
   {
     "id": "67269b640724",
@@ -465,16 +276,7 @@
     "height": 8,
     "difficulty_rating": 50,
     "steps": 33,
-    "sector": "Obsidian Gate"
-  },
-  {
-    "id": "486fff14b84f",
-    "title": "Scalar Mass",
-    "width": 10,
-    "height": 10,
-    "difficulty_rating": 50,
-    "steps": 58,
-    "sector": "Emerald Nebula"
+    "sector": "Azure Reach"
   },
   {
     "id": "ef52528b8f8b",
@@ -483,16 +285,7 @@
     "height": 5,
     "difficulty_rating": 50,
     "steps": 14,
-    "sector": "Emerald Nebula"
-  },
-  {
-    "id": "dbdc773acfda",
-    "title": "Scalar Array",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 140,
-    "sector": "Emerald Nebula"
+    "sector": "Azure Reach"
   },
   {
     "id": "65c2b7b5861c",
@@ -501,7 +294,7 @@
     "height": 5,
     "difficulty_rating": 50,
     "steps": 13,
-    "sector": "Emerald Nebula"
+    "sector": "Azure Reach"
   },
   {
     "id": "290ecbc0b599",
@@ -510,7 +303,7 @@
     "height": 5,
     "difficulty_rating": 50,
     "steps": 13,
-    "sector": "Emerald Nebula"
+    "sector": "Azure Reach"
   },
   {
     "id": "53da6057b466",
@@ -519,7 +312,7 @@
     "height": 5,
     "difficulty_rating": 50,
     "steps": 16,
-    "sector": "Emerald Nebula"
+    "sector": "Azure Reach"
   },
   {
     "id": "f289ddad1585",
@@ -528,7 +321,7 @@
     "height": 8,
     "difficulty_rating": 50,
     "steps": 31,
-    "sector": "Emerald Nebula"
+    "sector": "Azure Reach"
   },
   {
     "id": "f36c13d2e3fe",
@@ -537,7 +330,7 @@
     "height": 8,
     "difficulty_rating": 50,
     "steps": 36,
-    "sector": "Emerald Nebula"
+    "sector": "Azure Reach"
   },
   {
     "id": "bf562c2eaa20",
@@ -546,7 +339,7 @@
     "height": 8,
     "difficulty_rating": 50,
     "steps": 34,
-    "sector": "Emerald Nebula"
+    "sector": "Azure Reach"
   },
   {
     "id": "47f15fa3ac84",
@@ -555,16 +348,7 @@
     "height": 5,
     "difficulty_rating": 50,
     "steps": 16,
-    "sector": "Emerald Nebula"
-  },
-  {
-    "id": "d3d38029e1da",
-    "title": "Linear Entropy",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 121,
-    "sector": "Emerald Nebula"
+    "sector": "Azure Reach"
   },
   {
     "id": "6c2e3db29630",
@@ -573,7 +357,7 @@
     "height": 5,
     "difficulty_rating": 50,
     "steps": 12,
-    "sector": "Emerald Nebula"
+    "sector": "Obsidian Gate"
   },
   {
     "id": "58408d609616",
@@ -582,7 +366,7 @@
     "height": 5,
     "difficulty_rating": 50,
     "steps": 12,
-    "sector": "Emerald Nebula"
+    "sector": "Obsidian Gate"
   },
   {
     "id": "ffcdecd0c9fe",
@@ -591,7 +375,7 @@
     "height": 5,
     "difficulty_rating": 50,
     "steps": 13,
-    "sector": "Solar Forge"
+    "sector": "Obsidian Gate"
   },
   {
     "id": "89a4aff0f5ac",
@@ -600,7 +384,7 @@
     "height": 8,
     "difficulty_rating": 50,
     "steps": 34,
-    "sector": "Solar Forge"
+    "sector": "Obsidian Gate"
   },
   {
     "id": "afb4a12f8498",
@@ -609,16 +393,7 @@
     "height": 3,
     "difficulty_rating": 50,
     "steps": 5,
-    "sector": "Solar Forge"
-  },
-  {
-    "id": "e6f562491c2d",
-    "title": "Synthetic Shell",
-    "width": 10,
-    "height": 10,
-    "difficulty_rating": 50,
-    "steps": 63,
-    "sector": "Solar Forge"
+    "sector": "Obsidian Gate"
   },
   {
     "id": "fc42f7ac6a04",
@@ -627,16 +402,7 @@
     "height": 8,
     "difficulty_rating": 50,
     "steps": 42,
-    "sector": "Solar Forge"
-  },
-  {
-    "id": "9e1704f2bcf0",
-    "title": "Axial Wave",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 147,
-    "sector": "Solar Forge"
+    "sector": "Obsidian Gate"
   },
   {
     "id": "22c94fbeab29",
@@ -645,7 +411,7 @@
     "height": 5,
     "difficulty_rating": 50,
     "steps": 13,
-    "sector": "Solar Forge"
+    "sector": "Obsidian Gate"
   },
   {
     "id": "93219ffbfb8f",
@@ -654,25 +420,7 @@
     "height": 8,
     "difficulty_rating": 50,
     "steps": 38,
-    "sector": "Solar Forge"
-  },
-  {
-    "id": "c5ce293c0bed",
-    "title": "Linear Field",
-    "width": 10,
-    "height": 10,
-    "difficulty_rating": 50,
-    "steps": 53,
-    "sector": "Solar Forge"
-  },
-  {
-    "id": "7cb4d46f0970",
-    "title": "Nodal Pulse",
-    "width": 10,
-    "height": 10,
-    "difficulty_rating": 50,
-    "steps": 65,
-    "sector": "Solar Forge"
+    "sector": "Obsidian Gate"
   },
   {
     "id": "a76e16e58490",
@@ -681,16 +429,7 @@
     "height": 5,
     "difficulty_rating": 50,
     "steps": 13,
-    "sector": "Solar Forge"
-  },
-  {
-    "id": "aeb3cda3f8cc",
-    "title": "Lateral Gradient",
-    "width": 10,
-    "height": 10,
-    "difficulty_rating": 50,
-    "steps": 69,
-    "sector": "Solar Forge"
+    "sector": "Obsidian Gate"
   },
   {
     "id": "6e82a3103841",
@@ -699,25 +438,7 @@
     "height": 8,
     "difficulty_rating": 50,
     "steps": 41,
-    "sector": "Solar Forge"
-  },
-  {
-    "id": "fcf5402ff6ba",
-    "title": "Vortex Horizon",
-    "width": 10,
-    "height": 10,
-    "difficulty_rating": 50,
-    "steps": 57,
-    "sector": "Neutron Star"
-  },
-  {
-    "id": "83f5fab0c69f",
-    "title": "Linear Shell",
-    "width": 10,
-    "height": 10,
-    "difficulty_rating": 50,
-    "steps": 65,
-    "sector": "Neutron Star"
+    "sector": "Obsidian Gate"
   },
   {
     "id": "45272b5b869d",
@@ -726,7 +447,7 @@
     "height": 3,
     "difficulty_rating": 50,
     "steps": 4,
-    "sector": "Neutron Star"
+    "sector": "Obsidian Gate"
   },
   {
     "id": "7e1ae7e1561f",
@@ -735,7 +456,7 @@
     "height": 5,
     "difficulty_rating": 50,
     "steps": 15,
-    "sector": "Neutron Star"
+    "sector": "Obsidian Gate"
   },
   {
     "id": "88409738fbb2",
@@ -744,7 +465,7 @@
     "height": 3,
     "difficulty_rating": 50,
     "steps": 5,
-    "sector": "Neutron Star"
+    "sector": "Obsidian Gate"
   },
   {
     "id": "423991f089cb",
@@ -753,16 +474,7 @@
     "height": 5,
     "difficulty_rating": 50,
     "steps": 12,
-    "sector": "Neutron Star"
-  },
-  {
-    "id": "5d454fa4dd72",
-    "title": "Lateral Wave",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 128,
-    "sector": "Neutron Star"
+    "sector": "Emerald Nebula"
   },
   {
     "id": "076e995dfbc6",
@@ -771,7 +483,7 @@
     "height": 5,
     "difficulty_rating": 50,
     "steps": 16,
-    "sector": "Neutron Star"
+    "sector": "Emerald Nebula"
   },
   {
     "id": "5bdf0275a121",
@@ -780,7 +492,7 @@
     "height": 8,
     "difficulty_rating": 50,
     "steps": 29,
-    "sector": "Neutron Star"
+    "sector": "Emerald Nebula"
   },
   {
     "id": "eea4da846923",
@@ -789,16 +501,7 @@
     "height": 8,
     "difficulty_rating": 50,
     "steps": 34,
-    "sector": "Neutron Star"
-  },
-  {
-    "id": "cad998eb4b15",
-    "title": "Nodal Wave",
-    "width": 15,
-    "height": 15,
-    "difficulty_rating": 50,
-    "steps": 129,
-    "sector": "Neutron Star"
+    "sector": "Emerald Nebula"
   },
   {
     "id": "7a01396e2407",
@@ -807,7 +510,7 @@
     "height": 3,
     "difficulty_rating": 50,
     "steps": 5,
-    "sector": "Neutron Star"
+    "sector": "Emerald Nebula"
   },
   {
     "id": "c64e0c914393",
@@ -816,6 +519,303 @@
     "height": 3,
     "difficulty_rating": 50,
     "steps": 4,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "41079c9bdce0",
+    "title": "Static Mass",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 14,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "5bbe89819bec",
+    "title": "Isotope Node",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 36,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "e4ece82d26f3",
+    "title": "Inert Isotope",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "22a03e43c14e",
+    "title": "Still Focus",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 14,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "afb19c686e6a",
+    "title": "Isotope Node",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 36,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "89af6b384020",
+    "title": "Thermal Point",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 34,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "10d6d3ac2796",
+    "title": "Primal Nexus",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 4,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "f8d8bac935f5",
+    "title": "Still Path",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 12,
+    "sector": "Solar Forge"
+  },
+  {
+    "id": "6711d8922a08",
+    "title": "Tidal Vertex",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 6,
+    "sector": "Solar Forge"
+  },
+  {
+    "id": "b37b793eea85",
+    "title": "Nodal Point",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 41,
+    "sector": "Solar Forge"
+  },
+  {
+    "id": "0ac213385a0d",
+    "title": "Silver Mountain",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 10,
+    "sector": "Solar Forge"
+  },
+  {
+    "id": "047d520f7980",
+    "title": "Scalar Gradient",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 35,
+    "sector": "Solar Forge"
+  },
+  {
+    "id": "095b95e67083",
+    "title": "Axial Mass",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 34,
+    "sector": "Solar Forge"
+  },
+  {
+    "id": "0ad3a694ecb5",
+    "title": "Tidal Strata",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 13,
+    "sector": "Solar Forge"
+  },
+  {
+    "id": "bf5363134270",
+    "title": "Tidal Vertex",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 32,
+    "sector": "Solar Forge"
+  },
+  {
+    "id": "afb726f40394",
+    "title": "Cold Mountain",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 13,
+    "sector": "Solar Forge"
+  },
+  {
+    "id": "4d7af184ddc9",
+    "title": "Scalar Node",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 11,
+    "sector": "Solar Forge"
+  },
+  {
+    "id": "556c9d5db73a",
+    "title": "Axial Field",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 36,
+    "sector": "Solar Forge"
+  },
+  {
+    "id": "81fbe6e24562",
+    "title": "Local Cluster",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 6,
+    "sector": "Solar Forge"
+  },
+  {
+    "id": "fb746889f70e",
+    "title": "Axial Wave",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 40,
+    "sector": "Solar Forge"
+  },
+  {
+    "id": "73d9b65b4fdb",
+    "title": "Flux Force",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 44,
+    "sector": "Neutron Star"
+  },
+  {
+    "id": "64f6fb1e51dc",
+    "title": "Lateral Vertex",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 37,
+    "sector": "Neutron Star"
+  },
+  {
+    "id": "9d2108cdae78",
+    "title": "Orbital Matrix",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 37,
+    "sector": "Neutron Star"
+  },
+  {
+    "id": "fefed3ccf691",
+    "title": "Inverse Array",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 12,
+    "sector": "Neutron Star"
+  },
+  {
+    "id": "31a32ef536dd",
+    "title": "Binary Array",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 14,
+    "sector": "Neutron Star"
+  },
+  {
+    "id": "8c863678a6ec",
+    "title": "Flux Matrix",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 13,
+    "sector": "Neutron Star"
+  },
+  {
+    "id": "98902ab28a20",
+    "title": "Focal Point",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Neutron Star"
+  },
+  {
+    "id": "99d3d5eaa899",
+    "title": "Focal Lattice",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 12,
+    "sector": "Neutron Star"
+  },
+  {
+    "id": "f66d2b7a475e",
+    "title": "Focal Field",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 6,
+    "sector": "Neutron Star"
+  },
+  {
+    "id": "0322bc428bfb",
+    "title": "Vector Field",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 10,
+    "sector": "Neutron Star"
+  },
+  {
+    "id": "63e9c4875355",
+    "title": "Vector Mass",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 36,
+    "sector": "Neutron Star"
+  },
+  {
+    "id": "5773e2a44c99",
+    "title": "Nodal Array",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 37,
+    "sector": "Neutron Star"
+  },
+  {
+    "id": "88a9d6b9e013",
+    "title": "Linear Field",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 39,
     "sector": "Neutron Star"
   }
 ]
