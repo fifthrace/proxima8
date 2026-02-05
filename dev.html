@@ -73,6 +73,12 @@
 
         .cluster-label {
             margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .cluster-name {
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -82,6 +88,16 @@
             padding: 2px 8px;
             border-radius: 10px;
         }
+        .cluster-status {
+            font-size: 8px;
+            font-family: monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+        .status-scanning { color: #fd7e14; }
+        .status-stable { color: #40c057; }
 
         /* Sector Positions */
         #sector-alpha { top: 15%; left: 50%; transform: translateX(-50%); }
@@ -231,31 +247,52 @@
         <div id="universe">
             <div id="sector-alpha" class="cluster" onclick="zoomTo(0, 35, 'Alpha Sector', '#fab005')">
                 <div class="cluster-core"></div>
-                <div class="cluster-label">Alpha Sector</div>
+                <div class="cluster-label">
+                    <span class="cluster-name">Alpha Sector</span>
+                    <span id="status-Alpha-Sector" class="cluster-status"></span>
+                </div>
             </div>
             <div id="sector-void" class="cluster" onclick="zoomTo(30, 15, 'Crimson Void', '#fa5252')">
                 <div class="cluster-core" style="background: #fa5252;"></div>
-                <div class="cluster-label">Crimson Void</div>
+                <div class="cluster-label">
+                    <span class="cluster-name">Crimson Void</span>
+                    <span id="status-Crimson-Void" class="cluster-status"></span>
+                </div>
             </div>
             <div id="sector-azure" class="cluster" onclick="zoomTo(-30, 15, 'Azure Reach', '#1c7ed6')">
                 <div class="cluster-core" style="background: #1c7ed6;"></div>
-                <div class="cluster-label">Azure Reach</div>
+                <div class="cluster-label">
+                    <span class="cluster-name">Azure Reach</span>
+                    <span id="status-Azure-Reach" class="cluster-status"></span>
+                </div>
             </div>
             <div id="sector-obsidian" class="cluster" onclick="zoomTo(0, -5, 'Obsidian Gate', '#862e9c')">
                 <div class="cluster-core" style="background: #862e9c;"></div>
-                <div class="cluster-label">Obsidian Gate</div>
+                <div class="cluster-label">
+                    <span class="cluster-name">Obsidian Gate</span>
+                    <span id="status-Obsidian-Gate" class="cluster-status"></span>
+                </div>
             </div>
             <div id="sector-emerald" class="cluster" onclick="zoomTo(30, -25, 'Emerald Nebula', '#40c057')">
                 <div class="cluster-core" style="background: #40c057;"></div>
-                <div class="cluster-label">Emerald Nebula</div>
+                <div class="cluster-label">
+                    <span class="cluster-name">Emerald Nebula</span>
+                    <span id="status-Emerald-Nebula" class="cluster-status"></span>
+                </div>
             </div>
             <div id="sector-solar" class="cluster" onclick="zoomTo(-30, -25, 'Solar Forge', '#fd7e14')">
                 <div class="cluster-core" style="background: #fd7e14;"></div>
-                <div class="cluster-label">Solar Forge</div>
+                <div class="cluster-label">
+                    <span class="cluster-name">Solar Forge</span>
+                    <span id="status-Solar-Forge" class="cluster-status"></span>
+                </div>
             </div>
             <div id="sector-neutron" class="cluster" onclick="zoomTo(0, -40, 'Neutron Star', '#e9ecef')">
                 <div class="cluster-core" style="background: #e9ecef;"></div>
-                <div class="cluster-label">Neutron Star</div>
+                <div class="cluster-label">
+                    <span class="cluster-name">Neutron Star</span>
+                    <span id="status-Neutron-Star" class="cluster-status"></span>
+                </div>
             </div>
         </div>
 
@@ -393,6 +430,7 @@
         function zoomOut() {
             document.body.classList.remove('zoomed');
             document.getElementById('back-to-galaxy').style.display = 'none';
+            updateSectorStatus();
         }
 
         async function loadLevel(id) {
@@ -672,10 +710,36 @@
             });
         }
 
+        function updateSectorStatus() {
+            const completed = getCompleted();
+            const states = getStates();
+            const sectors = ['Alpha Sector', 'Crimson Void', 'Azure Reach', 'Obsidian Gate', 'Emerald Nebula', 'Solar Forge', 'Neutron Star'];
+            
+            sectors.forEach(name => {
+                const idSafe = name.replace(' ', '-');
+                const el = document.getElementById(`status-${idSafe}`);
+                if (!el) return;
+
+                const sectorLevels = levelManifest.filter(l => l.sector === name);
+                const doneCount = sectorLevels.filter(l => completed.includes(l.id)).length;
+                const startedCount = sectorLevels.filter(l => states[l.id] && states[l.id].flat().some(c => c === 1)).length;
+
+                if (doneCount === sectorLevels.length && sectorLevels.length > 0) {
+                    el.innerText = "[Stable]";
+                    el.className = "cluster-status status-stable";
+                } else if (doneCount > 0 || startedCount > 0) {
+                    el.innerText = "[Scanning...]";
+                    el.className = "cluster-status status-scanning";
+                } else {
+                    el.innerText = "";
+                }
+            });
+        }
+
         async function init() {
             const res = await fetch('level_manifest.json');
             levelManifest = await res.json();
-            // Sector assignment is now handled in the manifest itself by the script
+            updateSectorStatus();
         }
 
         init();
