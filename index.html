@@ -59,15 +59,13 @@
             padding: min(4vw, 20px);
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            width: 95vw;
-            max-width: 500px;
-            justify-content: center;
+            width: fit-content;
+            max-width: 95vw;
             margin: 0 auto;
             box-sizing: border-box;
         }
         .cell {
-            width: 100%;
-            max-width: 60px;
+            width: min(calc((95vw - 60px) / var(--grid-width, 8)), 60px);
             aspect-ratio: 1 / 1;
             border-radius: 8px;
             display: flex;
@@ -486,7 +484,8 @@
             const fontSize = currentLevel.width > 10 ? '14px' : (currentLevel.width > 5 ? '16px' : '20px');
             
             gridEl.style.setProperty('--grid-gap', gap + 'px');
-            gridEl.style.gridTemplateColumns = `repeat(${currentLevel.width}, 1fr)`;
+            gridEl.style.setProperty('--grid-width', currentLevel.width);
+            gridEl.style.gridTemplateColumns = `repeat(${currentLevel.width}, auto)`;
             gridEl.innerHTML = '';
             
             for (let y = 0; y < currentLevel.height; y++) {
