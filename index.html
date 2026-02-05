@@ -283,6 +283,45 @@
             border-color: #000;
             color: #fff;
         }
+        
+        /* Modal Styles */
+        #modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        #modal {
+            background: var(--panel-bg);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 320px;
+            text-align: center;
+            color: var(--text-color);
+        }
+        #modal h3 { margin-top: 0; margin-bottom: 12px; }
+        #modal p { margin-bottom: 24px; line-height: 1.4; opacity: 0.9; }
+        .modal-buttons { display: flex; gap: 12px; }
+        .modal-buttons button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .modal-confirm { background: #fa5252; color: white; }
+        .modal-cancel { background: var(--cell-bg); color: var(--text-color); }
+
         body.dark-mode #theme-dark.active {
             background: #fff;
             color: #000;
@@ -352,6 +391,17 @@
         <div id="level-id-display" onclick="copyUID()" style="cursor: pointer; font-size: 10px; color: #ccc; margin-top: 10px; font-family: monospace;" title="Click to copy UID"></div>
     </div>
 
+    <div id="modal-overlay">
+        <div id="modal">
+            <h3 id="modal-title">Confirm</h3>
+            <p id="modal-body"></p>
+            <div class="modal-buttons">
+                <button id="modal-cancel-btn" class="modal-cancel" onclick="closeModal()">Cancel</button>
+                <button id="modal-confirm-btn" class="modal-confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
         function setTheme(theme) {
@@ -378,6 +428,24 @@
         const savedTheme = localStorage.getItem('proxima_theme') || 'light';
         setTheme(savedTheme);
 
+        let modalCallback = null;
+
+        function showModal(title, body, confirmText, onConfirm) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-body').innerText = body;
+            const confirmBtn = document.getElementById('modal-confirm-btn');
+            confirmBtn.innerText = confirmText;
+            confirmBtn.onclick = () => {
+                onConfirm();
+                closeModal();
+            };
+            document.getElementById('modal-overlay').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').style.display = 'none';
+        }
+
         function toggleSettings() {
             const panel = document.getElementById('settings-panel');
             const isHidden = window.getComputedStyle(panel).display === 'none';
@@ -393,13 +461,18 @@
         }
 
         function clearAllProgress() {
-            if (confirm("Reset all neural mapping?")) {
-                localStorage.removeItem('zen_completed');
-                localStorage.removeItem('zen_in_progress');
-                localStorage.removeItem('proxima_states');
-                toggleSettings();
-                showMenu();
-            }
+            showModal(
+                "Reset Progress", 
+                "Clear all neural mapping? This cannot be undone.", 
+                "Clear All", 
+                () => {
+                    localStorage.removeItem('zen_completed');
+                    localStorage.removeItem('zen_in_progress');
+                    localStorage.removeItem('proxima_states');
+                    toggleSettings();
+                    showMenu();
+                }
+            );
         }
 
         function exportData() {
@@ -429,9 +502,14 @@
                     if (data.completed) localStorage.setItem('zen_completed', JSON.stringify(data.completed));
                     if (data.inProgress) localStorage.setItem('zen_in_progress', JSON.stringify(data.inProgress));
                     if (data.states) localStorage.setItem('proxima_states', JSON.stringify(data.states));
-                    alert("Progress imported successfully!");
-                    location.reload();
-                } catch (err) { alert("Failed to import data."); }
+                    showModal("Import Success", "Your neural mapping data has been successfully synchronized.", "Restart", () => {
+                        location.reload();
+                    });
+                    document.getElementById('modal-cancel-btn').style.display = 'none';
+                } catch (err) { 
+                    showModal("Import Failed", "The neural data could not be parsed. Please check the file integrity.", "Close", () => {});
+                    document.getElementById('modal-cancel-btn').style.display = 'none';
+                }
             };
             reader.readAsText(file);
         }
@@ -821,7 +899,15 @@
                 }).catch(console.error);
             } else {
                 navigator.clipboard.writeText(text).then(() => {
-                    alert("Mapping copied to clipboard!");
+                    showModal("Mapping Copied", "The neural mapping results have been copied to your clipboard.", "Close", () => {});
+                    // Hide cancel button for alerts
+                    document.getElementById('modal-cancel-btn').style.display = 'none';
+                    // Restore cancel button when closing
+                    const oldCallback = document.getElementById('modal-confirm-btn').onclick;
+                    document.getElementById('modal-confirm-btn').onclick = () => {
+                        oldCallback();
+                        document.getElementById('modal-cancel-btn').style.display = 'block';
+                    };
                 });
             }
         }
@@ -838,21 +924,26 @@
 
         function resetGame() {
             if (!currentLevel) return;
-            if (confirm("Clear this map?")) {
-                history = [];
-                state = Array(currentLevel.height).fill().map(() => Array(currentLevel.width).fill(0));
-                clearInProgress(currentLevel.id);
-                
-                // If it was completed, remove it from completed list
-                let completed = getCompleted();
-                if (completed.includes(currentLevel.id)) {
-                    completed = completed.filter(id => id !== currentLevel.id);
-                    localStorage.setItem('zen_completed', JSON.stringify(completed));
+            showModal(
+                "Clear Map",
+                "Reset this neural mapping? All progress on this puzzle will be lost.",
+                "Reset",
+                () => {
+                    history = [];
+                    state = Array(currentLevel.height).fill().map(() => Array(currentLevel.width).fill(0));
+                    clearInProgress(currentLevel.id);
+                    
+                    // If it was completed, remove it from completed list
+                    let completed = getCompleted();
+                    if (completed.includes(currentLevel.id)) {
+                        completed = completed.filter(id => id !== currentLevel.id);
+                        localStorage.setItem('zen_completed', JSON.stringify(completed));
+                    }
+                    
+                    updateUI();
+                    checkWin();
                 }
-                
-                updateUI();
-                checkWin();
-            }
+            );
         }
 
         function copyUID() {
