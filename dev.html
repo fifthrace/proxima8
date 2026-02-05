@@ -330,8 +330,7 @@
         <button onclick="exportData()">Export Data</button>
         <button onclick="document.getElementById('import-file').click()">Import Data</button>
         <input type="file" id="import-file" style="display: none" accept=".json" onchange="importData(event)">
-        <button onclick="clearAllProgress()" style="background: #fa5252; margin-top: 20px;">Purge All Data</button>
-        <button onclick="toggleSettings()" style="background: var(--cell-bg); color: var(--text-color); margin-top: 10px;">Close</button>
+        <button onclick="toggleSettings()" style="background: var(--cell-bg); color: var(--text-color); margin-top: 20px;">Close</button>
     </div>
 
     <div id="modal-overlay" onclick="if(event.target === this) closeModal()">
