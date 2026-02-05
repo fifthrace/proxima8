@@ -404,6 +404,12 @@
                 levelsCache[id] = data;
             }
             currentLevel = data;
+
+            // Ensure the current level has its sector assigned from the manifest
+            const manifestEntry = levelManifest.find(l => l.id === id);
+            if (manifestEntry) {
+                currentLevel.sector = manifestEntry.sector;
+            }
             
             const completed = getCompleted();
             if (completed.includes(id)) {
