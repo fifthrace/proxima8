@@ -225,10 +225,9 @@
 
     <div id="controls-row">
         <span id="back-btn" class="text-btn" onclick="showMenu()" style="display: none;">← Exit</span>
-        <span id="prev-btn" class="text-btn" onclick="goToPrevLevel()" style="display: none;">← Prev</span>
-        <span id="next-nav-btn" class="text-btn" onclick="goToNextLevel()" style="display: none;">Next →</span>
         <span id="undo-btn" class="text-btn" onclick="undoMove()" style="display: none;">↩ Undo</span>
         <span id="reset-btn" class="text-btn" onclick="resetGame()" style="display: none;">↺ Clear</span>
+        <span id="next-nav-btn" class="text-btn" onclick="goToNextLevel()" style="display: none;">Next →</span>
     </div>
     
     <div id="settings-toggle" onclick="toggleSettings()" title="Settings">⚙</div>
@@ -361,7 +360,6 @@
             document.getElementById('main-header').innerText = "Proximal";
             
             document.getElementById('back-btn').style.display = 'none';
-            document.getElementById('prev-btn').style.display = 'none';
             document.getElementById('next-nav-btn').style.display = 'none';
             document.getElementById('undo-btn').style.display = 'none';
             document.getElementById('reset-btn').style.display = 'none';
@@ -442,10 +440,8 @@
             
             // Handle Navigation Buttons
             const currentIndex = levelManifest.findIndex(l => l.id === key);
-            const prevBtn = document.getElementById('prev-btn');
             const nextNavBtn = document.getElementById('next-nav-btn');
             
-            if (prevBtn) prevBtn.style.display = (currentIndex > 0) ? 'flex' : 'none';
             if (nextNavBtn) nextNavBtn.style.display = (currentIndex !== -1 && currentIndex < levelManifest.length - 1) ? 'flex' : 'none';
 
             document.getElementById('undo-btn').style.display = 'flex';
@@ -669,16 +665,6 @@
             const currentIndex = levelManifest.findIndex(l => l.id === currentLevel.id);
             if (currentIndex !== -1 && currentIndex < levelManifest.length - 1) {
                 loadLevel(levelManifest[currentIndex + 1].id);
-            } else {
-                showMenu();
-            }
-        }
-
-        function goToPrevLevel() {
-            if (!currentLevel) return showMenu();
-            const currentIndex = levelManifest.findIndex(l => l.id === currentLevel.id);
-            if (currentIndex > 0) {
-                loadLevel(levelManifest[currentIndex - 1].id);
             } else {
                 showMenu();
             }
