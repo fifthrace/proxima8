@@ -293,7 +293,17 @@
             try {
                 const response = await fetch('level_manifest.json');
                 if (response.ok) {
-                    levelManifest = await response.json();
+                    const manifest = await response.json();
+                    
+                    // Sort manifest to match menu order: 3x3, then 5x5, 10x10, 15x15
+                    const sizeOrder = [3, 5, 10, 15];
+                    levelManifest = manifest.sort((a, b) => {
+                        if (a.width !== b.width) {
+                            return sizeOrder.indexOf(a.width) - sizeOrder.indexOf(b.width);
+                        }
+                        // Secondary sort by ID or title to keep order stable
+                        return a.id.localeCompare(b.id);
+                    });
                 }
             } catch (e) { console.error("Could not load manifest", e); }
         }
@@ -328,7 +338,8 @@
                 localStorage.setItem('zen_completed', JSON.stringify(completed));
             }
             clearInProgress(id);
-            document.getElementById('share-controls').style.display = 'flex';
+            const controls = document.getElementById('share-controls');
+            if (controls) controls.style.display = 'flex';
         }
 
         function showMenu() {
@@ -428,6 +439,8 @@
             document.getElementById('game-view').style.display = 'flex';
             document.getElementById('level-id-display').innerText = `UID: ${key}`;
             document.getElementById('status').innerText = "Map the proximities";
+            
+            if (document.getElementById('share-controls')) document.getElementById('share-controls').style.display = 'none';
             if (document.getElementById('next-btn')) document.getElementById('next-btn').style.display = 'none';
             
             createGrid();
