@@ -524,12 +524,21 @@
             const idx = levelManifest.findIndex(l => l.id === currentLevel.id);
             if (idx !== -1 && idx < levelManifest.length - 1) {
                 const nextLevel = levelManifest[idx + 1];
-                // If it's a different sector, we have to zoom out first or handle the transition
+                
+                // If it's a different sector, only show notification IF the sector was actually just completed
                 if (nextLevel.sector !== currentLevel.sector) {
-                    exitGame();
-                    showModal("Sector Complete", "You have stabilized all nodes in this sector. Preparing for long-range jump.", "Acknowledge", () => {
-                        // Logic to find and zoom to the next sector could go here
-                    }, true);
+                    const sectorLevels = levelManifest.filter(l => l.sector === currentLevel.sector);
+                    const completed = getCompleted();
+                    const allDone = sectorLevels.every(l => completed.includes(l.id));
+
+                    if (allDone) {
+                        exitGame();
+                        showModal("Sector Stabilized", `All nodes in the ${currentLevel.sector} are now active. Long-range jump possible.`, "Acknowledge", () => {}, true);
+                    } else {
+                        // Just go to next level in the next sector silently or exit? 
+                        // User expectation for "Next" on planet 13 usually means "Next Planet".
+                        loadLevel(nextLevel.id);
+                    }
                 } else {
                     loadLevel(nextLevel.id);
                 }
