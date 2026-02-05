@@ -1006,5 +1006,317 @@
     "height": 8,
     "difficulty": "medium",
     "steps": 38
+  },
+  {
+    "id": "bf562c2eaa20",
+    "title": "Focal Array",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 34
+  },
+  {
+    "id": "c13a01e7f6ab",
+    "title": "Kinetic Mass",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 34
+  },
+  {
+    "id": "df72efe10753",
+    "title": "Orbital Cluster",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 35
+  },
+  {
+    "id": "89a4aff0f5ac",
+    "title": "Binary Node",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 34
+  },
+  {
+    "id": "94d50bc3a2f4",
+    "title": "Scalar Gradient",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 36
+  },
+  {
+    "id": "4aff8b8d1558",
+    "title": "Linear Shell",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 42
+  },
+  {
+    "id": "93219ffbfb8f",
+    "title": "Thermal Force",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 38
+  },
+  {
+    "id": "fb746889f70e",
+    "title": "Axial Wave",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 40
+  },
+  {
+    "id": "5bdf0275a121",
+    "title": "Lateral Gradient",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 29
+  },
+  {
+    "id": "b8f09a0cc4bd",
+    "title": "Binary Pulse",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 37
+  },
+  {
+    "id": "eb154f249143",
+    "title": "Nodal Array",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 37
+  },
+  {
+    "id": "583b5b924698",
+    "title": "Tidal Cluster",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 31
+  },
+  {
+    "id": "6e82a3103841",
+    "title": "Flux Pulse",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 41
+  },
+  {
+    "id": "c227065f574b",
+    "title": "Isotope Node",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 34
+  },
+  {
+    "id": "9aa94514e0fe",
+    "title": "Linear Cluster",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 36
+  },
+  {
+    "id": "46b5ec8a3896",
+    "title": "Focal Mass",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 36
+  },
+  {
+    "id": "5773e2a44c99",
+    "title": "Nodal Array",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 37
+  },
+  {
+    "id": "a6ae6603dfb4",
+    "title": "Vector Lattice",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 35
+  },
+  {
+    "id": "418084de3fe8",
+    "title": "Linear Vertex",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 42
+  },
+  {
+    "id": "63e9c4875355",
+    "title": "Vector Mass",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 36
+  },
+  {
+    "id": "f9b4df1bd4d3",
+    "title": "Linear Array",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 40
+  },
+  {
+    "id": "047d520f7980",
+    "title": "Scalar Gradient",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 35
+  },
+  {
+    "id": "f36c13d2e3fe",
+    "title": "Vector Matrix",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 36
+  },
+  {
+    "id": "67269b640724",
+    "title": "Static Node",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 33
+  },
+  {
+    "id": "fde95902bcd1",
+    "title": "Scalar Pulse",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 36
+  },
+  {
+    "id": "a6f6b547c384",
+    "title": "Lateral Field",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 34
+  },
+  {
+    "id": "73d9b65b4fdb",
+    "title": "Flux Force",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 44
+  },
+  {
+    "id": "095b95e67083",
+    "title": "Axial Mass",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 34
+  },
+  {
+    "id": "64f6fb1e51dc",
+    "title": "Lateral Vertex",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 37
+  },
+  {
+    "id": "46b53e10e133",
+    "title": "Nodal Array",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 36
+  },
+  {
+    "id": "9f08faedc540",
+    "title": "Kinetic Point",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 39
+  },
+  {
+    "id": "2c00e7fa3e22",
+    "title": "Focal Strata",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 38
+  },
+  {
+    "id": "215663febc26",
+    "title": "Kinetic Point",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 38
+  },
+  {
+    "id": "eea4da846923",
+    "title": "Radial Node",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 34
+  },
+  {
+    "id": "afb19c686e6a",
+    "title": "Isotope Node",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 36
+  },
+  {
+    "id": "23e20d13ec86",
+    "title": "Scalar Core",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 36
+  },
+  {
+    "id": "b51bfa72b56d",
+    "title": "Scalar Strata",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 31
+  },
+  {
+    "id": "c4fb25c0529f",
+    "title": "Scalar Array",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 35
+  },
+  {
+    "id": "88a9d6b9e013",
+    "title": "Linear Field",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 39
   }
 ]

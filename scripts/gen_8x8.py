@@ -82,9 +82,9 @@ if __name__ == "__main__":
     # Filter out 10x10 and 15x15
     new_manifest = [l for l in manifest if l['width'] not in [10, 15]]
     
-    # Generate more 8x8 levels (up to 20 total)
+    # Generate more 8x8 levels (up to 59 total to match 5x5 set)
     generated_count = len([l for l in new_manifest if l['width'] == 8])
-    while generated_count < 20:
+    while generated_count < 59:
         l = generate_level(8, 8)
         if l:
             # Check for duplicates in manifest
