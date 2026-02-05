@@ -610,8 +610,13 @@
             document.getElementById('undo-btn').style.display = 'flex';
             document.getElementById('reset-btn').style.display = 'flex';
             
-            const saved = getInProgress(key) || getState(key);
-            state = saved ? saved : Array(currentLevel.height).fill().map(() => Array(currentLevel.width).fill(0));
+            const completed = getCompleted();
+            if (completed.includes(key) && currentLevel.solution) {
+                state = JSON.parse(JSON.stringify(currentLevel.solution));
+            } else {
+                const saved = getInProgress(key) || getState(key);
+                state = saved ? saved : Array(currentLevel.height).fill().map(() => Array(currentLevel.width).fill(0));
+            }
             history = [];
 
             const urlParams = new URLSearchParams(window.location.search);
