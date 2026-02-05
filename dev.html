@@ -152,6 +152,9 @@
         .planet-wrapper.completed .planet-sphere {
             box-shadow: inset -8px -8px 15px rgba(0,0,0,0.6), 0 0 0 2px var(--bg-color), 0 0 0 6px var(--accent-green);
         }
+        .planet-wrapper.in-progress .planet-sphere {
+            box-shadow: inset -8px -8px 15px rgba(0,0,0,0.6), 0 0 0 2px var(--bg-color), 0 0 0 3px #fd7e14;
+        }
 
         .type-rocky { background: linear-gradient(135deg, #a8a095, #5d5751); }
         .type-water { background: linear-gradient(135deg, #4dabf7, #1864ab); }
@@ -363,7 +366,13 @@
                 const wrapper = document.createElement('div');
                 wrapper.className = 'planet-wrapper';
                 wrapper.setAttribute('data-id', l.id);
+                
+                const states = getStates();
+                const levelState = states[l.id];
+                const hasProgress = levelState && levelState.flat().some(cell => cell === 1);
+
                 if (completed.includes(l.id)) wrapper.classList.add('completed');
+                else if (hasProgress) wrapper.classList.add('in-progress');
 
                 const physSize = 12 + (l.width * 2.2); 
                 const type = pTypes[i % pTypes.length];
@@ -452,6 +461,18 @@
             state[y][x] = state[y][x] === 0 ? 1 : 0;
             overridePending = overridePending.filter(p => p.x !== x || p.y !== y);
             saveState(currentLevel.id, state);
+            
+            // Visually mark as in-progress on the map if not already done
+            const completed = getCompleted();
+            if (!completed.includes(currentLevel.id)) {
+                const p = document.querySelector(`.planet-wrapper[data-id="${currentLevel.id}"]`);
+                if (p) {
+                    const hasProgress = state.flat().some(cell => cell === 1);
+                    if (hasProgress) p.classList.add('in-progress');
+                    else p.classList.remove('in-progress');
+                }
+            }
+
             updateUI();
             checkWin();
         }
@@ -511,8 +532,12 @@
             document.getElementById('next-btn').style.display = 'block';
             document.getElementById('next-btn').classList.add('glow');
             document.getElementById('override-btn').style.display = 'none';
+            
             const p = document.querySelector(`.planet-wrapper[data-id="${id}"]`);
-            if (p) p.classList.add('completed');
+            if (p) {
+                p.classList.remove('in-progress');
+                p.classList.add('completed');
+            }
             
             // Check if there is a next level in the manifest
             const idx = levelManifest.findIndex(l => l.id === id);
