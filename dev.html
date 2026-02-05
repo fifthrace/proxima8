@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proxima 8 - Galactic Chart DEV</title>
+    <title>Proxima 8 - Star Chart DEV</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b0e14">
+    <link rel="icon" type="image/png" href="assets/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
     <style>
         :root {
             --bg-color: #0b0e14;
@@ -101,23 +105,23 @@
         .status-scanning { color: #fd7e14; }
         .status-stable { color: #40c057; }
 
-        /* Scattered Organic Constellation Layout */
-        #sector-alpha { top: 12%; left: 25%; }
-        #sector-void { top: 22%; left: 65%; }
-        #sector-azure { top: 40%; left: 15%; }
-        #sector-neutron { top: 45%; left: 50%; transform: translateX(-50%); }
-        #sector-obsidian { top: 55%; left: 80%; transform: translateX(-100%); }
-        #sector-emerald { top: 75%; left: 35%; }
-        #sector-solar { top: 82%; left: 70%; transform: translateX(-100%); }
+        /* The Great Spiral Layout - Galactic View */
+        #sector-alpha    { top: 45%; left: 45%; } 
+        #sector-void     { top: 32%; left: 58%; }
+        #sector-azure    { top: 22%; left: 42%; }
+        #sector-obsidian { top: 35%; left: 22%; }
+        #sector-emerald  { top: 62%; left: 25%; }
+        #sector-solar    { top: 78%; left: 52%; }
+        #sector-neutron  { top: 65%; left: 78%; }
 
-        @media (orientation: landscape) and (max-height: 600px) {
-            #sector-alpha { top: 15%; left: 10%; }
-            #sector-void { top: 15%; left: 40%; }
-            #sector-azure { top: 15%; left: 70%; }
-            #sector-neutron { top: 50%; left: 85%; transform: translate(-100%, -50%); }
-            #sector-obsidian { top: 65%; left: 15%; }
-            #sector-emerald { top: 65%; left: 40%; }
-            #sector-solar { top: 65%; left: 65%; }
+        @media (max-width: 600px) {
+            #sector-alpha    { top: 45%; left: 45%; }
+            #sector-void     { top: 32%; left: 65%; }
+            #sector-azure    { top: 20%; left: 45%; }
+            #sector-obsidian { top: 35%; left: 15%; }
+            #sector-emerald  { top: 62%; left: 15%; }
+            #sector-solar    { top: 80%; left: 45%; }
+            #sector-neutron  { top: 65%; left: 80%; }
         }
 
         #system-view {
@@ -254,54 +258,33 @@
 <body>
     <div id="viewport" onclick="closeAllPanels()">
         <div id="universe">
-            <div id="sector-alpha" class="cluster" onclick="zoomTo(0, 35, 'Alpha Sector', '#fab005')">
+            <div id="sector-alpha" class="cluster" onclick="zoomTo(0, 0, 'Alpha Sector', '#fab005')">
                 <div class="cluster-core"></div>
-                <div class="cluster-label">
-                    <span class="cluster-name">Alpha Sector</span>
-                    <span id="status-Alpha-Sector" class="cluster-status"></span>
-                </div>
+                <div class="cluster-label"><span class="cluster-name">Alpha Sector</span><span id="status-Alpha-Sector" class="cluster-status"></span></div>
             </div>
-            <div id="sector-void" class="cluster" onclick="zoomTo(30, 15, 'Crimson Void', '#fa5252')">
+            <div id="sector-void" class="cluster" onclick="zoomTo(-13, 18, 'Crimson Void', '#fa5252')">
                 <div class="cluster-core" style="background: #fa5252;"></div>
-                <div class="cluster-label">
-                    <span class="cluster-name">Crimson Void</span>
-                    <span id="status-Crimson-Void" class="cluster-status"></span>
-                </div>
+                <div class="cluster-label"><span class="cluster-name">Crimson Void</span><span id="status-Crimson-Void" class="cluster-status"></span></div>
             </div>
-            <div id="sector-azure" class="cluster" onclick="zoomTo(-30, 15, 'Azure Reach', '#1c7ed6')">
+            <div id="sector-azure" class="cluster" onclick="zoomTo(8, 28, 'Azure Reach', '#1c7ed6')">
                 <div class="cluster-core" style="background: #1c7ed6;"></div>
-                <div class="cluster-label">
-                    <span class="cluster-name">Azure Reach</span>
-                    <span id="status-Azure-Reach" class="cluster-status"></span>
-                </div>
+                <div class="cluster-label"><span class="cluster-name">Azure Reach</span><span id="status-Azure-Reach" class="cluster-status"></span></div>
             </div>
-            <div id="sector-obsidian" class="cluster" onclick="zoomTo(0, -5, 'Obsidian Gate', '#862e9c')">
+            <div id="sector-obsidian" class="cluster" onclick="zoomTo(28, 15, 'Obsidian Gate', '#862e9c')">
                 <div class="cluster-core" style="background: #862e9c;"></div>
-                <div class="cluster-label">
-                    <span class="cluster-name">Obsidian Gate</span>
-                    <span id="status-Obsidian-Gate" class="cluster-status"></span>
-                </div>
+                <div class="cluster-label"><span class="cluster-name">Obsidian Gate</span><span id="status-Obsidian-Gate" class="cluster-status"></span></div>
             </div>
-            <div id="sector-emerald" class="cluster" onclick="zoomTo(30, -25, 'Emerald Nebula', '#40c057')">
+            <div id="sector-emerald" class="cluster" onclick="zoomTo(25, -12, 'Emerald Nebula', '#40c057')">
                 <div class="cluster-core" style="background: #40c057;"></div>
-                <div class="cluster-label">
-                    <span class="cluster-name">Emerald Nebula</span>
-                    <span id="status-Emerald-Nebula" class="cluster-status"></span>
-                </div>
+                <div class="cluster-label"><span class="cluster-name">Emerald Nebula</span><span id="status-Emerald-Nebula" class="cluster-status"></span></div>
             </div>
-            <div id="sector-solar" class="cluster" onclick="zoomTo(-30, -25, 'Solar Forge', '#fd7e14')">
+            <div id="sector-solar" class="cluster" onclick="zoomTo(-2, -33, 'Solar Forge', '#fd7e14')">
                 <div class="cluster-core" style="background: #fd7e14;"></div>
-                <div class="cluster-label">
-                    <span class="cluster-name">Solar Forge</span>
-                    <span id="status-Solar-Forge" class="cluster-status"></span>
-                </div>
+                <div class="cluster-label"><span class="cluster-name">Solar Forge</span><span id="status-Solar-Forge" class="cluster-status"></span></div>
             </div>
-            <div id="sector-neutron" class="cluster" onclick="zoomTo(0, -40, 'Neutron Star', '#e9ecef')">
+            <div id="sector-neutron" class="cluster" onclick="zoomTo(-33, -20, 'Neutron Star', '#e9ecef')">
                 <div class="cluster-core" style="background: #e9ecef;"></div>
-                <div class="cluster-label">
-                    <span class="cluster-name">Neutron Star</span>
-                    <span id="status-Neutron-Star" class="cluster-status"></span>
-                </div>
+                <div class="cluster-label"><span class="cluster-name">Neutron Star</span><span id="status-Neutron-Star" class="cluster-status"></span></div>
             </div>
         </div>
 
@@ -342,7 +325,6 @@
         <p style="font-style: italic; opacity: 0.8; font-size: 13px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 15px;">
             For eons, the Proxima expanse was connected by vast sub-space beacons. Then, the Great Static hit, plunging the systems into darkness. As a Pilot of the Reclamation Fleet, you must travel from system to system, identifying original coordinate patterns to stabilize the network.
         </p>
-        
         <ul style="padding-left: 0; list-style: none; margin-bottom: 20px;">
             <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
                 <div style="width: 20px; height: 20px; background: var(--cell-bg); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text-color); font-weight: bold; border: 1px solid rgba(255,255,255,0.1);">3</div>
@@ -369,7 +351,6 @@
                 <span><strong>Under-saturated:</strong> Needs more active nodes. Presence required.</span>
             </li>
         </ul>
-        
         <p style="font-size: 12px; opacity: 0.7;">Stabilizing all nodes in a sector will clear the static and lock the trajectory, allowing for deeper exploration.</p>
     </div>
 
@@ -425,6 +406,11 @@
             if (isHidden) document.getElementById('settings-panel').style.display = 'none';
         }
 
+        function closeAllPanels() {
+            document.getElementById('settings-panel').style.display = 'none';
+            document.getElementById('help-panel').style.display = 'none';
+        }
+
         function showModal(title, body, confirmText, onConfirm, hideCancel = false) {
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-body').innerText = body;
@@ -437,15 +423,12 @@
 
         function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
 
-        function closeAllPanels() {
-            document.getElementById('settings-panel').style.display = 'none';
-            document.getElementById('help-panel').style.display = 'none';
+        function zoomTo(x, y, name, color) {
+            window.history.pushState({view: 'system', sector: name, x: x, y: y, color: color}, '', `?sector=${name.replace(/ /g, '_')}`);
+            performZoomIn(x, y, name, color);
         }
 
-        function zoomTo(x, y, name, color) {
-            // Push state so browser back button works
-            window.history.pushState({view: 'system', sector: name}, '', `?sector=${name.replace(/ /g, '_')}`);
-            
+        function performZoomIn(x, y, name, color) {
             const isLandscape = window.innerWidth > window.innerHeight;
             document.body.style.setProperty('--zoom-x', (isLandscape ? x*0.8 : x) + '%');
             document.body.style.setProperty('--zoom-y', (isLandscape ? y*0.5 : y) + '%');
@@ -460,15 +443,15 @@
             container.innerHTML = '';
             
             const completed = getCompleted();
+            const states = getStates();
             const sectorLevels = levelManifest.filter(l => l.sector === name);
-            const baseR = Math.min(window.innerWidth, window.innerHeight) * 0.22;
+            const baseR = 160;
 
             sectorLevels.forEach((l, i) => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'planet-wrapper';
                 wrapper.setAttribute('data-id', l.id);
                 
-                const states = getStates();
                 const levelState = states[l.id];
                 const hasProgress = levelState && levelState.flat().some(cell => cell === 1);
 
@@ -478,9 +461,8 @@
                 const physSize = 12 + (l.width * 2.2); 
                 const type = pTypes[i % pTypes.length];
                 const angle = (i * (360 / sectorLevels.length)) * (Math.PI / 180);
-                const r = baseR + (i * 8); 
                 
-                wrapper.style.transform = `translate(${Math.cos(angle) * r}px, ${Math.sin(angle) * r}px)`;
+                wrapper.style.transform = `translate(${Math.cos(angle) * baseR}px, ${Math.sin(angle) * baseR}px)`;
                 wrapper.innerHTML = `
                     <div class="planet-sphere ${type}" style="width: ${physSize}px; height: ${physSize}px;"></div>
                     <div class="planet-label">${l.title}</div>
@@ -505,10 +487,6 @@
             updateSectorStatus();
         }
 
-        function performExitGame() {
-            document.getElementById('game-overlay').style.display = 'none'; 
-        }
-
         function exitGame() { 
             if (window.history.state && window.history.state.view === 'game') {
                 window.history.back();
@@ -517,10 +495,16 @@
             }
         }
 
-        async function loadLevel(id) {
-            // Push state for level view
-            window.history.pushState({view: 'game', id: id}, '', `?node=${id}`);
+        function performExitGame() {
+            document.getElementById('game-overlay').style.display = 'none'; 
+        }
 
+        async function loadLevel(id) {
+            window.history.pushState({view: 'game', id: id}, '', `?node=${id}`);
+            performLoadLevel(id);
+        }
+
+        async function performLoadLevel(id) {
             let data = levelsCache[id];
             if (!data) {
                 const res = await fetch(`levels/${id}.json`);
@@ -530,11 +514,8 @@
             }
             currentLevel = data;
 
-            // Ensure the current level has its sector assigned from the manifest
             const manifestEntry = levelManifest.find(l => l.id === id);
-            if (manifestEntry) {
-                currentLevel.sector = manifestEntry.sector;
-            }
+            if (manifestEntry) currentLevel.sector = manifestEntry.sector;
             
             const completed = getCompleted();
             if (completed.includes(id)) {
@@ -548,13 +529,8 @@
             document.getElementById('game-overlay').style.display = 'flex';
             document.getElementById('share-btn').style.display = completed.includes(id) ? 'block' : 'none';
             
-            // Next button logic restricted to current sector
             const sectorLevels = levelManifest.filter(l => l.sector === currentLevel.sector);
-            const localIdx = sectorLevels.findIndex(l => l.id === id);
-            const hasNextInSector = (localIdx !== -1 && localIdx < sectorLevels.length - 1);
-            
-            // Show Next button if there is another level in this sector, 
-            // OR if this is the last level (it will act as a 'Finish Sector' button)
+            const hasNextInSector = true; // We loop now
             document.getElementById('next-btn').style.display = 'block';
             
             if (completed.includes(id)) {
@@ -593,17 +569,14 @@
             overridePending = overridePending.filter(p => p.x !== x || p.y !== y);
             saveState(currentLevel.id, state);
             
-            // Visually mark as in-progress on the map if not already done
             const completed = getCompleted();
             if (!completed.includes(currentLevel.id)) {
                 const p = document.querySelector(`.planet-wrapper[data-id="${currentLevel.id}"]`);
                 if (p) {
                     const hasProgress = state.flat().some(cell => cell === 1);
-                    if (hasProgress) p.classList.add('in-progress');
-                    else p.classList.remove('in-progress');
+                    p.classList.toggle('in-progress', hasProgress);
                 }
             }
-
             updateUI();
             checkWin();
         }
@@ -670,53 +643,23 @@
                 p.classList.add('completed');
             }
 
-            // Check for entire sector completion
             if (currentLevel && currentLevel.sector) {
                 const sectorLevels = levelManifest.filter(l => l.sector === currentLevel.sector);
-                const allSectorDone = sectorLevels.every(l => done.includes(l.id));
-                if (allSectorDone) {
+                if (sectorLevels.every(l => done.includes(l.id))) {
                     setTimeout(() => {
-                        showModal("Sector Stabilized", `All trajectories in the ${currentLevel.sector} are now active.`, "Acknowledge", () => {
-                            exitGame();
-                        }, true);
+                        showModal("Sector Stabilized", `All nodes in ${currentLevel.sector} active.`, "Acknowledge", () => { exitGame(); }, true);
                     }, 500);
                 }
             }
-            
-            // Check if there is a next level in the manifest
-            const idx = levelManifest.findIndex(l => l.id === id);
-            if (idx === -1 || idx >= levelManifest.length - 1) {
-                document.getElementById('next-btn').style.display = 'none';
-            }
         }
 
-        function exitGame() { document.getElementById('game-overlay').style.display = 'none'; }
-
         function goToNext() {
-            if (!currentLevel || !levelManifest.length) return;
-            
-            // 1. Get ALL levels in the current sector in their manifest order
+            if (!currentLevel) return;
             const sectorLevels = levelManifest.filter(l => l.sector === currentLevel.sector);
-            if (!sectorLevels.length) {
-                console.error("Sector data missing for", currentLevel.sector);
-                exitGame();
-                return;
-            }
-            
-            // 2. Find where we are in that 1-13 sequence
             const localIdx = sectorLevels.findIndex(l => l.id === currentLevel.id);
-            console.log(`Current: ${currentLevel.id} (Index: ${localIdx} of ${sectorLevels.length})`);
-            
-            if (localIdx !== -1 && localIdx < sectorLevels.length - 1) {
-                // 3. Progress to the next ID in the JSON table
-                const nextId = sectorLevels[localIdx + 1].id;
-                console.log("Jumping to next node:", nextId);
+            if (localIdx !== -1) {
+                const nextId = sectorLevels[(localIdx + 1) % sectorLevels.length].id;
                 loadLevel(nextId);
-            } else {
-                // 4. We are on the 13th planet, loop back to the 1st
-                const firstId = sectorLevels[0].id;
-                console.log("Looping sector back to start:", firstId);
-                loadLevel(firstId);
             }
         }
 
@@ -729,15 +672,13 @@
         }
 
         function resetGame() {
-            showModal("Reset Trajectory", "Purge all coordinates for this node?", "Purge", () => {
+            showModal("Reset Trajectory", "Purge all coordinates?", "Purge", () => {
                 state = Array(currentLevel.height).fill().map(() => Array(currentLevel.width).fill(0));
                 saveState(currentLevel.id, state);
                 const done = getCompleted().filter(id => id !== currentLevel.id);
                 localStorage.setItem('zen_completed', JSON.stringify(done));
-                // Update planet visually
                 const p = document.querySelector(`.planet-wrapper[data-id="${currentLevel.id}"]`);
-                if (p) p.classList.remove('completed');
-                document.getElementById('next-btn').style.display = 'none';
+                if (p) p.classList.remove('completed', 'in-progress');
                 document.getElementById('next-btn').classList.remove('glow');
                 document.getElementById('override-btn').style.display = 'block';
                 updateUI();
@@ -790,43 +731,15 @@
             reader.readAsText(file);
         }
 
-        function clearAllProgress() {
-            showModal("Purge All Data", "This will erase all sectors and trajectories.", "Purge", () => {
-                localStorage.clear();
-                location.reload();
-            });
-        }
-
-        function updateSectorStatus() {
-            const completed = getCompleted();
-            const states = getStates();
-            const sectors = ['Alpha Sector', 'Crimson Void', 'Azure Reach', 'Obsidian Gate', 'Emerald Nebula', 'Solar Forge', 'Neutron Star'];
-            
-            sectors.forEach(name => {
-                const idSafe = name.replace(' ', '-');
-                const el = document.getElementById(`status-${idSafe}`);
-                if (!el) return;
-
-                const sectorLevels = levelManifest.filter(l => l.sector === name);
-                const doneCount = sectorLevels.filter(l => completed.includes(l.id)).length;
-                const startedCount = sectorLevels.filter(l => states[l.id] && states[l.id].flat().some(c => c === 1)).length;
-
-                if (doneCount === sectorLevels.length && sectorLevels.length > 0) {
-                    el.innerText = "[Stable]";
-                    el.className = "cluster-status status-stable";
-                } else if (doneCount > 0 || startedCount > 0) {
-                    el.innerText = "[Scanning...]";
-                    el.className = "cluster-status status-scanning";
-                } else {
-                    el.innerText = "";
-                }
-            });
-        }
-
         function onPopState(event) {
-            performExitGame();
-            if (!event.state || event.state.view !== 'system') {
+            if (!event.state) {
+                performExitGame();
                 performZoomOut();
+            } else if (event.state.view === 'system') {
+                performExitGame();
+                performZoomIn(event.state.x, event.state.y, event.state.sector, event.state.color);
+            } else if (event.state.view === 'game') {
+                performLoadLevel(event.state.id);
             }
         }
 
@@ -835,6 +748,41 @@
             const res = await fetch('level_manifest.json');
             levelManifest = await res.json();
             updateSectorStatus();
+            
+            // Handle direct deep links
+            const params = new URLSearchParams(window.location.search);
+            const node = params.get('node');
+            if (node) {
+                loadLevel(node);
+            } else {
+                const sector = params.get('sector');
+                if (sector) {
+                    const name = sector.replace(/_/g, ' ');
+                    const s = document.querySelector(`.cluster[id*="${name.split(' ')[0].toLowerCase()}"]`);
+                    // This is limited without the exact coords in the DOM, 
+                    // but for dev we'll just show the map for now.
+                }
+            }
+        }
+
+        function updateSectorStatus() {
+            const completed = getCompleted();
+            const states = getStates();
+            sectorNames.forEach(name => {
+                const idSafe = name.replace(' ', '-');
+                const el = document.getElementById(`status-${idSafe}`);
+                if (!el) return;
+                const sectorLevels = levelManifest.filter(l => l.sector === name);
+                const doneCount = sectorLevels.filter(l => completed.includes(l.id)).length;
+                const startedCount = sectorLevels.filter(l => states[l.id] && states[l.id].flat().some(c => c === 1)).length;
+                if (doneCount === sectorLevels.length && sectorLevels.length > 0) {
+                    el.innerText = "[Stable]";
+                    el.className = "cluster-status status-stable";
+                } else if (doneCount > 0 || startedCount > 0) {
+                    el.innerText = "[Scanning...]";
+                    el.className = "cluster-status status-scanning";
+                } else el.innerText = "";
+            });
         }
 
         init();
