@@ -193,24 +193,24 @@
         }
 
         #grid {
-            display: grid; grid-gap: 8px;
-            background: var(--grid-bg); padding: 15px;
+            display: grid; grid-gap: 6px;
+            background: var(--grid-bg); padding: 10px;
             border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            width: fit-content; max-width: 95vw; margin: 0 auto; box-sizing: border-box;
+            width: fit-content; max-width: 98vw; margin: 0 auto; box-sizing: border-box;
         }
         .cell {
             --vw-unit: min(100vw, 500px);
-            --paddings: 80px;
-            --gaps: calc(8px * (var(--grid-width, 8) - 1));
+            --paddings: 20px;
+            --gaps: calc(6px * (var(--grid-width, 8) - 1));
             --cell-w: calc((var(--vw-unit) - var(--paddings) - var(--gaps)) / var(--grid-width, 8));
             
-            width: min(var(--cell-w), 45px);
-            height: min(var(--cell-w), 45px);
+            width: min(var(--cell-w), 60px);
+            height: min(var(--cell-w), 60px);
             aspect-ratio: 1 / 1; border-radius: 6px; display: flex; align-items: center; justify-content: center;
             font-weight: bold; cursor: pointer; transition: all 0.2s ease;
-            background-color: var(--cell-bg); border: 3px solid transparent;
-            user-select: none; background-clip: padding-box; padding: 2px; color: var(--text-color);
-            font-size: clamp(8px, 3vw, 14px);
+            background-color: var(--cell-bg); border: 2px solid transparent;
+            user-select: none; background-clip: padding-box; padding: 0px; color: var(--text-color);
+            font-size: clamp(8px, 3.5vw, 18px);
         }
         .cell.active { background-color: var(--accent-blue) !important; color: white !important; box-shadow: 0 2px 8px rgba(77, 171, 247, 0.4); background-clip: content-box; }
         .cell.correct { border-color: var(--accent-green); box-shadow: inset 0 0 10px rgba(64, 192, 87, 0.5); }
