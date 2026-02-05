@@ -381,12 +381,12 @@
 
     <div id="game-view" style="display: none; flex-direction: column; align-items: center;">
         <div id="grid"></div>
-        <div id="status">Map the proximities</div>
+        <div id="status">Map the Sector</div>
         <div id="action-row" style="margin-top: 15px; display: flex; gap: 10px;">
             <div id="share-controls" style="display: none; gap: 10px;">
                 <button onclick="shareResult()" style="padding: 8px 16px; border-radius: 20px; border: 1px solid #4dabf7; background: white; color: #4dabf7; cursor: pointer; font-weight: 600;">Share Mapping</button>
             </div>
-            <button id="override-btn" onclick="requestOverride()" style="padding: 8px 16px; border-radius: 20px; border: 1px solid #fab005; background: white; color: #fab005; cursor: pointer; font-weight: 600;">Neural Override (∞)</button>
+            <button id="override-btn" onclick="requestOverride()" style="padding: 8px 16px; border-radius: 20px; border: 1px solid #fab005; background: white; color: #fab005; cursor: pointer; font-weight: 600;">Ion Scan (∞)</button>
         </div>
         <div id="level-id-display" onclick="copyUID()" style="cursor: pointer; font-size: 10px; color: #ccc; margin-top: 10px; font-family: monospace;" title="Click to copy UID"></div>
     </div>
@@ -594,6 +594,8 @@
             // Add yellow glow to the Next button
             const nextBtn = document.getElementById('next-nav-btn');
             if (nextBtn) nextBtn.classList.add('glow');
+
+            document.getElementById('status').innerText = "Trajectory Locked";
         }
 
         function showMenu() {
@@ -705,7 +707,7 @@
             document.getElementById('level-menu').style.display = 'none';
             document.getElementById('game-view').style.display = 'flex';
             document.getElementById('level-id-display').innerText = `UID: ${key}`;
-            document.getElementById('status').innerText = "Map the proximities";
+            document.getElementById('status').innerText = "Map the Sector";
             
             if (document.getElementById('share-controls')) document.getElementById('share-controls').style.display = 'none';
             if (document.getElementById('next-nav-btn')) {
@@ -827,8 +829,8 @@
             if (isActuallySolved) {
                 console.log("LEVEL SOLVED", { id: currentLevel.id, totalActive, solved });
                 const statusEl = document.getElementById('status');
-                if (statusEl.innerText !== "Origin Identified") {
-                    statusEl.innerText = "Origin Identified";
+                if (statusEl.innerText !== "Trajectory Locked") {
+                    statusEl.innerText = "Trajectory Locked";
                     if (!silent) {
                         confetti({
                             particleCount: 150,
@@ -840,9 +842,9 @@
                 }
                 markCompleted(currentLevel.id);
             } else if (!silent) {
-                document.getElementById('status').innerText = "Map the proximities";
+                document.getElementById('status').innerText = "Map the Sector";
             } else if (silent && solved && totalActive === 0) {
-                 document.getElementById('status').innerText = "Map the proximities";
+                 document.getElementById('status').innerText = "Map the Sector";
             }
         }
 
