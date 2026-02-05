@@ -312,8 +312,8 @@
         </div>
 
         <button id="back-to-galaxy" onclick="zoomOut()" style="display:none;">← Galactic Chart</button>
-        <div id="help-toggle" style="position: absolute; top: 30px; right: 70px; cursor: pointer; font-size: 20px; opacity: 0.4; color: var(--text-color); z-index: 100;" onclick="toggleHelp()">?</div>
-        <div id="settings-toggle" onclick="toggleSettings()">⚙</div>
+        <div id="help-toggle" style="position: absolute; top: 30px; right: 70px; cursor: pointer; font-size: 20px; opacity: 0.4; color: var(--text-color); z-index: 100;" onclick="event.stopPropagation(); toggleHelp()">?</div>
+        <div id="settings-toggle" onclick="event.stopPropagation(); toggleSettings()">⚙</div>
     </div>
 
     <div id="game-overlay" onclick="closeAllPanels()">
