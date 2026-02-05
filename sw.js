@@ -1,4 +1,4 @@
-const CACHE_NAME = 'proxima8-v9';
+const CACHE_NAME = 'proxima8-v10';
 const ASSETS = [
   './',
   './index.html',

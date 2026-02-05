@@ -878,5 +878,133 @@
     "height": 8,
     "difficulty": "medium",
     "steps": 41
+  },
+  {
+    "id": "9d2108cdae78",
+    "title": "Orbital Matrix",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 37
+  },
+  {
+    "id": "b3916f352469",
+    "title": "Flux Matrix",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 30
+  },
+  {
+    "id": "d6e92809f7ab",
+    "title": "Axial Field",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 40
+  },
+  {
+    "id": "c88793f570a6",
+    "title": "Isotope Node",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 34
+  },
+  {
+    "id": "556c9d5db73a",
+    "title": "Axial Field",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 36
+  },
+  {
+    "id": "5bbe89819bec",
+    "title": "Isotope Node",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 36
+  },
+  {
+    "id": "ece07dde4936",
+    "title": "Vector Point",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 35
+  },
+  {
+    "id": "a283b8698603",
+    "title": "Kinetic Matrix",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 42
+  },
+  {
+    "id": "25435e88b790",
+    "title": "Axial Pulse",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 33
+  },
+  {
+    "id": "fc42f7ac6a04",
+    "title": "Kinetic Strata",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 42
+  },
+  {
+    "id": "bf5363134270",
+    "title": "Tidal Vertex",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 32
+  },
+  {
+    "id": "b4733bc5d3cb",
+    "title": "Flux Node",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 39
+  },
+  {
+    "id": "38271dbb45a0",
+    "title": "Flux Pulse",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 32
+  },
+  {
+    "id": "ea3a39802a31",
+    "title": "Lateral Gradient",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 32
+  },
+  {
+    "id": "89af6b384020",
+    "title": "Thermal Point",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 34
+  },
+  {
+    "id": "39a73147b43b",
+    "title": "Flux Field",
+    "width": 8,
+    "height": 8,
+    "difficulty": "medium",
+    "steps": 38
   }
 ]
