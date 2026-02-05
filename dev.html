@@ -544,6 +544,19 @@
                 p.classList.remove('in-progress');
                 p.classList.add('completed');
             }
+
+            // Check for entire sector completion
+            if (currentLevel && currentLevel.sector) {
+                const sectorLevels = levelManifest.filter(l => l.sector === currentLevel.sector);
+                const allSectorDone = sectorLevels.every(l => done.includes(l.id));
+                if (allSectorDone) {
+                    setTimeout(() => {
+                        showModal("Sector Stabilized", `All trajectories in the ${currentLevel.sector} are now active.`, "Acknowledge", () => {
+                            exitGame();
+                        }, true);
+                    }, 500);
+                }
+            }
             
             // Check if there is a next level in the manifest
             const idx = levelManifest.findIndex(l => l.id === id);
