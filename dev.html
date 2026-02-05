@@ -105,23 +105,24 @@
         .status-scanning { color: #fd7e14; }
         .status-stable { color: #40c057; }
 
-        /* The Great Spiral Layout - Galactic View */
-        #sector-alpha    { top: 45%; left: 45%; } 
-        #sector-void     { top: 32%; left: 58%; }
-        #sector-azure    { top: 22%; left: 42%; }
-        #sector-obsidian { top: 35%; left: 22%; }
-        #sector-emerald  { top: 62%; left: 25%; }
-        #sector-solar    { top: 78%; left: 52%; }
-        #sector-neutron  { top: 65%; left: 78%; }
+        /* The Great Spiral Layout - High Precision Fixed Points */
+        #sector-alpha    { top: 48%; left: 48%; transform: translate(-50%, -50%); } 
+        #sector-void     { top: 35%; left: 65%; transform: translate(-50%, -50%); }
+        #sector-azure    { top: 18%; left: 50%; transform: translate(-50%, -50%); }
+        #sector-obsidian { top: 30%; left: 25%; transform: translate(-50%, -50%); }
+        #sector-emerald  { top: 60%; left: 20%; transform: translate(-50%, -50%); }
+        #sector-solar    { top: 80%; left: 45%; transform: translate(-50%, -50%); }
+        #sector-neutron  { top: 70%; left: 75%; transform: translate(-50%, -50%); }
 
         @media (max-width: 600px) {
-            #sector-alpha    { top: 45%; left: 45%; }
-            #sector-void     { top: 32%; left: 65%; }
-            #sector-azure    { top: 20%; left: 45%; }
+            /* Tighten spiral specifically for portrait mobile aspect ratios */
+            #sector-alpha    { top: 48%; left: 48%; }
+            #sector-void     { top: 38%; left: 75%; }
+            #sector-azure    { top: 20%; left: 55%; }
             #sector-obsidian { top: 35%; left: 15%; }
-            #sector-emerald  { top: 62%; left: 15%; }
-            #sector-solar    { top: 80%; left: 45%; }
-            #sector-neutron  { top: 65%; left: 80%; }
+            #sector-emerald  { top: 65%; left: 15%; }
+            #sector-solar    { top: 85%; left: 45%; }
+            #sector-neutron  { top: 70%; left: 80%; }
         }
 
         #system-view {
