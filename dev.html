@@ -193,9 +193,25 @@
         .text-btn { cursor: pointer; opacity: 0.4; transition: opacity 0.2s; display: flex; align-items: center; gap: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 13px; }
         .text-btn:hover { opacity: 1; }
         
-        #back-to-galaxy, #abort-btn { position: absolute; top: 30px; left: 30px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 20px; cursor: pointer; text-transform: uppercase; z-index: 100; font-size: 11px; letter-spacing: 1px; }
+        #back-to-galaxy { position: absolute; top: 30px; left: 30px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 20px; cursor: pointer; text-transform: uppercase; z-index: 100; font-size: 11px; letter-spacing: 1px; }
         #settings-toggle { cursor: pointer; font-size: 20px; position: absolute; top: 30px; right: 30px; opacity: 0.4; transition: opacity 0.2s; color: var(--text-color); z-index: 100; }
-        #abort-btn { right: 30px; left: auto; background: #fa5252; border: none; }
+
+        @media (max-width: 600px) {
+            .btn-text { display: none; }
+            .text-btn { font-size: 18px; }
+        }
+
+        #next-btn.glow {
+            opacity: 1;
+            color: #fab005;
+            text-shadow: 0 0 8px rgba(250, 176, 5, 0.6);
+            animation: pulse-glow 2s infinite;
+        }
+        @keyframes pulse-glow {
+            0% { text-shadow: 0 0 5px rgba(250, 176, 5, 0.4); }
+            50% { text-shadow: 0 0 20px rgba(250, 176, 5, 0.8); }
+            100% { text-shadow: 0 0 5px rgba(250, 176, 5, 0.4); }
+        }
 
         #settings-panel { display: none; position: absolute; top: 70px; right: 30px; background: var(--panel-bg); padding: 20px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 3000; width: 220px; }
         #settings-panel button { width: 100%; margin-top: 10px; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; background: var(--accent-blue); color: white; }
@@ -252,12 +268,12 @@
     </div>
 
     <div id="game-overlay">
-        <button id="abort-btn" onclick="exitGame()">← Abort</button>
-        <div id="settings-toggle-game" style="position: absolute; top: 30px; right: 120px; cursor: pointer; font-size: 20px; opacity: 0.4;" onclick="toggleSettings()">⚙</div>
+        <div id="settings-toggle-game" style="position: absolute; top: 30px; right: 30px; cursor: pointer; font-size: 20px; opacity: 0.4;" onclick="toggleSettings()">⚙</div>
         
         <div style="display: flex; gap: 20px; margin-bottom: 20px; margin-top: 20px;">
-            <span class="text-btn" onclick="undoMove()">↩ Undo</span>
-            <span class="text-btn" onclick="resetGame()">↺ Clear</span>
+            <span class="text-btn" onclick="exitGame()">← <span class="btn-text">Abort</span></span>
+            <span class="text-btn" onclick="undoMove()">↩ <span class="btn-text">Undo</span></span>
+            <span class="text-btn" onclick="resetGame()">↺ <span class="btn-text">Clear</span></span>
             <span id="next-btn" class="text-btn" style="display:none;" onclick="goToNext()">Next →</span>
         </div>
         <h1 id="game-header" style="font-weight: 200; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;">Sector Node</h1>
@@ -393,6 +409,9 @@
             document.getElementById('game-overlay').style.display = 'flex';
             document.getElementById('share-btn').style.display = completed.includes(id) ? 'block' : 'none';
             document.getElementById('next-btn').style.display = completed.includes(id) ? 'block' : 'none';
+            if (completed.includes(id)) document.getElementById('next-btn').classList.add('glow');
+            else document.getElementById('next-btn').classList.remove('glow');
+            document.getElementById('override-btn').style.display = completed.includes(id) ? 'none' : 'block';
             
             createGrid();
             updateUI();
@@ -478,6 +497,8 @@
             }
             document.getElementById('share-btn').style.display = 'block';
             document.getElementById('next-btn').style.display = 'block';
+            document.getElementById('next-btn').classList.add('glow');
+            document.getElementById('override-btn').style.display = 'none';
             const p = document.querySelector(`.planet-wrapper[data-id="${id}"]`);
             if (p) p.classList.add('completed');
         }
@@ -507,6 +528,9 @@
                 // Update planet visually
                 const p = document.querySelector(`.planet-wrapper[data-id="${currentLevel.id}"]`);
                 if (p) p.classList.remove('completed');
+                document.getElementById('next-btn').style.display = 'none';
+                document.getElementById('next-btn').classList.remove('glow');
+                document.getElementById('override-btn').style.display = 'block';
                 updateUI();
                 checkWin();
             });
