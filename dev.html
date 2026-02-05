@@ -501,14 +501,32 @@
             document.getElementById('override-btn').style.display = 'none';
             const p = document.querySelector(`.planet-wrapper[data-id="${id}"]`);
             if (p) p.classList.add('completed');
+            
+            // Check if there is a next level in the manifest
+            const idx = levelManifest.findIndex(l => l.id === id);
+            if (idx === -1 || idx >= levelManifest.length - 1) {
+                document.getElementById('next-btn').style.display = 'none';
+            }
         }
 
         function exitGame() { document.getElementById('game-overlay').style.display = 'none'; }
 
         function goToNext() {
             const idx = levelManifest.findIndex(l => l.id === currentLevel.id);
-            if (idx !== -1 && idx < levelManifest.length - 1) loadLevel(levelManifest[idx+1].id);
-            else exitGame();
+            if (idx !== -1 && idx < levelManifest.length - 1) {
+                const nextLevel = levelManifest[idx + 1];
+                // If it's a different sector, we have to zoom out first or handle the transition
+                if (nextLevel.sector !== currentLevel.sector) {
+                    exitGame();
+                    showModal("Sector Complete", "You have stabilized all nodes in this sector. Preparing for long-range jump.", "Acknowledge", () => {
+                        // Logic to find and zoom to the next sector could go here
+                    }, true);
+                } else {
+                    loadLevel(nextLevel.id);
+                }
+            } else {
+                exitGame();
+            }
         }
 
         function undoMove() {
