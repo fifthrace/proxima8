@@ -3,81 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proxima 8</title>
+    <title>Proxima 8 - Star Chart DEV</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#343a40">
+    <meta name="theme-color" content="#0b0e14">
     <link rel="icon" type="image/png" href="assets/icon-192.png">
     <link rel="apple-touch-icon" href="assets/icon-192.png">
     <style>
         :root {
-            --bg-color: #f8f9fa;
-            --text-color: #212529;
-            --header-color: #343a40;
-            --grid-bg: #fff;
-            --cell-bg: #e9ecef;
-            --panel-bg: #fff;
-            --btn-opacity: 0.4;
-            --btn-hover: #333;
-            --border-color: #e9ecef;
-        }
-
-        body.dark-mode {
-            --bg-color: #1a1b1e;
+            --bg-color: #0b0e14;
+            --panel-bg: #1a1b1e;
+            --accent-blue: #4dabf7;
+            --accent-yellow: #fab005;
+            --accent-green: #40c057;
             --text-color: #ced4da;
-            --header-color: #f8f9fa;
             --grid-bg: #25262b;
             --cell-bg: #2c2e33;
-            --panel-bg: #25262b;
-            --btn-opacity: 0.6;
-            --btn-hover: #fff;
             --border-color: #373a40;
         }
 
-        body.dark-mode #override-btn {
-            background-color: #1c7ed6 !important;
-            color: white !important;
-            border-color: #1c7ed6 !important;
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
-        body.dark-mode #share-controls button {
-            background-color: #1c7ed6 !important;
-            color: white !important;
-            border-color: #1c7ed6 !important;
+        #viewport {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            perspective: 1000px;
+            overflow: hidden;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
+        #universe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        body.zoomed #universe {
+            transform: scale(3) translate(var(--zoom-x, 0), var(--zoom-y, 0));
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .cluster {
+            position: absolute;
+            width: 120px;
+            height: 120px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
+            justify-content: center;
+            cursor: pointer;
+            outline: none;
         }
-        h1 { font-weight: 200; color: var(--header-color); display: flex; align-items: center; gap: 15px; margin-bottom: 10px; letter-spacing: 2px; text-transform: uppercase; }
-        
-        #controls-row {
+
+        .cluster-core {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            filter: blur(10px);
+            box-shadow: 0 0 30px 15px rgba(255,255,255,0.1);
+            transition: transform 0.3s;
+        }
+        .cluster:hover .cluster-core { transform: scale(1.2); }
+
+        .cluster-label {
+            margin-top: 15px;
             display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-            font-size: 14px;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .cluster-name {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 200;
+            white-space: nowrap;
+            background: rgba(0,0,0,0.4);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .cluster-status {
+            font-size: 10px;
+            font-family: monospace;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-weight: 600;
-            color: #888;
+            font-weight: bold;
+            opacity: 0.9;
         }
-        .text-btn {
-            cursor: pointer;
-            transition: color 0.2s, opacity 0.2s;
+        .status-scanning { color: #fd7e14; }
+        .status-stable { color: #40c057; }
+
+        /* Uniform Orbital Layout - Alpha in center, 6 in a ring */
+        #sector-alpha    { top: 50%; left: 50%; transform: translate(-50%, -50%); } 
+        #sector-void     { top: 20%; left: 50%; transform: translate(-50%, -50%); }
+        #sector-azure    { top: 35%; left: 80%; transform: translate(-50%, -50%); }
+        #sector-obsidian { top: 65%; left: 80%; transform: translate(-50%, -50%); }
+        #sector-emerald  { top: 80%; left: 50%; transform: translate(-50%, -50%); }
+        #sector-solar    { top: 65%; left: 20%; transform: translate(-50%, -50%); }
+        #sector-neutron  { top: 35%; left: 20%; transform: translate(-50%, -50%); }
+
+        @media (max-width: 600px) {
+            #sector-alpha    { top: 50%; left: 50%; }
+            #sector-void     { top: 25%; left: 50%; }
+            #sector-azure    { top: 37%; left: 82%; }
+            #sector-obsidian { top: 63%; left: 82%; }
+            #sector-emerald  { top: 75%; left: 50%; }
+            #sector-solar    { top: 63%; left: 18%; }
+            #sector-neutron  { top: 37%; left: 18%; }
+        }
+
+        #system-view {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
             display: flex;
             align-items: center;
-            gap: 5px;
-            opacity: var(--btn-opacity);
+            justify-content: center;
+            z-index: 20;
+            pointer-events: none;
+            background: radial-gradient(circle at center, rgba(26, 27, 30, 0.9) 0%, transparent 85%);
+            opacity: 0;
+            transform: scale(0.1);
+            transition: opacity 0.8s ease, transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .text-btn:hover { color: var(--btn-hover); opacity: 1; }
+        body.zoomed #system-view { opacity: 1; transform: scale(1); pointer-events: all; }
+
+        @keyframes corona {
+            0% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 0.3; }
+        }
+
+        .central-sun {
+            width: 100px; height: 100px; border-radius: 50%;
+            position: relative; z-index: 2; pointer-events: none;
+        }
+        .sun-halo {
+            position: absolute; width: 140px; height: 140px; border-radius: 50%;
+            z-index: 1; animation: corona 4s infinite ease-in-out; filter: blur(10px);
+        }
+
+        #planet-container {
+            position: absolute; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .planet-wrapper {
+            position: absolute; display: flex; flex-direction: column;
+            align-items: center; cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .planet-wrapper:hover { transform: scale(1.1); z-index: 10; }
+
+        .planet-sphere {
+            border-radius: 50%;
+            box-shadow: inset -8px -8px 15px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .planet-wrapper.completed .planet-sphere {
+            box-shadow: inset -8px -8px 15px rgba(0,0,0,0.6), 0 0 0 2px var(--bg-color), 0 0 0 6px var(--accent-green);
+        }
+        .planet-wrapper.in-progress .planet-sphere {
+            box-shadow: inset -8px -8px 15px rgba(0,0,0,0.6), 0 0 0 2px var(--bg-color), 0 0 0 3px #fd7e14;
+        }
+
+        .type-rocky { background: linear-gradient(135deg, #a8a095, #5d5751); }
+        .type-water { background: linear-gradient(135deg, #4dabf7, #1864ab); }
+        .type-gas { background: linear-gradient(135deg, #ff922b, #d9480f); }
+        .type-ice { background: linear-gradient(135deg, #e7f5ff, #74c0fc); }
+
+        .planet-label {
+            margin-top: 8px; font-size: 9px; text-transform: uppercase;
+            letter-spacing: 1px; font-weight: 600; background: rgba(0,0,0,0.6);
+            padding: 2px 6px; border-radius: 4px; white-space: nowrap; color: #fff;
+        }
+
+        #game-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color); z-index: 2000;
+            display: none; flex-direction: column; align-items: center;
+            padding: 40px 20px; box-sizing: border-box; overflow-y: auto;
+        }
+
+        #grid {
+            display: grid; grid-gap: 4px;
+            background: var(--grid-bg); padding: 8px;
+            border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            width: fit-content; max-width: 98vw; margin: 0 auto; box-sizing: border-box;
+        }
+        .cell {
+            --vw-unit: min(100vw, 500px);
+            --paddings: 80px;
+            --gaps: calc(4px * (var(--grid-width, 8) - 1));
+            --cell-w: calc((var(--vw-unit) - var(--paddings) - var(--gaps)) / var(--grid-width, 8));
+            
+            width: min(var(--cell-w), 60px);
+            height: min(var(--cell-w), 60px);
+            aspect-ratio: 1 / 1; border-radius: 4px; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; cursor: pointer; transition: all 0.2s ease;
+            background-color: var(--cell-bg); border: 2px solid transparent;
+            user-select: none; background-clip: padding-box; padding: 0px; color: var(--text-color);
+            font-size: clamp(8px, 3.5vw, 18px);
+        }
+        .cell.active { background-color: var(--accent-blue) !important; color: white !important; box-shadow: 0 2px 8px rgba(77, 171, 247, 0.4); background-clip: content-box; }
+        .cell.correct { border-color: var(--accent-green); box-shadow: inset 0 0 10px rgba(64, 192, 87, 0.5); }
+        .cell.too-many { border-color: #fa5252; box-shadow: inset 0 0 10px rgba(250, 82, 82, 0.5); color: #fa5252; }
+        .cell.override { background-color: var(--accent-yellow) !important; color: white !important; box-shadow: 0 0 15px rgba(250, 176, 5, 0.6); background-clip: padding-box !important; }
+
+        .text-btn { cursor: pointer; opacity: 0.4; transition: opacity 0.2s; display: flex; align-items: center; gap: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 13px; }
+        .text-btn:hover { opacity: 1; }
         
-        #next-nav-btn.glow {
+        #back-to-galaxy { position: absolute; top: 30px; left: 30px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 20px; cursor: pointer; text-transform: uppercase; z-index: 100; font-size: 11px; letter-spacing: 1px; }
+        #settings-toggle { cursor: pointer; font-size: 20px; position: absolute; top: 30px; right: 30px; opacity: 0.4; transition: opacity 0.2s; color: var(--text-color); z-index: 100; }
+
+        @media (max-width: 600px) {
+            .btn-text { display: none; }
+            .text-btn { font-size: 24px; }
+        }
+
+        #next-btn.glow {
             opacity: 1;
             color: #fab005;
             text-shadow: 0 0 8px rgba(250, 176, 5, 0.6);
@@ -88,313 +243,129 @@
             50% { text-shadow: 0 0 20px rgba(250, 176, 5, 0.8); }
             100% { text-shadow: 0 0 5px rgba(250, 176, 5, 0.4); }
         }
-        
-        #grid {
-            display: grid;
-            grid-gap: var(--grid-gap, 10px);
-            background: var(--grid-bg);
-            padding: min(4vw, 20px);
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            width: fit-content;
-            max-width: 95vw;
-            margin: 0 auto;
-            box-sizing: border-box;
-        }
-        .cell {
-            width: min(calc((95vw - (min(4vw, 20px) * 2) - (var(--grid-gap, 10px) * (var(--grid-width, 8) - 1))) / var(--grid-width, 8)), 60px);
-            aspect-ratio: 1 / 1;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: bold;
-            transition: all 0.2s ease;
-            background-color: var(--cell-bg);
-            border: 4px solid transparent;
-            user-select: none;
-            box-sizing: border-box;
-            background-clip: padding-box;
-            padding: 4px;
-            color: var(--text-color);
-        }
-        .cell.active {
-            background-color: #4dabf7 !important;
-            color: white !important;
-            box-shadow: 0 2px 8px rgba(77, 171, 247, 0.4);
-            background-clip: content-box;
-        }
-        .cell.override {
-            background-color: #fab005 !important;
-            color: white !important;
-            box-shadow: 0 0 15px rgba(250, 176, 5, 0.6);
-            background-clip: padding-box !important;
-        }
-        .cell.correct {
-            border-color: #40c057;
-            box-shadow: inset 0 0 10px rgba(64, 192, 87, 0.5);
-        }
-        .cell.too-many {
-            border-color: #fa5252;
-            box-shadow: inset 0 0 10px rgba(250, 82, 82, 0.5);
-            color: #fa5252;
-        }
-        #status {
-            margin-top: 20px;
-            font-weight: 500;
-        }
-        .menu-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            transition: transform 0.2s;
-            width: 75px;
-        }
-        .menu-item:hover { transform: translateY(-5px); }
-        .menu-item.completed .menu-box {
-            background-color: rgba(64, 192, 87, 0.1);
-            border-color: #40c057;
-            color: #40c057;
-        }
-        /* Fixed checkmark styling */
-        .menu-item.completed .menu-box::after {
-            content: "✓";
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #40c057;
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid white;
-            z-index: 2;
-        }
-        .menu-item.in-progress .menu-box {
-            border-color: #4dabf7;
-            border-style: dashed;
-        }
-        .menu-box {
-            position: relative;
-            width: 65px;
-            height: 65px;
-            background: var(--grid-bg);
-            border: 3px solid var(--border-color);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            padding: 4px;
-            text-align: center;
-            font-size: 10px;
-            line-height: 1.1;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            box-sizing: border-box;
-            overflow: hidden;
-            word-wrap: break-word;
-            color: var(--text-color);
-        }
-        #level-menu {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-            max-width: 800px;
-        }
-        .cat-title {
-            width: 100%;
-            text-align: center;
-            margin-top: 30px;
-            color: #888;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-        
-        #settings-toggle { 
-            cursor: pointer; 
-            font-size: 20px; 
-            position: absolute; 
-            top: 20px; 
-            right: 20px; 
-            opacity: var(--btn-opacity); 
-            transition: opacity 0.2s; 
-            user-select: none;
-            color: var(--text-color);
-        }
-        #settings-toggle:hover { opacity: 1; }
-        
-        #settings-panel {
-            display: none;
-            position: absolute;
-            top: 60px;
-            right: 20px;
-            background: var(--panel-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            z-index: 100;
-            width: 200px;
-            color: var(--text-color);
-        }
-        #settings-panel button {
-            width: 100%;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        .theme-toggle-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .theme-btn {
-            font-size: 20px;
-            cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 8px;
-            background: #fff;
-            color: #000;
-            border: 1px solid #ced4da;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 44px;
-            height: 44px;
-        }
-        .theme-btn.active {
-            background: #000;
-            border-color: #000;
-            color: #fff;
-        }
-        
-        /* Modal Styles */
-        #modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        #modal {
-            background: var(--panel-bg);
-            padding: 24px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            width: 90%;
-            max-width: 320px;
-            text-align: center;
-            color: var(--text-color);
-        }
-        #modal h3 { margin-top: 0; margin-bottom: 12px; }
-        #modal p { margin-bottom: 24px; line-height: 1.4; opacity: 0.9; }
-        .modal-buttons { display: flex; gap: 12px; }
-        .modal-buttons button {
-            flex: 1;
-            padding: 12px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-        }
+
+        #settings-panel { display: none; position: absolute; top: 70px; right: 30px; background: var(--panel-bg); padding: 20px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 3000; width: 220px; }
+        #settings-panel button { width: 100%; margin-top: 10px; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; background: var(--accent-blue); color: white; }
+
+        #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 4000; align-items: center; justify-content: center; }
+        #modal { background: var(--panel-bg); padding: 30px; border-radius: 20px; width: 90%; max-width: 320px; text-align: center; }
+        .modal-buttons { display: flex; gap: 12px; margin-top: 20px; }
+        .modal-buttons button { flex: 1; padding: 12px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; }
         .modal-confirm { background: #fa5252; color: white; }
         .modal-cancel { background: var(--cell-bg); color: var(--text-color); }
-
-        body.dark-mode #theme-dark.active {
-            background: #fff;
-            color: #000;
-            border-color: #fff;
-        }
-        body.dark-mode .theme-btn {
-            background: #000;
-            color: #fff;
-            border-color: #373a40;
-        }
     </style>
 </head>
 <body>
-    <h1 id="main-header">Proxima 8</h1>
-
-    <div id="controls-row">
-        <span id="back-btn" class="text-btn" onclick="showMenu()" style="display: none;">← Exit</span>
-        <span id="undo-btn" class="text-btn" onclick="undoMove()" style="display: none;">↩ Undo</span>
-        <span id="reset-btn" class="text-btn" onclick="resetGame()" style="display: none;">↺ Clear</span>
-        <span id="next-nav-btn" class="text-btn" onclick="goToNextLevel()" style="display: none;">Next →</span>
-    </div>
-    
-    <div id="settings-toggle" onclick="toggleSettings()" title="Settings">⚙</div>
-    <div id="help-toggle" onclick="toggleHelp()" style="cursor: pointer; font-size: 20px; position: absolute; top: 20px; right: 55px; opacity: 0.4; transition: opacity 0.2s; user-select: none; color: #333;" title="How to Play">?</div>
-
-    <div id="settings-panel">
-        <h3 style="margin-top: 0;">Settings</h3>
-        <div class="theme-toggle-row">
-            <div style="display: flex; gap: 10px; width: 100%; justify-content: center;">
-                <span id="theme-light" class="theme-btn active" onclick="setTheme('light')" title="Light Mode">☀️</span>
-                <span id="theme-dark" class="theme-btn" onclick="setTheme('dark')" title="Dark Mode">🌙</span>
+    <div id="viewport" onclick="closeAllPanels()">
+        <div id="universe">
+            <div id="sector-alpha" class="cluster" onclick="zoomTo(0, 0, 'Alpha Sector', '#fab005')">
+                <div class="cluster-core"></div>
+                <div class="cluster-label"><span class="cluster-name">Alpha Sector</span><span id="status-Alpha-Sector" class="cluster-status"></span></div>
+            </div>
+            <div id="sector-void" class="cluster" onclick="zoomTo(-13, 18, 'Crimson Void', '#fa5252')">
+                <div class="cluster-core" style="background: #fa5252;"></div>
+                <div class="cluster-label"><span class="cluster-name">Crimson Void</span><span id="status-Crimson-Void" class="cluster-status"></span></div>
+            </div>
+            <div id="sector-azure" class="cluster" onclick="zoomTo(8, 28, 'Azure Reach', '#1c7ed6')">
+                <div class="cluster-core" style="background: #1c7ed6;"></div>
+                <div class="cluster-label"><span class="cluster-name">Azure Reach</span><span id="status-Azure-Reach" class="cluster-status"></span></div>
+            </div>
+            <div id="sector-obsidian" class="cluster" onclick="zoomTo(28, 15, 'Obsidian Gate', '#862e9c')">
+                <div class="cluster-core" style="background: #862e9c;"></div>
+                <div class="cluster-label"><span class="cluster-name">Obsidian Gate</span><span id="status-Obsidian-Gate" class="cluster-status"></span></div>
+            </div>
+            <div id="sector-emerald" class="cluster" onclick="zoomTo(25, -12, 'Emerald Nebula', '#40c057')">
+                <div class="cluster-core" style="background: #40c057;"></div>
+                <div class="cluster-label"><span class="cluster-name">Emerald Nebula</span><span id="status-Emerald-Nebula" class="cluster-status"></span></div>
+            </div>
+            <div id="sector-solar" class="cluster" onclick="zoomTo(-2, -33, 'Solar Forge', '#fd7e14')">
+                <div class="cluster-core" style="background: #fd7e14;"></div>
+                <div class="cluster-label"><span class="cluster-name">Solar Forge</span><span id="status-Solar-Forge" class="cluster-status"></span></div>
+            </div>
+            <div id="sector-neutron" class="cluster" onclick="zoomTo(-33, -20, 'Neutron Star', '#e9ecef')">
+                <div class="cluster-core" style="background: #e9ecef;"></div>
+                <div class="cluster-label"><span class="cluster-name">Neutron Star</span><span id="status-Neutron-Star" class="cluster-status"></span></div>
             </div>
         </div>
-        <div style="margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
-            <div style="font-size: 10px; color: #888; margin-bottom: 8px; text-align: center; letter-spacing: 1px;">DATA MANAGEMENT</div>
-            <button onclick="exportData()" style="background: #4dabf7; color: white; margin-bottom: 8px;">Export Progress</button>
-            <button onclick="document.getElementById('import-file').click()" style="background: #4dabf7; color: white;">Import Progress</button>
-            <input type="file" id="import-file" style="display: none" accept=".json" onchange="importData(event)">
+
+        <div id="system-view" onclick="zoomOut()">
+            <div class="sun-halo" id="system-halo"></div>
+            <div class="central-sun" id="system-sun"></div>
+            <div id="planet-container"></div>
         </div>
-        <button onclick="toggleSettings()" style="background: var(--cell-bg); color: var(--text-color);">Close</button>
+
+        <button id="back-to-galaxy" onclick="zoomOut()" style="display:none;">← Galactic Chart</button>
+        <div id="help-toggle" style="position: absolute; top: 30px; right: 70px; cursor: pointer; font-size: 20px; opacity: 0.4; color: var(--text-color); z-index: 100;" onclick="event.stopPropagation(); toggleHelp()">?</div>
+        <div id="settings-toggle" onclick="event.stopPropagation(); toggleSettings()">⚙</div>
     </div>
 
-    <div id="help-panel" style="display: none; position: absolute; top: 60px; right: 20px; background: var(--panel-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 100; width: 280px; font-size: 14px; line-height: 1.5; color: var(--text-color);">
-        <h3 style="margin-top: 0;">Protocol</h3>
-        <p><strong>Objective:</strong> Identify the hidden neural pattern by satisfying all proximity clues.</p>
-        <p><strong>Clues:</strong> Each number indicates the exact count of active nodes in its 8-cell neighborhood.</p>
-        <p><strong>Feedback:</strong></p>
-        <ul style="padding-left: 20px;">
-            <li><span style="color: #40c057; font-weight: bold;">Green:</span> Proximity satisfied.</li>
-            <li><span style="color: #fa5252; font-weight: bold;">Red:</span> Over-saturated (too many neighbors).</li>
-            <li><span style="color: var(--text-color); opacity: 0.5; font-weight: bold;">Grey:</span> Under-saturated (needs more neighbors).</li>
+    <div id="game-overlay" onclick="closeAllPanels()">
+        <div id="help-toggle-game" style="position: absolute; top: 30px; right: 70px; cursor: pointer; font-size: 20px; opacity: 0.4;" onclick="event.stopPropagation(); toggleHelp()">?</div>
+        <div id="settings-toggle-game" style="position: absolute; top: 30px; right: 30px; cursor: pointer; font-size: 20px; opacity: 0.4;" onclick="event.stopPropagation(); toggleSettings()">⚙</div>
+        
+        <div style="display: flex; gap: 20px; margin-bottom: 20px; margin-top: 20px;" onclick="event.stopPropagation()">
+            <span class="text-btn" onclick="exitGame()">← <span class="btn-text">Back</span></span>
+            <span class="text-btn" onclick="undoMove()">↩ <span class="btn-text">Undo</span></span>
+            <span class="text-btn" onclick="resetGame()">↺ <span class="btn-text">Clear</span></span>
+            <span id="next-btn" class="text-btn" style="display:none;" onclick="goToNext()"><span class="btn-text">Next</span> →</span>
+        </div>
+        <h1 id="game-header" style="font-weight: 200; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;" onclick="event.stopPropagation()">Sector Node</h1>
+        <div id="grid" onclick="event.stopPropagation()"></div>
+        <div id="status" style="margin-top: 20px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; font-size: 14px;" onclick="event.stopPropagation()">Map the Sector</div>
+        
+        <div id="action-row" style="margin-top: 25px; display: flex; gap: 15px;" onclick="event.stopPropagation()">
+            <button id="share-btn" onclick="shareResult()" style="display:none; padding: 10px 20px; border-radius: 20px; border: 1px solid var(--accent-blue); background: transparent; color: var(--accent-blue); cursor: pointer; font-weight: 600;">Share Mapping</button>
+            <button id="override-btn" onclick="requestOverride()" style="padding: 10px 20px; border-radius: 20px; border: none; background: var(--accent-blue); color: white; cursor: pointer; font-weight: 600;">Ion Scan (∞)</button>
+        </div>
+    </div>
+
+    <div id="help-panel" onclick="event.stopPropagation()" style="display: none; position: absolute; top: 70px; left: 30px; background: var(--panel-bg); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 3000; width: 85%; max-width: 350px; font-size: 14px; line-height: 1.6; color: var(--text-color); overflow-y: auto; max-height: 80vh;">
+        <div style="position: absolute; top: 15px; right: 15px; cursor: pointer; font-size: 18px; opacity: 0.3;" onclick="toggleHelp()">✕</div>
+        <h3 style="margin-top: 0; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-yellow);">Operation Proxima</h3>
+        <p style="font-style: italic; opacity: 0.8; font-size: 13px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 15px;">
+            For eons, the Proxima expanse was connected by vast sub-space beacons. Then, the Great Static hit, plunging the systems into darkness. As a Pilot of the Reclamation Fleet, you must travel from system to system, identifying original coordinate patterns to stabilize the network.
+        </p>
+        <ul style="padding-left: 0; list-style: none; margin-bottom: 20px;">
+            <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <div style="width: 20px; height: 20px; background: var(--cell-bg); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text-color); font-weight: bold; border: 1px solid rgba(255,255,255,0.1);">3</div>
+                <span><strong>Sensors:</strong> Clue indicating exactly how many blue active nodes are needed nearby.</span>
+            </li>
+            <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <div style="width: 20px; height: 20px; background: var(--accent-blue); border-radius: 4px; flex-shrink: 0;"></div>
+                <span><strong>Active Node:</strong> Click a square to activate or deactivate it.</span>
+            </li>
+            <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <div style="width: 20px; height: 20px; background: var(--accent-yellow); border-radius: 4px; flex-shrink: 0; box-shadow: 0 0 8px var(--accent-yellow);"></div>
+                <span><strong>Ion Scan:</strong> Reveals local coordinate data to assist in triangulation.</span>
+            </li>
+            <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <div style="width: 20px; height: 20px; border: 2px solid var(--accent-green); border-radius: 4px; flex-shrink: 0;"></div>
+                <span><strong>Stable:</strong> Sensor target met. Target achieved.</span>
+            </li>
+            <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <div style="width: 20px; height: 20px; border: 2px solid #fa5252; border-radius: 4px; flex-shrink: 0;"></div>
+                <span><strong>Over-saturated:</strong> Too many nearby nodes. Exceeds parameters.</span>
+            </li>
+            <li style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 20px; height: 20px; border: 2px solid #888; border-radius: 4px; flex-shrink: 0;"></div>
+                <span><strong>Under-saturated:</strong> Needs more active nodes. Presence required.</span>
+            </li>
         </ul>
-        <button onclick="toggleHelp()" style="width: 100%; margin-top: 10px; padding: 10px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; background: var(--cell-bg); color: var(--text-color);">Close</button>
-    </div>
-    
-    <div id="level-menu"></div>
-
-    <div id="game-view" style="display: none; flex-direction: column; align-items: center;">
-        <div id="grid"></div>
-        <div id="status">Map the Sector</div>
-        <div id="action-row" style="margin-top: 15px; display: flex; gap: 10px;">
-            <div id="share-controls" style="display: none; gap: 10px;">
-                <button onclick="shareResult()" style="padding: 8px 16px; border-radius: 20px; border: 1px solid #4dabf7; background: white; color: #4dabf7; cursor: pointer; font-weight: 600;">Share Mapping</button>
-            </div>
-            <button id="override-btn" onclick="requestOverride()" style="padding: 8px 16px; border-radius: 20px; border: 1px solid #fab005; background: white; color: #fab005; cursor: pointer; font-weight: 600;">Ion Scan (∞)</button>
-        </div>
-        <div id="level-id-display" onclick="copyUID()" style="cursor: pointer; font-size: 10px; color: #ccc; margin-top: 10px; font-family: monospace;" title="Click to copy UID"></div>
+        <p style="font-size: 12px; opacity: 0.7;">Stabilizing all nodes in a sector will clear the static and lock the trajectory, allowing for deeper exploration.</p>
     </div>
 
-    <div id="modal-overlay">
+    <div id="settings-panel" onclick="event.stopPropagation()">
+        <h3 style="margin-top: 0; font-weight: 300; letter-spacing: 1px;">SYSTEM SETTINGS</h3>
+        <button onclick="exportData()">Export Data</button>
+        <button onclick="document.getElementById('import-file').click()">Import Data</button>
+        <input type="file" id="import-file" style="display: none" accept=".json" onchange="importData(event)">
+        <button onclick="toggleSettings()" style="background: var(--cell-bg); color: var(--text-color); margin-top: 20px;">Close</button>
+    </div>
+
+    <div id="modal-overlay" onclick="if(event.target === this) closeModal()">
         <div id="modal">
-            <h3 id="modal-title">Confirm</h3>
-            <p id="modal-body"></p>
+            <h3 id="modal-title" style="margin-top: 0; font-weight: 300;">Confirm</h3>
+            <p id="modal-body" style="font-size: 14px; opacity: 0.8; line-height: 1.4;"></p>
             <div class="modal-buttons">
                 <button id="modal-cancel-btn" class="modal-cancel" onclick="closeModal()">Cancel</button>
                 <button id="modal-confirm-btn" class="modal-confirm">Confirm</button>
@@ -404,345 +375,189 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
-        function setTheme(theme) {
-            const body = document.body;
-            const lightBtn = document.getElementById('theme-light');
-            const darkBtn = document.getElementById('theme-dark');
-            const helpToggle = document.getElementById('help-toggle');
-            
-            if (theme === 'dark') {
-                body.classList.add('dark-mode');
-                darkBtn.classList.add('active');
-                lightBtn.classList.remove('active');
-                if (helpToggle) helpToggle.style.color = '#ced4da';
-            } else {
-                body.classList.remove('dark-mode');
-                lightBtn.classList.add('active');
-                darkBtn.classList.remove('active');
-                if (helpToggle) helpToggle.style.color = '#333';
-            }
-            localStorage.setItem('proxima_theme', theme);
-        }
-
-        // Initialize theme
-        const savedTheme = localStorage.getItem('proxima_theme') || 'light';
-        setTheme(savedTheme);
-
-        let modalCallback = null;
-
-        function showModal(title, body, confirmText, onConfirm) {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-body').innerText = body;
-            const confirmBtn = document.getElementById('modal-confirm-btn');
-            confirmBtn.innerText = confirmText;
-            confirmBtn.onclick = () => {
-                onConfirm();
-                closeModal();
-            };
-            document.getElementById('modal-overlay').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('modal-overlay').style.display = 'none';
-        }
-
-        function toggleSettings() {
-            const panel = document.getElementById('settings-panel');
-            const isHidden = window.getComputedStyle(panel).display === 'none';
-            panel.style.display = isHidden ? 'block' : 'none';
-            if (isHidden) document.getElementById('help-panel').style.display = 'none';
-        }
-
-        function toggleHelp() {
-            const panel = document.getElementById('help-panel');
-            const isHidden = window.getComputedStyle(panel).display === 'none';
-            panel.style.display = isHidden ? 'block' : 'none';
-            if (isHidden) document.getElementById('settings-panel').style.display = 'none';
-        }
-
-        function clearAllProgress() {
-            showModal(
-                "Reset Progress", 
-                "Clear all neural mapping? This cannot be undone.", 
-                "Clear All", 
-                () => {
-                    localStorage.removeItem('zen_completed');
-                    localStorage.removeItem('zen_in_progress');
-                    localStorage.removeItem('proxima_states');
-                    toggleSettings();
-                    showMenu();
-                }
-            );
-        }
-
-        function exportData() {
-            const data = {
-                completed: getCompleted(),
-                inProgress: JSON.parse(localStorage.getItem('zen_in_progress') || '{}'),
-                states: JSON.parse(localStorage.getItem('proxima_states') || '{}'),
-                version: 1,
-                timestamp: new Date().toISOString()
-            };
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `proxima_save_${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function importData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (data.completed) localStorage.setItem('zen_completed', JSON.stringify(data.completed));
-                    if (data.inProgress) localStorage.setItem('zen_in_progress', JSON.stringify(data.inProgress));
-                    if (data.states) localStorage.setItem('proxima_states', JSON.stringify(data.states));
-                    showModal("Import Success", "Your neural mapping data has been successfully synchronized.", "Restart", () => {
-                        location.reload();
-                    });
-                    document.getElementById('modal-cancel-btn').style.display = 'none';
-                } catch (err) { 
-                    showModal("Import Failed", "The neural data could not be parsed. Please check the file integrity.", "Close", () => {});
-                    document.getElementById('modal-cancel-btn').style.display = 'none';
-                }
-            };
-            reader.readAsText(file);
-        }
-
         let levelManifest = [];
-        const levelsCache = {};
-
         let currentLevel = null;
         let state = [];
         let history = [];
         let overridePending = [];
+        const levelsCache = {};
+        const pTypes = ['type-rocky', 'type-water', 'type-gas', 'type-ice'];
+        const sectorNames = ['Alpha Sector', 'Crimson Void', 'Azure Reach', 'Obsidian Gate', 'Emerald Nebula', 'Solar Forge', 'Neutron Star'];
 
-        async function fetchManifest() {
-            try {
-                const response = await fetch('level_manifest.json');
-                if (response.ok) {
-                    const manifest = await response.json();
-                    
-                    // Sort manifest to match menu order: 3x3, then 5x5, 10x10, 15x15
-                    const sizeOrder = [3, 5, 10, 15];
-                    levelManifest = manifest.sort((a, b) => {
-                        if (a.width !== b.width) {
-                            return sizeOrder.indexOf(a.width) - sizeOrder.indexOf(b.width);
-                        }
-                        // Secondary sort by ID or title to keep order stable
-                        return a.id.localeCompare(b.id);
-                    });
-                }
-            } catch (e) { console.error("Could not load manifest", e); }
+        const getCompleted = () => JSON.parse(localStorage.getItem('zen_completed') || '[]');
+        const getStates = () => JSON.parse(localStorage.getItem('proxima_states') || '{}');
+        const saveState = (id, s) => {
+            const all = getStates();
+            all[id] = s;
+            localStorage.setItem('proxima_states', JSON.stringify(all));
+        };
+
+        function toggleSettings() {
+            const p = document.getElementById('settings-panel');
+            const isHidden = p.style.display !== 'block';
+            p.style.display = isHidden ? 'block' : 'none';
+            if (isHidden) document.getElementById('help-panel').style.display = 'none';
         }
 
-        function getCompleted() {
-            return JSON.parse(localStorage.getItem('zen_completed') || '[]');
+        function toggleHelp() {
+            const p = document.getElementById('help-panel');
+            const isHidden = p.style.display !== 'block';
+            p.style.display = isHidden ? 'block' : 'none';
+            if (isHidden) document.getElementById('settings-panel').style.display = 'none';
         }
 
-        function saveInProgress(id, state) {
-            const hasActiveCells = state.some(row => row.some(cell => cell === 1));
-            let inProgress = JSON.parse(localStorage.getItem('zen_in_progress') || '{}');
-            if (hasActiveCells) inProgress[id] = state;
-            else delete inProgress[id];
-            localStorage.setItem('zen_in_progress', JSON.stringify(inProgress));
+        function closeAllPanels() {
+            document.getElementById('settings-panel').style.display = 'none';
+            document.getElementById('help-panel').style.display = 'none';
         }
 
-        function getInProgress(id) {
-            let inProgress = JSON.parse(localStorage.getItem('zen_in_progress') || '{}');
-            return inProgress[id];
+        function showModal(title, body, confirmText, onConfirm, hideCancel = false) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-body').innerText = body;
+            const cb = document.getElementById('modal-confirm-btn');
+            cb.innerText = confirmText;
+            cb.onclick = () => { onConfirm(); closeModal(); };
+            document.getElementById('modal-cancel-btn').style.display = hideCancel ? 'none' : 'block';
+            document.getElementById('modal-overlay').style.display = 'flex';
         }
 
-        function saveState(id, state) {
-            let allStates = JSON.parse(localStorage.getItem('proxima_states') || '{}');
-            allStates[id] = state;
-            localStorage.setItem('proxima_states', JSON.stringify(allStates));
+        function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+
+        function zoomTo(x, y, name, color) {
+            window.history.pushState({view: 'system', sector: name, x: x, y: y, color: color}, '', `?sector=${name.replace(/ /g, '_')}`);
+            performZoomIn(x, y, name, color);
         }
 
-        function getState(id) {
-            let allStates = JSON.parse(localStorage.getItem('proxima_states') || '{}');
-            return allStates[id];
-        }
-
-        function clearInProgress(id) {
-            let inProgress = JSON.parse(localStorage.getItem('zen_in_progress') || '{}');
-            delete inProgress[id];
-            localStorage.setItem('zen_in_progress', JSON.stringify(inProgress));
+        function performZoomIn(x, y, name, color) {
+            const isLandscape = window.innerWidth > window.innerHeight;
+            document.body.style.setProperty('--zoom-x', (isLandscape ? x*0.8 : x) + '%');
+            document.body.style.setProperty('--zoom-y', (isLandscape ? y*0.5 : y) + '%');
+            document.body.classList.add('zoomed');
             
-            let allStates = JSON.parse(localStorage.getItem('proxima_states') || '{}');
-            delete allStates[id];
-            localStorage.setItem('proxima_states', JSON.stringify(allStates));
-        }
-
-        function markCompleted(id) {
-            let completed = getCompleted();
-            if (!completed.includes(id)) {
-                completed.push(id);
-                localStorage.setItem('zen_completed', JSON.stringify(completed));
-            }
-            clearInProgress(id);
-            const controls = document.getElementById('share-controls');
-            if (controls) controls.style.display = 'flex';
-            const overrideBtn = document.getElementById('override-btn');
-            if (overrideBtn) overrideBtn.style.display = 'none';
+            const sun = document.getElementById('system-sun');
+            sun.style.background = color;
+            sun.style.boxShadow = `0 0 80px ${color}aa, inset 0 0 20px rgba(255,255,255,0.5)`;
+            document.getElementById('system-halo').style.background = color;
             
-            // Add yellow glow to the Next button
-            const nextBtn = document.getElementById('next-nav-btn');
-            if (nextBtn) nextBtn.classList.add('glow');
-
-            document.getElementById('status').innerText = "Trajectory Locked";
-        }
-
-        function showMenu() {
-            window.history.pushState({}, '', window.location.pathname);
-            document.getElementById('main-header').innerText = "Proxima 8";
+            const container = document.getElementById('planet-container');
+            container.innerHTML = '';
             
-            document.getElementById('back-btn').style.display = 'none';
-            document.getElementById('next-nav-btn').style.display = 'none';
-            document.getElementById('undo-btn').style.display = 'none';
-            document.getElementById('reset-btn').style.display = 'none';
-            
-            document.getElementById('level-menu').style.display = 'flex';
-            document.getElementById('game-view').style.display = 'none';
-            initMenu();
-        }
-
-        function initMenu() {
-            const menuEl = document.getElementById('level-menu');
-            if (!menuEl) return;
-            menuEl.innerHTML = '';
             const completed = getCompleted();
-            const inProgress = JSON.parse(localStorage.getItem('zen_in_progress') || '{}');
+            const states = getStates();
+            const sectorLevels = levelManifest.filter(l => l.sector === name);
+            const baseR = 160;
 
-            const categories = [
-                { name: 'Neural Sync (3x3)', filter: (l) => l.width === 3 },
-                { name: 'Local Mapping (5x5)', filter: (l) => l.width === 5 },
-                { name: 'Sector Analysis (8x8)', filter: (l) => l.width === 8 },
-                { name: 'Regional Analysis (10x10)', filter: (l) => l.width === 10 },
-                { name: 'Global Resolution (15x15)', filter: (l) => l.width === 15 }
-            ];
+            sectorLevels.forEach((l, i) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'planet-wrapper';
+                wrapper.setAttribute('data-id', l.id);
+                
+                const levelState = states[l.id];
+                const hasProgress = levelState && levelState.flat().some(cell => cell === 1);
 
-            categories.forEach(cat => {
-                const filtered = levelManifest.filter(cat.filter);
-                const allInCat = filtered;
+                if (completed.includes(l.id)) wrapper.classList.add('completed');
+                else if (hasProgress) wrapper.classList.add('in-progress');
 
-                if (allInCat.length > 0) {
-                    const header = document.createElement('h2');
-                    header.className = 'cat-title';
-                    header.innerText = cat.name;
-                    menuEl.appendChild(header);
-
-                    allInCat.forEach(level => {
-                        const item = document.createElement('div');
-                        item.className = 'menu-item';
-                        if (completed.includes(level.id)) item.classList.add('completed');
-                        else if (inProgress[level.id]) item.classList.add('in-progress');
-                        
-                        item.onclick = () => loadLevel(level.id);
-                        item.innerHTML = `
-                            <div class="menu-box">${level.title || level.name}</div>
-                        `;
-                        menuEl.appendChild(item);
-                    });
-                }
+                const physSize = 12 + (l.width * 2.2); 
+                const type = pTypes[i % pTypes.length];
+                const angle = (i * (360 / sectorLevels.length)) * (Math.PI / 180);
+                
+                wrapper.style.transform = `translate(${Math.cos(angle) * baseR}px, ${Math.sin(angle) * baseR}px)`;
+                wrapper.innerHTML = `
+                    <div class="planet-sphere ${type}" style="width: ${physSize}px; height: ${physSize}px;"></div>
+                    <div class="planet-label">${l.title}</div>
+                `;
+                wrapper.onclick = (e) => { e.stopPropagation(); loadLevel(l.id); };
+                container.appendChild(wrapper);
             });
+            document.getElementById('back-to-galaxy').style.display = 'block';
         }
 
-        async function loadLevel(key) {
-            if (!key) return showMenu();
-
-            let levelData = levelsCache[key];
-            if (!levelData || !levelData.clues) {
-                try {
-                    const response = await fetch(`levels/${key}.json`);
-                    if (response.ok) {
-                        const fetched = await response.json();
-                        levelData = {
-                            ...fetched,
-                            id: key,
-                            title: fetched.name || "Mapping",
-                            display: fetched.display || `${fetched.width}x${fetched.height}`,
-                            targetActive: fetched.solution ? fetched.solution.flat().reduce((a, b) => a + b, 0) : 0
-                        };
-                        levelsCache[key] = levelData;
-                    }
-                } catch (e) { console.error(e); }
+        function zoomOut() {
+            if (window.history.state && window.history.state.view === 'system') {
+                window.history.back();
+            } else {
+                performZoomOut();
             }
+        }
 
-            if (!levelData || !levelData.clues) return showMenu();
+        function performZoomOut() {
+            document.body.classList.remove('zoomed');
+            document.getElementById('back-to-galaxy').style.display = 'none';
+            updateSectorStatus();
+        }
 
-            currentLevel = levelData;
-            document.getElementById('main-header').innerText = currentLevel.title;
-            
-            document.getElementById('back-btn').style.display = 'flex';
-            
-            // Handle Navigation Buttons
-            const currentIndex = levelManifest.findIndex(l => l.id === key);
-            const nextNavBtn = document.getElementById('next-nav-btn');
-            
-            if (nextNavBtn) nextNavBtn.style.display = (currentIndex !== -1 && currentIndex < levelManifest.length - 1) ? 'flex' : 'none';
+        function exitGame() { 
+            if (window.history.state && window.history.state.view === 'game') {
+                window.history.back();
+            } else {
+                performExitGame();
+            }
+        }
 
-            document.getElementById('undo-btn').style.display = 'flex';
-            document.getElementById('reset-btn').style.display = 'flex';
+        function performExitGame() {
+            document.getElementById('game-overlay').style.display = 'none'; 
+        }
+
+        async function loadLevel(id) {
+            window.history.pushState({view: 'game', id: id}, '', `?node=${id}`);
+            performLoadLevel(id);
+        }
+
+        async function performLoadLevel(id) {
+            let data = levelsCache[id];
+            if (!data) {
+                const res = await fetch(`levels/${id}.json`);
+                data = await res.json();
+                data.id = id;
+                levelsCache[id] = data;
+            }
+            currentLevel = data;
+
+            const manifestEntry = levelManifest.find(l => l.id === id);
+            if (manifestEntry) currentLevel.sector = manifestEntry.sector;
             
             const completed = getCompleted();
-            if (completed.includes(key) && currentLevel.solution) {
-                state = JSON.parse(JSON.stringify(currentLevel.solution));
+            if (completed.includes(id)) {
+                state = JSON.parse(JSON.stringify(data.solution));
             } else {
-                const saved = getInProgress(key) || getState(key);
-                state = saved ? saved : Array(currentLevel.height).fill().map(() => Array(currentLevel.width).fill(0));
+                state = getStates()[id] || Array(data.height).fill().map(() => Array(data.width).fill(0));
             }
             history = [];
-
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('level') !== key) {
-                window.history.pushState({}, '', `?level=${key}`);
-            }
-
-            document.getElementById('level-menu').style.display = 'none';
-            document.getElementById('game-view').style.display = 'flex';
-            document.getElementById('level-id-display').innerText = `UID: ${key}`;
-            document.getElementById('status').innerText = "Map the Sector";
             
-            if (document.getElementById('share-controls')) document.getElementById('share-controls').style.display = 'none';
-            if (document.getElementById('next-nav-btn')) {
-                document.getElementById('next-nav-btn').classList.remove('glow');
-                document.getElementById('next-nav-btn').style.display = (currentIndex !== -1 && currentIndex < levelManifest.length - 1) ? 'flex' : 'none';
+            document.getElementById('game-header').innerText = data.name;
+            document.getElementById('game-overlay').style.display = 'flex';
+            document.getElementById('share-btn').style.display = completed.includes(id) ? 'block' : 'none';
+            
+            const sectorLevels = levelManifest.filter(l => l.sector === currentLevel.sector);
+            const hasNextInSector = true; // We loop now
+            document.getElementById('next-btn').style.display = 'block';
+            
+            if (completed.includes(id)) {
+                document.getElementById('next-btn').classList.add('glow');
+                document.getElementById('override-btn').style.display = 'none';
+            } else {
+                document.getElementById('next-btn').classList.remove('glow');
+                document.getElementById('override-btn').style.display = 'block';
             }
-            if (document.getElementById('override-btn')) document.getElementById('override-btn').style.display = 'block';
-            overridePending = [];
             
             createGrid();
             updateUI();
         }
 
         function createGrid() {
-            if (!currentLevel || !currentLevel.clues) return;
-            const gridEl = document.getElementById('grid');
-            
-            // Scalable grid sizing
-            const gap = currentLevel.width > 8 ? 5 : 10;
-            const fontSize = currentLevel.width > 10 ? '14px' : (currentLevel.width > 5 ? '16px' : '20px');
-            
-            gridEl.style.setProperty('--grid-gap', gap + 'px');
-            gridEl.style.setProperty('--grid-width', currentLevel.width);
-            gridEl.style.gridTemplateColumns = `repeat(${currentLevel.width}, auto)`;
-            gridEl.innerHTML = '';
-            
+            const g = document.getElementById('grid');
+            g.style.setProperty('--grid-width', currentLevel.width);
+            g.style.gridTemplateColumns = `repeat(${currentLevel.width}, auto)`;
+            g.innerHTML = '';
             for (let y = 0; y < currentLevel.height; y++) {
                 for (let x = 0; x < currentLevel.width; x++) {
-                    const cell = document.createElement('div');
-                    cell.className = 'cell';
-                    cell.style.fontSize = fontSize;
-                    cell.id = `cell-${x}-${y}`;
-                    cell.innerText = currentLevel.clues[y][x];
-                    cell.onclick = () => toggleCell(x, y);
-                    gridEl.appendChild(cell);
+                    const c = document.createElement('div');
+                    c.className = 'cell';
+                    c.id = `cell-${x}-${y}`;
+                    c.innerText = currentLevel.clues[y][x];
+                    c.onclick = () => toggleCell(x, y);
+                    g.appendChild(c);
                 }
             }
             checkWin(true);
@@ -750,238 +565,227 @@
 
         function toggleCell(x, y) {
             history.push(JSON.stringify(state));
-            if (history.length > 50) history.shift();
             state[y][x] = state[y][x] === 0 ? 1 : 0;
-            
-            // Clear override if this cell was highlighted
             overridePending = overridePending.filter(p => p.x !== x || p.y !== y);
+            saveState(currentLevel.id, state);
             
-            saveInProgress(currentLevel.id, state);
-            saveState(currentLevel.id, state);
-            updateUI();
-            checkWin();
-        }
-
-        function undoMove() {
-            if (history.length === 0) return;
-            state = JSON.parse(history.pop());
-            saveInProgress(currentLevel.id, state);
-            saveState(currentLevel.id, state);
+            const completed = getCompleted();
+            if (!completed.includes(currentLevel.id)) {
+                const p = document.querySelector(`.planet-wrapper[data-id="${currentLevel.id}"]`);
+                if (p) {
+                    const hasProgress = state.flat().some(cell => cell === 1);
+                    p.classList.toggle('in-progress', hasProgress);
+                }
+            }
             updateUI();
             checkWin();
         }
 
         function updateUI() {
-            if (!currentLevel) return;
             for (let y = 0; y < currentLevel.height; y++) {
                 for (let x = 0; x < currentLevel.width; x++) {
-                    const cell = document.getElementById(`cell-${x}-${y}`);
-                    if (!cell) continue;
-                    if (state[y][x] === 1) cell.classList.add('active');
-                    else cell.classList.remove('active');
-
-                    // Apply persistent override highlight
-                    const isOverridden = overridePending.some(p => p.x === x && p.y === y);
-                    if (isOverridden) cell.classList.add('override');
-                    else cell.classList.remove('override');
+                    const c = document.getElementById(`cell-${x}-${y}`);
+                    if (!c) continue;
+                    c.classList.toggle('active', state[y][x] === 1);
+                    const ov = overridePending.some(p => p.x === x && p.y === y);
+                    c.classList.toggle('override', ov);
                 }
             }
         }
 
         function checkWin(silent = false) {
-            if (!currentLevel) return;
             let solved = true;
-            let totalActive = 0;
-            const targetActive = currentLevel.targetActive || 0;
-
+            let active = 0;
             for (let y = 0; y < currentLevel.height; y++) {
                 for (let x = 0; x < currentLevel.width; x++) {
-                    if (state[y][x] === 1) totalActive++;
-                    let neighbors = 0;
+                    if (state[y][x] === 1) active++;
+                    let n = 0;
                     for (let dy = -1; dy <= 1; dy++) {
                         for (let dx = -1; dx <= 1; dx++) {
                             if (dx === 0 && dy === 0) continue;
                             let nx = x + dx, ny = y + dy;
                             if (nx >= 0 && nx < currentLevel.width && ny >= 0 && ny < currentLevel.height) {
-                                if (state[ny][nx] === 1) neighbors++;
+                                if (state[ny][nx] === 1) n++;
                             }
                         }
                     }
-                    const cell = document.getElementById(`cell-${x}-${y}`);
-                    if (!cell) continue;
-                    
-                    if (neighbors === currentLevel.clues[y][x]) {
-                        cell.classList.add('correct');
-                        cell.classList.remove('too-many');
-                    } else {
-                        cell.classList.remove('correct');
-                        if (neighbors > currentLevel.clues[y][x]) cell.classList.add('too-many');
-                        else cell.classList.remove('too-many');
-                        solved = false;
-                    }
+                    const c = document.getElementById(`cell-${x}-${y}`);
+                    c.classList.toggle('correct', n === currentLevel.clues[y][x]);
+                    c.classList.toggle('too-many', n > currentLevel.clues[y][x]);
+                    if (n !== currentLevel.clues[y][x]) solved = false;
                 }
             }
-
-            // If a target count exists, must match exactly.
-            // If not, just needs at least one active cell (prevents empty board win).
-            const isActuallySolved = targetActive > 0 ? (solved && totalActive === targetActive) : (solved && totalActive > 0);
-
-            if (isActuallySolved) {
-                console.log("LEVEL SOLVED", { id: currentLevel.id, totalActive, solved });
-                const statusEl = document.getElementById('status');
-                if (statusEl.innerText !== "Trajectory Locked") {
-                    statusEl.innerText = "Trajectory Locked";
-                    if (!silent) {
-                        confetti({
-                            particleCount: 150,
-                            spread: 70,
-                            origin: { y: 0.6 },
-                            colors: ['#4dabf7', '#40c057', '#fab005']
-                        });
-                    }
+            if (solved && active > 0) {
+                document.getElementById('status').innerText = "Trajectory Locked";
+                if (!silent) {
+                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#4dabf7', '#40c057', '#fab005'] });
+                    markCompleted(currentLevel.id);
                 }
-                markCompleted(currentLevel.id);
-            } else if (!silent) {
+            } else {
                 document.getElementById('status').innerText = "Map the Sector";
-            } else if (silent && solved && totalActive === 0) {
-                 document.getElementById('status').innerText = "Map the Sector";
             }
         }
 
-        function requestOverride() {
-            if (!currentLevel || !currentLevel.solution) return;
+        function markCompleted(id) {
+            let done = getCompleted();
+            if (!done.includes(id)) {
+                done.push(id);
+                localStorage.setItem('zen_completed', JSON.stringify(done));
+            }
+            document.getElementById('share-btn').style.display = 'block';
+            document.getElementById('next-btn').style.display = 'block';
+            document.getElementById('next-btn').classList.add('glow');
+            document.getElementById('override-btn').style.display = 'none';
             
-            // Find all cells that are currently WRONG compared to the solution
-            // AND not already currently highlighted by a previous override
-            const incorrectCells = [];
-            for (let y = 0; y < currentLevel.height; y++) {
-                for (let x = 0; x < currentLevel.width; x++) {
-                    const alreadyHighlighted = overridePending.some(p => p.x === x && p.y === y);
-                    if (state[y][x] !== currentLevel.solution[y][x] && !alreadyHighlighted) {
-                        incorrectCells.push({x, y});
-                    }
+            const p = document.querySelector(`.planet-wrapper[data-id="${id}"]`);
+            if (p) {
+                p.classList.remove('in-progress');
+                p.classList.add('completed');
+            }
+
+            if (currentLevel && currentLevel.sector) {
+                const sectorLevels = levelManifest.filter(l => l.sector === currentLevel.sector);
+                if (sectorLevels.every(l => done.includes(l.id))) {
+                    setTimeout(() => {
+                        showModal("Sector Stabilized", `All nodes in ${currentLevel.sector} active.`, "Acknowledge", () => { exitGame(); }, true);
+                    }, 500);
                 }
             }
+        }
 
-            if (incorrectCells.length === 0) return;
-
-            // Pick up to 3 random incorrect cells
-            const count = Math.min(3, incorrectCells.length);
-            for (let i = 0; i < count; i++) {
-                const idx = Math.floor(Math.random() * incorrectCells.length);
-                overridePending.push(incorrectCells.splice(idx, 1)[0]);
+        function goToNext() {
+            if (!currentLevel) return;
+            const sectorLevels = levelManifest.filter(l => l.sector === currentLevel.sector);
+            const localIdx = sectorLevels.findIndex(l => l.id === currentLevel.id);
+            if (localIdx !== -1) {
+                const nextId = sectorLevels[(localIdx + 1) % sectorLevels.length].id;
+                loadLevel(nextId);
             }
+        }
 
+        function undoMove() {
+            if (!history.length) return;
+            state = JSON.parse(history.pop());
+            saveState(currentLevel.id, state);
+            updateUI();
+            checkWin();
+        }
+
+        function resetGame() {
+            showModal("Reset Trajectory", "Purge all coordinates?", "Purge", () => {
+                state = Array(currentLevel.height).fill().map(() => Array(currentLevel.width).fill(0));
+                saveState(currentLevel.id, state);
+                const done = getCompleted().filter(id => id !== currentLevel.id);
+                localStorage.setItem('zen_completed', JSON.stringify(done));
+                const p = document.querySelector(`.planet-wrapper[data-id="${currentLevel.id}"]`);
+                if (p) p.classList.remove('completed', 'in-progress');
+                document.getElementById('next-btn').classList.remove('glow');
+                document.getElementById('override-btn').style.display = 'block';
+                updateUI();
+                checkWin();
+            });
+        }
+
+        function requestOverride() {
+            const cells = [];
+            for (let y = 0; y < currentLevel.height; y++) {
+                for (let x = 0; x < currentLevel.width; x++) {
+                    if (state[y][x] !== currentLevel.solution[y][x]) cells.push({x, y});
+                }
+            }
+            if (!cells.length) return;
+            for (let i = 0; i < Math.min(3, cells.length); i++) {
+                overridePending.push(cells.splice(Math.floor(Math.random() * cells.length), 1)[0]);
+            }
             updateUI();
         }
 
         function shareResult() {
-            if (!currentLevel) return;
-            const uid = currentLevel.id;
-            const moves = history.length + 1; // Basic move count
-            const status = "Origin Identified";
-            const url = window.location.href;
-            
-            // Generate a simple emoji representation of the grid
-            let gridEmoji = "";
-            for (let y = 0; y < currentLevel.height; y++) {
-                for (let x = 0; x < currentLevel.width; x++) {
-                    gridEmoji += state[y][x] === 1 ? "🟩" : "⬜";
-                }
-                gridEmoji += "\n";
-            }
-
-            const text = `Proximal: ${currentLevel.title}\nUID: ${uid}\nMoves: ${moves}\n${status}\n\n${url}`;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Proximal Mapping',
-                    text: text,
-                    url: url
-                }).catch(console.error);
-            } else {
-                navigator.clipboard.writeText(text).then(() => {
-                    showModal("Mapping Copied", "The neural mapping results have been copied to your clipboard.", "Close", () => {});
-                    // Hide cancel button for alerts
-                    document.getElementById('modal-cancel-btn').style.display = 'none';
-                    // Restore cancel button when closing
-                    const oldCallback = document.getElementById('modal-confirm-btn').onclick;
-                    document.getElementById('modal-confirm-btn').onclick = () => {
-                        oldCallback();
-                        document.getElementById('modal-cancel-btn').style.display = 'block';
-                    };
-                });
+            const text = `Proxima 8: ${currentLevel.name}\nTrajectory Locked\n\n${window.location.href}`;
+            if (navigator.share) navigator.share({ title: 'Proxima 8', text }).catch(() => {});
+            else {
+                navigator.clipboard.writeText(text);
+                showModal("Copied", "Result copied to clipboard.", "OK", () => {}, true);
             }
         }
 
-        function goToNextLevel() {
-            if (!currentLevel) return showMenu();
-            const currentIndex = levelManifest.findIndex(l => l.id === currentLevel.id);
-            if (currentIndex !== -1 && currentIndex < levelManifest.length - 1) {
-                loadLevel(levelManifest[currentIndex + 1].id);
-            } else {
-                showMenu();
-            }
+        function exportData() {
+            const data = { completed: getCompleted(), states: getStates() };
+            const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `proxima8_save.json`;
+            a.click();
         }
 
-        function resetGame() {
-            if (!currentLevel) return;
-            showModal(
-                "Clear Map",
-                "Reset this neural mapping? All progress on this puzzle will be lost.",
-                "Reset",
-                () => {
-                    history = [];
-                    state = Array(currentLevel.height).fill().map(() => Array(currentLevel.width).fill(0));
-                    clearInProgress(currentLevel.id);
-                    
-                    // If it was completed, remove it from completed list
-                    let completed = getCompleted();
-                    if (completed.includes(currentLevel.id)) {
-                        completed = completed.filter(id => id !== currentLevel.id);
-                        localStorage.setItem('zen_completed', JSON.stringify(completed));
-                    }
-                    
-                    updateUI();
-                    checkWin();
-                }
-            );
-        }
-
-        function copyUID() {
-            const uidText = currentLevel.id;
-            navigator.clipboard.writeText(uidText);
-            const el = document.getElementById('level-id-display');
-            const oldText = el.innerText;
-            el.innerText = "Copied!";
-            setTimeout(() => el.innerText = oldText, 1000);
-        }
-
-        // Boot
-        async function boot() {
-            await fetchManifest();
-            
-            window.onpopstate = () => {
-                const urlParams = new URLSearchParams(window.location.search);
-                loadLevel(urlParams.get('level'));
+        function importData(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const d = JSON.parse(ev.target.result);
+                if (d.completed) localStorage.setItem('zen_completed', JSON.stringify(d.completed));
+                if (d.states) localStorage.setItem('proxima_states', JSON.stringify(d.states));
+                location.reload();
             };
-            
-            const urlParams = new URLSearchParams(window.location.search);
-            const initialLevel = urlParams.get('level');
-            if (initialLevel) {
-                loadLevel(initialLevel);
-            } else {
-                showMenu();
+            reader.readAsText(file);
+        }
+
+        function onPopState(event) {
+            if (!event.state) {
+                performExitGame();
+                performZoomOut();
+            } else if (event.state.view === 'system') {
+                performExitGame();
+                performZoomIn(event.state.x, event.state.y, event.state.sector, event.state.color);
+            } else if (event.state.view === 'game') {
+                performLoadLevel(event.state.id);
             }
         }
-        
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js');
+
+        async function init() {
+            window.addEventListener('popstate', onPopState);
+            const res = await fetch('level_manifest.json');
+            levelManifest = await res.json();
+            updateSectorStatus();
+            
+            // Handle direct deep links
+            const params = new URLSearchParams(window.location.search);
+            const node = params.get('node');
+            if (node) {
+                loadLevel(node);
+            } else {
+                const sector = params.get('sector');
+                if (sector) {
+                    const name = sector.replace(/_/g, ' ');
+                    const s = document.querySelector(`.cluster[id*="${name.split(' ')[0].toLowerCase()}"]`);
+                    // This is limited without the exact coords in the DOM, 
+                    // but for dev we'll just show the map for now.
+                }
+            }
+        }
+
+        function updateSectorStatus() {
+            const completed = getCompleted();
+            const states = getStates();
+            sectorNames.forEach(name => {
+                const idSafe = name.replace(' ', '-');
+                const el = document.getElementById(`status-${idSafe}`);
+                if (!el) return;
+                const sectorLevels = levelManifest.filter(l => l.sector === name);
+                const doneCount = sectorLevels.filter(l => completed.includes(l.id)).length;
+                const startedCount = sectorLevels.filter(l => states[l.id] && states[l.id].flat().some(c => c === 1)).length;
+                if (doneCount === sectorLevels.length && sectorLevels.length > 0) {
+                    el.innerText = "[Stable]";
+                    el.className = "cluster-status status-stable";
+                } else if (doneCount > 0 || startedCount > 0) {
+                    el.innerText = "[Scanning...]";
+                    el.className = "cluster-status status-scanning";
+                } else el.innerText = "";
             });
         }
-        
-        boot();
+
+        init();
     </script>
 </body>
 </html>
