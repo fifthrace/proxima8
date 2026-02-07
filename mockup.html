@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Chart V18 - Proxima 8</title>
+    <style>
+        :root {
+            --bg-color: #0b0e14;
+            --panel-bg: #1a1b1e;
+            --accent-blue: #4dabf7;
+            --accent-yellow: #fab005;
+            --accent-green: #40c057;
+            --text-color: #ced4da;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        #viewport {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            perspective: 1000px;
+            overflow: hidden;
+        }
+
+        #universe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        body.zoomed #universe {
+            transform: scale(3) translate(var(--zoom-x, 0), var(--zoom-y, 0));
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .cluster {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .cluster-core {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            filter: blur(10px);
+            box-shadow: 0 0 30px 15px rgba(255,255,255,0.1);
+            transition: transform 0.3s;
+        }
+        .cluster:hover .cluster-core { transform: scale(1.2); }
+
+        .cluster-label {
+            margin-top: 15px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 200;
+            white-space: nowrap;
+            background: rgba(0,0,0,0.4);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        /* Fixed Spiral Coordinates for Galaxy View */
+        #sector-alpha    { top: 45%; left: 45%; } /* Core */
+        #sector-void     { top: 32%; left: 58%; }
+        #sector-azure    { top: 22%; left: 42%; }
+        #sector-obsidian { top: 35%; left: 22%; }
+        #sector-emerald  { top: 62%; left: 25%; }
+        #sector-solar    { top: 78%; left: 52%; }
+        #sector-neutron  { top: 65%; left: 78%; }
+
+        @media (max-width: 600px) {
+            /* Tighten spiral for narrow phone screens */
+            #sector-alpha    { top: 45%; left: 45%; }
+            #sector-void     { top: 32%; left: 65%; }
+            #sector-azure    { top: 20%; left: 45%; }
+            #sector-obsidian { top: 35%; left: 15%; }
+            #sector-emerald  { top: 62%; left: 15%; }
+            #sector-solar    { top: 80%; left: 45%; }
+            #sector-neutron  { top: 65%; left: 80%; }
+        }
+
+        #system-view {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            pointer-events: none;
+            background: radial-gradient(circle at center, rgba(26, 27, 30, 0.9) 0%, transparent 85%);
+            opacity: 0;
+            transform: scale(0.1);
+            transition: opacity 0.8s ease, transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        body.zoomed #system-view { 
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: all;
+        }
+
+        @keyframes corona {
+            0% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 0.3; }
+        }
+
+        .central-sun {
+            width: 100px; height: 100px; border-radius: 50%;
+            position: relative; z-index: 2; pointer-events: none;
+        }
+        .sun-halo {
+            position: absolute; width: 140px; height: 140px; border-radius: 50%;
+            z-index: 1; animation: corona 4s infinite ease-in-out; filter: blur(10px);
+        }
+
+        #planet-container {
+            position: absolute; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .planet-wrapper {
+            position: absolute; display: flex; flex-direction: column;
+            align-items: center; cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .planet-wrapper:hover { transform: scale(1.1); z-index: 10; }
+
+        .planet-sphere {
+            border-radius: 50%;
+            box-shadow: inset -8px -8px 15px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .type-rocky { background: linear-gradient(135deg, #a8a095, #5d5751); }
+        .type-water { background: linear-gradient(135deg, #4dabf7, #1864ab); }
+        .type-gas { background: linear-gradient(135deg, #ff922b, #d9480f); }
+        .type-ice { background: linear-gradient(135deg, #e7f5ff, #74c0fc); }
+
+        .planet-label {
+            margin-top: 8px; font-size: 9px; text-transform: uppercase;
+            letter-spacing: 1px; font-weight: 600; background: rgba(0,0,0,0.6);
+            padding: 2px 6px; border-radius: 4px; white-space: nowrap; color: #fff;
+        }
+
+        #status-bar { position: absolute; bottom: 30px; left: 30px; right: 30px; display: flex; justify-content: space-between; font-size: 10px; font-family: monospace; opacity: 0.5; text-transform: uppercase; z-index: 10; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <div id="viewport">
+        <div id="universe">
+            <div id="sector-alpha" class="cluster" onclick="zoomTo(0, 0, 'Alpha Sector', '#fab005')">
+                <div class="cluster-core"></div>
+                <div class="cluster-label"><span class="cluster-name">Alpha Sector</span></div>
+            </div>
+            <div id="sector-void" class="cluster" onclick="zoomTo(-13, 18, 'Crimson Void', '#fa5252')">
+                <div class="cluster-core" style="background: #fa5252;"></div>
+                <div class="cluster-label"><span class="cluster-name">Crimson Void</span></div>
+            </div>
+            <div id="sector-azure" class="cluster" onclick="zoomTo(8, 28, 'Azure Reach', '#1c7ed6')">
+                <div class="cluster-core" style="background: #1c7ed6;"></div>
+                <div class="cluster-label"><span class="cluster-name">Azure Reach</span></div>
+            </div>
+            <div id="sector-obsidian" class="cluster" onclick="zoomTo(28, 15, 'Obsidian Gate', '#862e9c')">
+                <div class="cluster-core" style="background: #862e9c;"></div>
+                <div class="cluster-label"><span class="cluster-name">Obsidian Gate</span></div>
+            </div>
+            <div id="sector-emerald" class="cluster" onclick="zoomTo(25, -12, 'Emerald Nebula', '#40c057')">
+                <div class="cluster-core" style="background: #40c057;"></div>
+                <div class="cluster-label"><span class="cluster-name">Emerald Nebula</span></div>
+            </div>
+            <div id="sector-solar" class="cluster" onclick="zoomTo(-2, -33, 'Solar Forge', '#fd7e14')">
+                <div class="cluster-core" style="background: #fd7e14;"></div>
+                <div class="cluster-label"><span class="cluster-name">Solar Forge</span></div>
+            </div>
+            <div id="sector-neutron" class="cluster" onclick="zoomTo(-33, -20, 'Neutron Star', '#e9ecef')">
+                <div class="cluster-core" style="background: #e9ecef;"></div>
+                <div class="cluster-label"><span class="cluster-name">Neutron Star</span></div>
+            </div>
+        </div>
+
+        <div id="system-view" onclick="zoomOut()">
+            <div class="sun-halo" id="system-halo"></div>
+            <div class="central-sun" id="system-sun"></div>
+            <div id="planet-container"></div>
+        </div>
+    </div>
+
+    <div id="status-bar">
+        <div>POS: 192.168.50.76 // SEC: LOCAL_NET</div>
+        <div id="sector-display">GALACTIC SPIRAL ALIGNED // NAV READY</div>
+    </div>
+
+    <script>
+        const puzzleNames = ["Aethelgard", "Borealis", "Calypsos", "Dreadnaught", "Eos Prime", "Focal Point", "Gorgon", "Helios", "Icarus", "Juno", "Krypton", "Luna", "Mars"];
+        const pTypes = ['type-rocky', 'type-water', 'type-gas', 'type-ice'];
+
+        function zoomTo(x, y, name, color) {
+            document.body.style.setProperty('--zoom-x', x + '%');
+            document.body.style.setProperty('--zoom-y', y + '%');
+            document.body.classList.add('zoomed');
+            
+            const sun = document.getElementById('system-sun');
+            sun.style.background = color;
+            sun.style.boxShadow = `0 0 80px ${color}aa, inset 0 0 20px rgba(255,255,255,0.5)`;
+            document.getElementById('system-halo').style.background = color;
+            
+            const container = document.getElementById('planet-container');
+            container.innerHTML = '';
+            
+            const baseR = 160;
+
+            for(let i=0; i < 13; i++) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'planet-wrapper';
+                const puzzleSize = [3, 5, 8][Math.floor(Math.random() * 3)];
+                const physSize = 12 + (puzzleSize * 2.5); 
+                const type = pTypes[Math.floor(Math.random() * pTypes.length)];
+                
+                const angle = (i * (360/13)) * (Math.PI / 180);
+                const r = baseR; 
+                const px = Math.cos(angle) * r;
+                const py = Math.sin(angle) * r;
+                
+                wrapper.style.transform = `translate(${px}px, ${py}px)`;
+                wrapper.innerHTML = `
+                    <div class="planet-sphere ${type}" style="width: ${physSize}px; height: ${physSize}px;"></div>
+                    <div class="planet-label">${puzzleNames[i]}</div>
+                `;
+                
+                wrapper.onclick = (e) => { e.stopPropagation(); alert(`Jump to ${puzzleNames[i]}`); };
+                container.appendChild(wrapper);
+            }
+        }
+
+        function zoomOut() {
+            if (!document.body.classList.contains('zoomed')) return;
+            document.body.classList.remove('zoomed');
+        }
+    </script>
+</body>
+</html>
