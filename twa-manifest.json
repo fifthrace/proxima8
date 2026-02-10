@@ -20,8 +20,8 @@
     "path": "./android.keystore",
     "alias": "android"
   },
-  "appVersionName": "Y",
-  "appVersionCode": 5,
+  "appVersionName": "1.0.6",
+  "appVersionCode": 6,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://proxima8.bajo.io/manifest.json",
