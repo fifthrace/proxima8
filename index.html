@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proxima 8 - Star Chart DEV</title>
+    <title>Proxima 8 - Star Chart</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0b0e14">
     <link rel="icon" type="image/png" href="assets/icon-192.png">
@@ -105,7 +105,6 @@
         .status-scanning { color: #fd7e14; }
         .status-stable { color: #40c057; }
 
-        /* Uniform Orbital Layout - Alpha in center, 6 in a ring */
         #sector-alpha    { top: 50%; left: 50%; transform: translate(-50%, -50%); } 
         #sector-crimson  { top: 20%; left: 50%; transform: translate(-50%, -50%); }
         #sector-azure    { top: 35%; left: 80%; transform: translate(-50%, -50%); }
@@ -215,6 +214,11 @@
             background-color: var(--cell-bg); border: 2px solid transparent;
             user-select: none; background-clip: padding-box; padding: 0px; color: var(--text-color);
             font-size: clamp(8px, 3.5vw, 18px);
+
+            /* Mobile Haptics/CSS Shield */
+            touch-action: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
         }
         .cell.active { background-color: var(--accent-blue) !important; color: white !important; box-shadow: 0 2px 8px rgba(77, 171, 247, 0.4); background-clip: content-box; }
         .cell.correct { border-color: var(--accent-green); box-shadow: inset 0 0 10px rgba(64, 192, 87, 0.5); }
@@ -231,7 +235,7 @@
             left: 4px;
             right: 4px;
             bottom: 4px;
-            border: 2px dotted rgba(255, 255, 255, 0.25);
+            border: 4px inset dotted rgba(255, 255, 255, 0.25);
             border-radius: 2px;
             pointer-events: none;
         }
@@ -495,7 +499,6 @@
                 showModal("Access Denied", "Alpha Sector stabilization required for further travel.", "Acknowledge", () => {}, true);
                 return;
             } else if (alphaCompleted && !galaxyUnlocked) {
-                // One-time unlock trigger if zooming into a newly unlocked sector
                 localStorage.setItem('proxima_galaxy_unlocked', 'true');
             }
 
@@ -564,7 +567,6 @@
             } else {
                 performExitGame();
                 if (currentLevel && currentLevel.sector) {
-                    // Find the original sector data to get the right color/coordinates
                     const sectorConfigs = {
                         'Alpha Sector': { x: 0, y: 0, color: '#fab005' },
                         'Crimson Void': { x: -13, y: 18, color: '#fa5252' },
@@ -643,7 +645,6 @@
             document.getElementById('game-overlay').style.display = 'flex';
             document.getElementById('share-btn').style.display = (completed.includes(id) || dailyCompleted[id]) ? 'block' : 'none';
             
-            const sectorLevels = levelManifest.filter(l => l.sector === currentLevel.sector);
             document.getElementById('next-btn').style.display = id.startsWith('daily/') ? 'none' : 'block';
             
             if (completed.includes(id) || dailyCompleted[id]) {
@@ -665,6 +666,7 @@
             g.innerHTML = '';
             
             let pressTimer;
+            let longPressDetected = false;
 
             for (let y = 0; y < currentLevel.height; y++) {
                 for (let x = 0; x < currentLevel.width; x++) {
@@ -673,28 +675,37 @@
                     c.id = `cell-${x}-${y}`;
                     c.innerText = currentLevel.clues[y][x];
                     
-                    // Interaction Handlers
                     c.onclick = (e) => {
-                        if (state[y][x] === 2) return; // Prevent activation of marked cells
+                        if (longPressDetected) {
+                            longPressDetected = false;
+                            return;
+                        }
+                        if (state[y][x] === 2) return;
                         toggleCell(x, y);
                     };
 
                     c.oncontextmenu = (e) => {
                         e.preventDefault();
+                        e.stopPropagation();
                         markCell(x, y);
                     };
 
-                    // Mobile Long Press
                     const startPress = (e) => {
+                        longPressDetected = false;
                         pressTimer = setTimeout(() => {
                             markCell(x, y);
-                            pressTimer = null;
+                            longPressDetected = true;
+                            if (navigator.vibrate) navigator.vibrate([30, 30, 30]);
                         }, 500);
                     };
                     const endPress = (e) => {
                         if (pressTimer) {
                             clearTimeout(pressTimer);
                             pressTimer = null;
+                        }
+                        if (longPressDetected) {
+                            e.preventDefault();
+                            e.stopPropagation();
                         }
                     };
 
@@ -710,7 +721,7 @@
         }
 
         function markCell(x, y) {
-            if (state[y][x] === 1) return; // Cannot mark active cells
+            if (state[y][x] === 1) return;
             history.push(JSON.stringify(state));
             state[y][x] = state[y][x] === 2 ? 0 : 2;
             saveState(currentLevel.id, state);
@@ -807,7 +818,7 @@
             if (currentLevel && currentLevel.sector) {
                 const sectorLevels = levelManifest.filter(l => l.sector === currentLevel.sector);
                 if (sectorLevels.every(l => done.includes(l.id))) {
-                    updateSectorStatus(); // Refresh galaxy colors
+                    updateSectorStatus();
                     setTimeout(() => {
                         showModal("Sector Stabilized", `All nodes in ${currentLevel.sector} active.`, "Acknowledge", () => { exitGame(); }, true);
                     }, 500);
@@ -842,7 +853,7 @@
                 const p = document.querySelector(`.planet-wrapper[data-id="${currentLevel.id}"]`);
                 if (p) p.classList.remove('completed', 'in-progress');
                 document.getElementById('next-btn').classList.remove('glow');
-                document.getElementById('override-btn').style.display = currentLevel.id.startsWith('daily/') ? 'none' : 'block';
+                document.getElementById('override-btn').style.display = (currentLevel.id && currentLevel.id.startsWith('daily/')) ? 'none' : 'block';
                 updateUI();
                 checkWin();
             });
@@ -912,14 +923,12 @@
             updateSectorStatus();
             updateDailyStatus();
 
-            // Warm up the Service Worker cache with all levels from manifest
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.ready.then(registration => {
                     if (registration.active) {
                         const ids = levelManifest.map(l => l.id);
                         registration.active.postMessage({ action: 'warmUp', ids });
                         
-                        // Update status indicator
                         const statusEl = document.getElementById('offline-status');
                         if (statusEl) {
                             caches.open('proxima8-v21').then(cache => {
@@ -934,7 +943,6 @@
                 });
             }
             
-            // Handle direct deep links
             const params = new URLSearchParams(window.location.search);
             const node = params.get('node');
             const daily = params.get('daily') || params.get('vigil');
@@ -946,13 +954,9 @@
                 const sector = params.get('sector');
                 if (sector) {
                     const name = sector.replace(/_/g, ' ');
-                    const s = document.querySelector(`.cluster[id*="${name.split(' ')[0].toLowerCase()}"]`);
-                    // This is limited without the exact coords in the DOM, 
-                    // but for dev we'll just show the map for now.
                 }
             }
 
-            // Auto-show help if first visit
             if (!localStorage.getItem('proxima_has_seen_help')) {
                 setTimeout(toggleHelp, 1000);
             }
@@ -978,16 +982,12 @@
                 const clusterId = `sector-${firstWord}`;
                 const cluster = document.getElementById(clusterId);
                 
-                if (!el || !cluster) {
-                    console.warn("Could not find elements for sector:", name, clusterId);
-                    return;
-                }
+                if (!el || !cluster) return;
 
                 const sectorLevels = levelManifest.filter(l => l.sector === name);
                 const doneCount = sectorLevels.filter(l => completed.includes(l.id)).length;
                 const startedCount = sectorLevels.filter(l => states[l.id] && states[l.id].flat().some(c => c === 1)).length;
                 
-                // Reset styles
                 cluster.style.opacity = "1";
                 cluster.style.filter = "none";
                 cluster.style.pointerEvents = "all";
