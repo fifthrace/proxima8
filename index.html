@@ -220,6 +220,17 @@
         .cell.correct { border-color: var(--accent-green); box-shadow: inset 0 0 10px rgba(64, 192, 87, 0.5); }
         .cell.too-many { border-color: #fa5252; box-shadow: inset 0 0 10px rgba(250, 82, 82, 0.5); color: #fa5252; }
         .cell.override { background-color: var(--accent-yellow) !important; color: white !important; box-shadow: 0 0 15px rgba(250, 176, 5, 0.6); background-clip: padding-box !important; }
+        .cell.marked { position: relative; opacity: 0.6; }
+        .cell.marked::after {
+            content: '✕';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fa5252;
+            font-size: 1.2em;
+            pointer-events: none;
+        }
 
         .text-btn { cursor: pointer; opacity: 0.4; transition: opacity 0.2s; display: flex; align-items: center; gap: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 13px; }
         .text-btn:hover { opacity: 1; }
@@ -338,6 +349,10 @@
             <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
                 <div style="width: 20px; height: 20px; background: var(--accent-yellow); border-radius: 4px; flex-shrink: 0; box-shadow: 0 0 8px var(--accent-yellow);"></div>
                 <span><strong>Ion Scan:</strong> Reveals local coordinate data to assist in triangulation.</span>
+            </li>
+            <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <div style="width: 20px; height: 20px; background: var(--cell-bg); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fa5252; border: 1px solid rgba(255,255,255,0.1);">✕</div>
+                <span><strong>Blank Mark:</strong> Right-click or long-press to mark cells as empty.</span>
             </li>
             <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
                 <div style="width: 20px; height: 20px; border: 2px solid var(--accent-green); border-radius: 4px; flex-shrink: 0;"></div>
@@ -598,20 +613,62 @@
             g.style.setProperty('--grid-width', currentLevel.width);
             g.style.gridTemplateColumns = `repeat(${currentLevel.width}, auto)`;
             g.innerHTML = '';
+            
+            let pressTimer;
+
             for (let y = 0; y < currentLevel.height; y++) {
                 for (let x = 0; x < currentLevel.width; x++) {
                     const c = document.createElement('div');
                     c.className = 'cell';
                     c.id = `cell-${x}-${y}`;
                     c.innerText = currentLevel.clues[y][x];
-                    c.onclick = () => toggleCell(x, y);
+                    
+                    // Interaction Handlers
+                    c.onclick = (e) => {
+                        if (state[y][x] === 2) return; // Prevent activation of marked cells
+                        toggleCell(x, y);
+                    };
+
+                    c.oncontextmenu = (e) => {
+                        e.preventDefault();
+                        markCell(x, y);
+                    };
+
+                    // Mobile Long Press
+                    const startPress = (e) => {
+                        pressTimer = setTimeout(() => {
+                            markCell(x, y);
+                            pressTimer = null;
+                        }, 500);
+                    };
+                    const endPress = (e) => {
+                        if (pressTimer) {
+                            clearTimeout(pressTimer);
+                            pressTimer = null;
+                        }
+                    };
+
+                    c.addEventListener('pointerdown', startPress);
+                    c.addEventListener('pointerup', endPress);
+                    c.addEventListener('pointerleave', endPress);
+                    c.addEventListener('pointercancel', endPress);
+
                     g.appendChild(c);
                 }
             }
             checkWin(true);
         }
 
+        function markCell(x, y) {
+            if (state[y][x] === 1) return; // Cannot mark active cells
+            history.push(JSON.stringify(state));
+            state[y][x] = state[y][x] === 2 ? 0 : 2;
+            saveState(currentLevel.id, state);
+            updateUI();
+        }
+
         function toggleCell(x, y) {
+            if (state[y][x] === 2) return;
             history.push(JSON.stringify(state));
             state[y][x] = state[y][x] === 0 ? 1 : 0;
             overridePending = overridePending.filter(p => p.x !== x || p.y !== y);
@@ -635,6 +692,7 @@
                     const c = document.getElementById(`cell-${x}-${y}`);
                     if (!c) continue;
                     c.classList.toggle('active', state[y][x] === 1);
+                    c.classList.toggle('marked', state[y][x] === 2);
                     const ov = overridePending.some(p => p.x === x && p.y === y);
                     c.classList.toggle('override', ov);
                 }
