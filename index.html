@@ -270,10 +270,10 @@
         .modal-confirm { background: #fa5252; color: white; }
         .modal-cancel { background: var(--cell-bg); color: var(--text-color); }
 
-        /* Daily Challenge Button */
+        /* Reclamation Vigil Button */
         #daily-btn {
             position: absolute;
-            bottom: 30px;
+            top: 30px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(255, 255, 255, 0.05);
@@ -342,7 +342,7 @@
         <button id="back-to-galaxy" onclick="zoomOut()" style="display:none;">← Galactic Chart</button>
         <div id="help-toggle" style="position: absolute; top: 30px; right: 70px; cursor: pointer; font-size: 20px; opacity: 0.4; color: var(--text-color); z-index: 100;" onclick="event.stopPropagation(); toggleHelp()">?</div>
         <div id="settings-toggle" onclick="event.stopPropagation(); toggleSettings()">⚙</div>
-        <button id="daily-btn" onclick="event.stopPropagation(); loadDailyChallenge()">Daily Challenge</button>
+        <button id="daily-btn" onclick="event.stopPropagation(); loadDailyChallenge()">Reclamation Vigil</button>
     </div>
 
     <div id="game-overlay" onclick="closeAllPanels()">
@@ -596,7 +596,7 @@
         async function loadDailyChallenge() {
             const today = new Date().toISOString().split('T')[0];
             const id = `daily/${today}`;
-            window.history.pushState({view: 'game', id: id, isDaily: true}, '', `?daily=${today}`);
+            window.history.pushState({view: 'game', id: id, isDaily: true}, '', `?vigil=${today}`);
             performLoadLevel(id);
         }
 
@@ -643,7 +643,7 @@
                 document.getElementById('override-btn').style.display = 'none';
             } else {
                 document.getElementById('next-btn').classList.remove('glow');
-                document.getElementById('override-btn').style.display = 'block';
+                document.getElementById('override-btn').style.display = id.startsWith('daily/') ? 'none' : 'block';
             }
             
             createGrid();
@@ -834,7 +834,7 @@
                 const p = document.querySelector(`.planet-wrapper[data-id="${currentLevel.id}"]`);
                 if (p) p.classList.remove('completed', 'in-progress');
                 document.getElementById('next-btn').classList.remove('glow');
-                document.getElementById('override-btn').style.display = 'block';
+                document.getElementById('override-btn').style.display = currentLevel.id.startsWith('daily/') ? 'none' : 'block';
                 updateUI();
                 checkWin();
             });
@@ -929,7 +929,7 @@
             // Handle direct deep links
             const params = new URLSearchParams(window.location.search);
             const node = params.get('node');
-            const daily = params.get('daily');
+            const daily = params.get('daily') || params.get('vigil');
             if (node) {
                 loadLevel(node);
             } else if (daily) {
@@ -1009,10 +1009,10 @@
             const dailyCompleted = JSON.parse(localStorage.getItem('proxima_daily_completed') || '{}');
             const btn = document.getElementById('daily-btn');
             if (dailyCompleted[id]) {
-                btn.innerText = "Daily Challenge: Stable";
+                btn.innerText = "Reclamation Vigil: Stable";
                 btn.classList.add('stable');
             } else {
-                btn.innerText = "Daily Challenge";
+                btn.innerText = "Reclamation Vigil";
                 btn.classList.remove('stable');
             }
         }
