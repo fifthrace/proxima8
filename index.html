@@ -235,7 +235,7 @@
             left: 4px;
             right: 4px;
             bottom: 4px;
-            border: 2px dotted rgba(255, 255, 255, 0.3);
+            border: 2px dotted rgba(255, 255, 255, 0.35);
             border-radius: 2px;
             pointer-events: none;
         }
@@ -721,7 +721,12 @@
             checkWin(true);
         }
 
+        let lastMarkTime = 0;
         function markCell(x, y) {
+            const now = Date.now();
+            if (now - lastMarkTime < 300) return;
+            lastMarkTime = now;
+
             if (state[y][x] === 1) return;
             history.push(JSON.stringify(state));
             state[y][x] = state[y][x] === 2 ? 0 : 2;
