@@ -558,25 +558,33 @@
         }
 
         function exitGame() { 
-            performExitGame();
-            if (currentLevel && currentLevel.sector) {
-                // Find the original sector data to get the right color/coordinates
-                const sectorConfigs = {
-                    'Alpha Sector': { x: 0, y: 0, color: '#fab005' },
-                    'Crimson Void': { x: -13, y: 18, color: '#fa5252' },
-                    'Azure Reach': { x: 8, y: 28, color: '#1c7ed6' },
-                    'Obsidian Gate': { x: 28, y: 15, color: '#212529' },
-                    'Emerald Nebula': { x: 25, y: -12, color: '#40c057' },
-                    'Amber Vault': { x: -2, y: -33, color: '#fd7e14' },
-                    'Indigo Drift': { x: -33, y: -20, color: '#7048e8' }
-                };
-                const config = sectorConfigs[currentLevel.sector] || sectorConfigs['Alpha Sector'];
-                window.history.pushState({view: 'system', sector: currentLevel.sector, x: config.x, y: config.y, color: config.color}, '', `?sector=${currentLevel.sector.replace(/ /g, '_')}`);
+            if (currentLevel && currentLevel.id && currentLevel.id.startsWith('daily/')) {
+                window.history.pushState({view: 'galaxy'}, '', window.location.pathname);
+                performExitGame();
+            } else {
+                performExitGame();
+                if (currentLevel && currentLevel.sector) {
+                    // Find the original sector data to get the right color/coordinates
+                    const sectorConfigs = {
+                        'Alpha Sector': { x: 0, y: 0, color: '#fab005' },
+                        'Crimson Void': { x: -13, y: 18, color: '#fa5252' },
+                        'Azure Reach': { x: 8, y: 28, color: '#1c7ed6' },
+                        'Obsidian Gate': { x: 28, y: 15, color: '#212529' },
+                        'Emerald Nebula': { x: 25, y: -12, color: '#40c057' },
+                        'Amber Vault': { x: -2, y: -33, color: '#fd7e14' },
+                        'Indigo Drift': { x: -33, y: -20, color: '#7048e8' }
+                    };
+                    const config = sectorConfigs[currentLevel.sector] || sectorConfigs['Alpha Sector'];
+                    window.history.pushState({view: 'system', sector: currentLevel.sector, x: config.x, y: config.y, color: config.color}, '', `?sector=${currentLevel.sector.replace(/ /g, '_')}`);
+                }
             }
         }
 
         function performExitGame() {
             document.getElementById('game-overlay').style.display = 'none'; 
+            if (currentLevel && currentLevel.id && currentLevel.id.startsWith('daily/')) {
+                performZoomOut();
+            }
         }
 
         async function loadLevel(id) {
@@ -886,7 +894,7 @@
         }
 
         function onPopState(event) {
-            if (!event.state) {
+            if (!event.state || event.state.view === 'galaxy') {
                 performExitGame();
                 performZoomOut();
             } else if (event.state.view === 'system') {
