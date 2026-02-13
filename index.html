@@ -235,7 +235,7 @@
             left: 4px;
             right: 4px;
             bottom: 4px;
-            border: 4px inset dotted rgba(255, 255, 255, 0.25);
+            border: 2px dotted rgba(255, 255, 255, 0.3);
             border-radius: 2px;
             pointer-events: none;
         }
@@ -389,7 +389,9 @@
                 <span><strong>Ion Scan:</strong> Reveals local coordinate data to assist in triangulation.</span>
             </li>
             <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                <div style="width: 20px; height: 20px; background: var(--cell-bg); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fa5252; border: 1px solid rgba(255,255,255,0.1);">✕</div>
+                <div style="width: 20px; height: 20px; background: var(--cell-bg); border-radius: 4px; flex-shrink: 0; position: relative; border: 1px solid rgba(255,255,255,0.1);">
+                    <div style="position: absolute; top: 3px; left: 3px; right: 3px; bottom: 3px; border: 1px dotted rgba(255,255,255,0.5); border-radius: 1px;"></div>
+                </div>
                 <span><strong>Blank Mark:</strong> Right-click or long-press to mark cells as empty.</span>
             </li>
             <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
@@ -666,7 +668,7 @@
             g.innerHTML = '';
             
             let pressTimer;
-            let longPressDetected = false;
+            let longPressActive = false;
 
             for (let y = 0; y < currentLevel.height; y++) {
                 for (let x = 0; x < currentLevel.width; x++) {
@@ -676,10 +678,7 @@
                     c.innerText = currentLevel.clues[y][x];
                     
                     c.onclick = (e) => {
-                        if (longPressDetected) {
-                            longPressDetected = false;
-                            return;
-                        }
+                        if (longPressActive) return;
                         if (state[y][x] === 2) return;
                         toggleCell(x, y);
                     };
@@ -691,10 +690,11 @@
                     };
 
                     const startPress = (e) => {
-                        longPressDetected = false;
+                        longPressActive = false;
+                        if (pressTimer) clearTimeout(pressTimer);
                         pressTimer = setTimeout(() => {
                             markCell(x, y);
-                            longPressDetected = true;
+                            longPressActive = true;
                             if (navigator.vibrate) navigator.vibrate([30, 30, 30]);
                         }, 500);
                     };
@@ -703,9 +703,10 @@
                             clearTimeout(pressTimer);
                             pressTimer = null;
                         }
-                        if (longPressDetected) {
+                        if (longPressActive) {
                             e.preventDefault();
                             e.stopPropagation();
+                            setTimeout(() => { longPressActive = false; }, 100);
                         }
                     };
 
