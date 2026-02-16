@@ -19,11 +19,11 @@
   },
   {
     "id": "10d6d3ac2796",
-    "title": "Prime",
+    "title": "Prism",
     "width": 3,
     "height": 3,
     "difficulty_rating": 50,
-    "steps": 5,
+    "steps": 4,
     "sector": "Alpha Sector"
   },
   {
@@ -64,7 +64,7 @@
   },
   {
     "id": "3a755f4e276b",
-    "title": "Pulse",
+    "title": "Surge",
     "width": 3,
     "height": 3,
     "difficulty_rating": 50,
@@ -207,8 +207,8 @@
     "sector": "Azure Reach"
   },
   {
-    "id": "3a755f4e276b",
-    "title": "Surge",
+    "id": "75ae93c42766",
+    "title": "Thermal Node",
     "width": 3,
     "height": 3,
     "difficulty_rating": 50,
@@ -522,7 +522,7 @@
     "sector": "Emerald Nebula"
   },
   {
-    "id": "10d6d3ac2796",
+    "id": "62b0d94d49d8",
     "title": "Prism",
     "width": 3,
     "height": 3,

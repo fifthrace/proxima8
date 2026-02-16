@@ -1,0 +1,767 @@
+[
+  {
+    "id": "0093e783c24c",
+    "title": "Dawn",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Alpha Sector"
+  },
+  {
+    "id": "02858fd35bb2",
+    "title": "Spark",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Alpha Sector"
+  },
+  {
+    "id": "10d6d3ac2796",
+    "title": "Prime",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Alpha Sector"
+  },
+  {
+    "id": "170909786b48",
+    "title": "Neon",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Alpha Sector"
+  },
+  {
+    "id": "1a01c7254b2c",
+    "title": "Origin",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Alpha Sector"
+  },
+  {
+    "id": "2d9b1287cf00",
+    "title": "Aura",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Alpha Sector"
+  },
+  {
+    "id": "31e6683c8870",
+    "title": "Atom",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Alpha Sector"
+  },
+  {
+    "id": "3a755f4e276b",
+    "title": "Pulse",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Alpha Sector"
+  },
+  {
+    "id": "c227065f574b",
+    "title": "Flare",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 34,
+    "sector": "Crimson Void"
+  },
+  {
+    "id": "eb5fb5a54035",
+    "title": "Ember",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Crimson Void"
+  },
+  {
+    "id": "2c00e7fa3e22",
+    "title": "Scorch",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 38,
+    "sector": "Crimson Void"
+  },
+  {
+    "id": "95ff249650e2",
+    "title": "Magma",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 13,
+    "sector": "Crimson Void"
+  },
+  {
+    "id": "cc86ec6e963c",
+    "title": "Ignite",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 4,
+    "sector": "Crimson Void"
+  },
+  {
+    "id": "e5cb68d0c783",
+    "title": "Cinder",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Crimson Void"
+  },
+  {
+    "id": "583b5b924698",
+    "title": "Pyro",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 31,
+    "sector": "Crimson Void"
+  },
+  {
+    "id": "9aa94514e0fe",
+    "title": "Blaze",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 36,
+    "sector": "Crimson Void"
+  },
+  {
+    "id": "18a9aedb69ba",
+    "title": "Inferno",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 13,
+    "sector": "Crimson Void"
+  },
+  {
+    "id": "c361a6e7cbe5",
+    "title": "Solaris",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 4,
+    "sector": "Crimson Void"
+  },
+  {
+    "id": "eb154f249143",
+    "title": "Corona",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 37,
+    "sector": "Crimson Void"
+  },
+  {
+    "id": "09cfcfc55e22",
+    "title": "Zenith",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 13,
+    "sector": "Crimson Void"
+  },
+  {
+    "id": "1110fda1c231",
+    "title": "Heat",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 13,
+    "sector": "Crimson Void"
+  },
+  {
+    "id": "f9b4df1bd4d3",
+    "title": "Tide",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 40,
+    "sector": "Azure Reach"
+  },
+  {
+    "id": "46b53e10e133",
+    "title": "Wave",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 36,
+    "sector": "Azure Reach"
+  },
+  {
+    "id": "3a755f4e276b",
+    "title": "Surge",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Azure Reach"
+  },
+  {
+    "id": "5f3dadf1077c",
+    "title": "Reef",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 15,
+    "sector": "Azure Reach"
+  },
+  {
+    "id": "67269b640724",
+    "title": "Drift",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 33,
+    "sector": "Azure Reach"
+  },
+  {
+    "id": "ef52528b8f8b",
+    "title": "Abyss",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 14,
+    "sector": "Azure Reach"
+  },
+  {
+    "id": "65c2b7b5861c",
+    "title": "Crest",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 13,
+    "sector": "Azure Reach"
+  },
+  {
+    "id": "290ecbc0b599",
+    "title": "Depth",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 13,
+    "sector": "Azure Reach"
+  },
+  {
+    "id": "53da6057b466",
+    "title": "Fathom",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 16,
+    "sector": "Azure Reach"
+  },
+  {
+    "id": "f289ddad1585",
+    "title": "Marina",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 31,
+    "sector": "Azure Reach"
+  },
+  {
+    "id": "f36c13d2e3fe",
+    "title": "Shoal",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 36,
+    "sector": "Azure Reach"
+  },
+  {
+    "id": "bf562c2eaa20",
+    "title": "Azure",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 34,
+    "sector": "Azure Reach"
+  },
+  {
+    "id": "47f15fa3ac84",
+    "title": "Aquos",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 16,
+    "sector": "Azure Reach"
+  },
+  {
+    "id": "6c2e3db29630",
+    "title": "Onyx",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 12,
+    "sector": "Obsidian Gate"
+  },
+  {
+    "id": "58408d609616",
+    "title": "Shard",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 12,
+    "sector": "Obsidian Gate"
+  },
+  {
+    "id": "ffcdecd0c9fe",
+    "title": "Echo",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 13,
+    "sector": "Obsidian Gate"
+  },
+  {
+    "id": "89a4aff0f5ac",
+    "title": "Slate",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 34,
+    "sector": "Obsidian Gate"
+  },
+  {
+    "id": "afb4a12f8498",
+    "title": "Gloom",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Obsidian Gate"
+  },
+  {
+    "id": "fc42f7ac6a04",
+    "title": "Basalt",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 42,
+    "sector": "Obsidian Gate"
+  },
+  {
+    "id": "22c94fbeab29",
+    "title": "Obsidian",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 13,
+    "sector": "Obsidian Gate"
+  },
+  {
+    "id": "93219ffbfb8f",
+    "title": "Flint",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 38,
+    "sector": "Obsidian Gate"
+  },
+  {
+    "id": "a76e16e58490",
+    "title": "Relic",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 13,
+    "sector": "Obsidian Gate"
+  },
+  {
+    "id": "6e82a3103841",
+    "title": "Void",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 41,
+    "sector": "Obsidian Gate"
+  },
+  {
+    "id": "45272b5b869d",
+    "title": "Obelisk",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 4,
+    "sector": "Obsidian Gate"
+  },
+  {
+    "id": "7e1ae7e1561f",
+    "title": "Shade",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 15,
+    "sector": "Obsidian Gate"
+  },
+  {
+    "id": "88409738fbb2",
+    "title": "Crypt",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Obsidian Gate"
+  },
+  {
+    "id": "423991f089cb",
+    "title": "Jade",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 12,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "5bdf0275a121",
+    "title": "Bloom",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 29,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "eea4da846923",
+    "title": "Moss",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 34,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "7a01396e2407",
+    "title": "Verant",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "c64e0c914393",
+    "title": "Spore",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 4,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "41079c9bdce0",
+    "title": "Glade",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 14,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "5bbe89819bec",
+    "title": "Flora",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 36,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "e4ece82d26f3",
+    "title": "Leaf",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "22a03e43c14e",
+    "title": "Root",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 14,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "afb19c686e6a",
+    "title": "Grove",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 36,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "89af6b384020",
+    "title": "Eden",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 34,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "10d6d3ac2796",
+    "title": "Prism",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 4,
+    "sector": "Emerald Nebula"
+  },
+  {
+    "id": "f8d8bac935f5",
+    "title": "Honey",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 12,
+    "sector": "Amber Vault"
+  },
+  {
+    "id": "6711d8922a08",
+    "title": "Resin",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 6,
+    "sector": "Amber Vault"
+  },
+  {
+    "id": "b37b793eea85",
+    "title": "Amber",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 41,
+    "sector": "Amber Vault"
+  },
+  {
+    "id": "0ac213385a0d",
+    "title": "Citrus",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 10,
+    "sector": "Amber Vault"
+  },
+  {
+    "id": "047d520f7980",
+    "title": "Ochre",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 35,
+    "sector": "Amber Vault"
+  },
+  {
+    "id": "095b95e67083",
+    "title": "Topaz",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 34,
+    "sector": "Amber Vault"
+  },
+  {
+    "id": "0ad3a694ecb5",
+    "title": "Citrine",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 13,
+    "sector": "Amber Vault"
+  },
+  {
+    "id": "bf5363134270",
+    "title": "Gold",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 32,
+    "sector": "Amber Vault"
+  },
+  {
+    "id": "afb726f40394",
+    "title": "Saffron",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 13,
+    "sector": "Amber Vault"
+  },
+  {
+    "id": "4d7af184ddc9",
+    "title": "Copper",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 11,
+    "sector": "Amber Vault"
+  },
+  {
+    "id": "556c9d5db73a",
+    "title": "Terra",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 36,
+    "sector": "Amber Vault"
+  },
+  {
+    "id": "81fbe6e24562",
+    "title": "Rust",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 6,
+    "sector": "Amber Vault"
+  },
+  {
+    "id": "fb746889f70e",
+    "title": "Bronze",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 40,
+    "sector": "Amber Vault"
+  },
+  {
+    "id": "73d9b65b4fdb",
+    "title": "Iris",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 44,
+    "sector": "Indigo Drift"
+  },
+  {
+    "id": "64f6fb1e51dc",
+    "title": "Violet",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 37,
+    "sector": "Indigo Drift"
+  },
+  {
+    "id": "9d2108cdae78",
+    "title": "Plum",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 37,
+    "sector": "Indigo Drift"
+  },
+  {
+    "id": "fefed3ccf691",
+    "title": "Orchid",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 12,
+    "sector": "Indigo Drift"
+  },
+  {
+    "id": "31a32ef536dd",
+    "title": "Grape",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 14,
+    "sector": "Indigo Drift"
+  },
+  {
+    "id": "8c863678a6ec",
+    "title": "Berry",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 13,
+    "sector": "Indigo Drift"
+  },
+  {
+    "id": "98902ab28a20",
+    "title": "Amethyst",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 5,
+    "sector": "Indigo Drift"
+  },
+  {
+    "id": "99d3d5eaa899",
+    "title": "Indigo",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 12,
+    "sector": "Indigo Drift"
+  },
+  {
+    "id": "f66d2b7a475e",
+    "title": "Lila",
+    "width": 3,
+    "height": 3,
+    "difficulty_rating": 50,
+    "steps": 6,
+    "sector": "Indigo Drift"
+  },
+  {
+    "id": "0322bc428bfb",
+    "title": "Mauve",
+    "width": 5,
+    "height": 5,
+    "difficulty_rating": 50,
+    "steps": 10,
+    "sector": "Indigo Drift"
+  },
+  {
+    "id": "63e9c4875355",
+    "title": "Petal",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 36,
+    "sector": "Indigo Drift"
+  },
+  {
+    "id": "5773e2a44c99",
+    "title": "Cosmos",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 37,
+    "sector": "Indigo Drift"
+  },
+  {
+    "id": "88a9d6b9e013",
+    "title": "Static",
+    "width": 8,
+    "height": 8,
+    "difficulty_rating": 50,
+    "steps": 39,
+    "sector": "Indigo Drift"
+  }
+]
