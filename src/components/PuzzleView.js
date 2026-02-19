@@ -295,7 +295,17 @@ export class PuzzleView {
   }
 
   shareResult() {
-    const text = `Proxima 8: ${this.currentLevel.name}\nTrajectory Locked\n\n${window.location.href}`;
+    const stats = gameState.getPerformanceStats(this.currentLevel.id);
+    const isDaily = this.currentLevel.sector === 'Daily Static';
+    
+    let text = "";
+    if (isDaily && stats) {
+        const timeStr = new Date(stats.time * 1000).toISOString().substr(14, 5);
+        text = `Proxima 8: Daily Challenge ${this.currentLevel.id}\nAccuracy: ${stats.accuracy}%\nTime: ${timeStr}\n\n${window.location.origin}/proxima8/`;
+    } else {
+        text = `Proxima 8: ${this.currentLevel.name}\nTrajectory Locked\n\n${window.location.href}`;
+    }
+
     if (navigator.share) navigator.share({ title: 'Proxima 8', text }).catch(() => { });
     else {
       this.fallbackCopyTextToClipboard(text);

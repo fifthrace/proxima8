@@ -13,7 +13,13 @@ export class GameState extends EventTarget {
     this.overridePending = [];
     this.completed = this._loadCompleted();
     this.states = this._loadStates();
+    this.stats = this._loadStats(); // Persistent stats for daily/accuracy/time
     this.galaxyUnlocked = this._loadGalaxyUnlocked();
+    
+    // Performance tracking
+    this.startTime = 0;
+    this.moveCount = 0;
+    this.incorrectClicks = 0;
   }
 
   // --- Persistence Helpers ---
@@ -34,6 +40,14 @@ export class GameState extends EventTarget {
     localStorage.setItem('proxima_states', JSON.stringify(this.states));
   }
 
+  _loadStats() {
+    return JSON.parse(localStorage.getItem('proxima_stats') || '{}');
+  }
+
+  _saveStats() {
+    localStorage.setItem('proxima_stats', JSON.stringify(this.stats));
+  }
+
   _loadGalaxyUnlocked() {
     return localStorage.getItem('proxima_galaxy_unlocked') === 'true';
   }
@@ -52,6 +66,11 @@ export class GameState extends EventTarget {
     this.currentLevel = levelData;
     this.history = [];
     this.overridePending = [];
+    
+    // Reset performance tracking for new load
+    this.startTime = Date.now();
+    this.moveCount = 0;
+    this.incorrectClicks = 0;
 
     if (this.completed.includes(levelData.id)) {
       // If completed, show the solution
@@ -72,7 +91,17 @@ export class GameState extends EventTarget {
     if (!this.currentLevel || this.state[y][x] === 2) return;
 
     this.history.push(JSON.stringify(this.state));
-    this.state[y][x] = this.state[y][x] === 0 ? 1 : 0;
+    
+    const targetValue = this.currentLevel.solution[y][x];
+    const newValue = this.state[y][x] === 0 ? 1 : 0;
+    
+    this.state[y][x] = newValue;
+    this.moveCount++;
+
+    // Accuracy tracking: if the new value doesn't match the solution, it's an incorrect move
+    if (newValue !== targetValue) {
+        this.incorrectClicks++;
+    }
     
     // Clear override if the cell is manually toggled
     this.overridePending = this.overridePending.filter(p => p.x !== x || p.y !== y);
@@ -111,9 +140,28 @@ export class GameState extends EventTarget {
   markCompleted(id) {
     if (!this.completed.includes(id)) {
       this.completed.push(id);
+      
+      // Calculate final stats upon first completion
+      const endTime = Date.now();
+      const durationSeconds = Math.floor((endTime - this.startTime) / 1000);
+      const accuracy = this.moveCount > 0 
+        ? Math.max(0, Math.floor(((this.moveCount - this.incorrectClicks) / this.moveCount) * 100))
+        : 100;
+
+      this.stats[id] = {
+        time: durationSeconds,
+        accuracy: accuracy,
+        completedAt: new Date().toISOString()
+      };
+
+      this._saveStats();
       this._saveCompleted();
-      this.emit('level-completed', { id });
+      this.emit('level-completed', { id, stats: this.stats[id] });
     }
+  }
+
+  getPerformanceStats(id) {
+      return this.stats[id] || null;
   }
 
   /**
@@ -125,6 +173,9 @@ export class GameState extends EventTarget {
     this.state = Array(this.currentLevel.height).fill().map(() => Array(this.currentLevel.width).fill(0));
     this.history = [];
     this.overridePending = [];
+    this.startTime = Date.now();
+    this.moveCount = 0;
+    this.incorrectClicks = 0;
     
     // Remove from completed if it was there
     this.completed = this.completed.filter(id => id !== this.currentLevel.id);
@@ -159,6 +210,7 @@ export class GameState extends EventTarget {
    */
   addOverride(cells) {
     this.overridePending.push(...cells);
+    this.incorrectClicks += cells.length; // Hints count against accuracy
     this.emit('state-updated', { state: this.state, overrides: this.overridePending });
   }
 
