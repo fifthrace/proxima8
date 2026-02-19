@@ -30,16 +30,29 @@ export class LevelLoader {
   async fetchLevel(id) {
     if (this.levelsCache.has(id)) return this.levelsCache.get(id);
     
-    const response = await fetch(`${this.baseUrl}levels/${id}.json`);
+    // Check if it's a daily level ID (Format: YYYY-MM-DD)
+    const isDailyId = /^\d{4}-\d{2}-\d{2}$/.test(id);
+    const path = isDailyId ? `levels/daily/${id}.json` : `levels/${id}.json`;
+
+    const response = await fetch(`${this.baseUrl}${path}`);
     if (!response.ok) throw new Error(`Failed to load level: ${id}`);
     
     const data = await response.json();
     data.id = id;
     
-    // Inject sector from manifest if available
-    if (this.manifest) {
+    // Set sector manually for daily puzzles, or from manifest for standard ones
+    if (isDailyId) {
+      data.sector = 'Daily Static';
+    } else {
+      // Ensure the manifest is loaded before injecting sector
+      if (!this.manifest) {
+        await this.fetchManifest();
+      }
+      
       const manifestEntry = this.manifest.find(l => l.id === id);
-      if (manifestEntry) data.sector = manifestEntry.sector;
+      if (manifestEntry) {
+        data.sector = manifestEntry.sector;
+      }
     }
 
     this.levelsCache.set(id, data);

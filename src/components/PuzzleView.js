@@ -23,23 +23,31 @@ export class PuzzleView {
       gameState.loadLevel(levelData);
     }
 
+    // Check if level is already completed to decide button visibility
+    const isCompleted = gameState.completed.includes(this.props.levelId);
+    const isDaily = this.currentLevel && this.currentLevel.sector === 'Daily Static';
+
+    console.log('[PuzzleView] Rendering level:', this.props.levelId, 'isCompleted:', isCompleted, 'isDaily:', isDaily);
+
     this.container.innerHTML = `
       <div id="game-overlay" style="display: flex;">
         <div style="display: flex; gap: 20px; margin-bottom: 20px; margin-top: 20px;">
             <span id="exit-btn" class="text-btn">← <span class="btn-text">Exit</span></span>
             <span id="undo-btn" class="text-btn">↩ <span class="btn-text">Undo</span></span>
-            <span id="reset-btn" class="text-btn">↺ <span class="btn-text">Clear</span></span>
-            <span id="next-btn" class="text-btn" style="display:none;"><span class="btn-text">Next</span> →</span>
+            <span id="reset-btn" class="text-btn" style="display:${isDaily ? 'none' : 'inline-block'};">↺ <span class="btn-text">Clear</span></span>
+            <span id="next-btn" class="text-btn" style="display:${(isCompleted && !isDaily) ? 'inline-block' : 'none'}; cursor: pointer;"><span class="btn-text">Next</span> →</span>
         </div>
         <h1 id="game-header" style="font-weight: 200; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;">
             ${this.currentLevel ? this.currentLevel.name : 'Sector Node'}
         </h1>
         <div id="grid"></div>
-        <div id="status" style="margin-top: 20px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; font-size: 14px;">Map the Sector</div>
+        <div id="status" style="margin-top: 20px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; font-size: 14px;">
+            ${isCompleted ? 'Trajectory Locked' : 'Map the Sector'}
+        </div>
         
         <div id="action-row" style="margin-top: 25px; display: flex; gap: 15px;">
-            <button id="share-btn" style="display:none; padding: 10px 20px; border-radius: 20px; border: 1px solid var(--accent-blue); background: transparent; color: var(--accent-blue); cursor: pointer; font-weight: 600;">Share Mapping</button>
-            <button id="override-btn" style="padding: 10px 20px; border-radius: 20px; border: none; background: var(--accent-blue); color: white; cursor: pointer; font-weight: 600;">Ion Scan (∞)</button>
+            <button id="share-btn" style="display:${(isCompleted && isDaily) ? 'block' : 'none'}; padding: 10px 20px; border-radius: 20px; border: 1px solid var(--accent-blue); background: transparent; color: var(--accent-blue); cursor: pointer; font-weight: 600;">Share Mapping</button>
+            <button id="override-btn" style="display:${isCompleted ? 'none' : 'block'}; padding: 10px 20px; border-radius: 20px; border: none; background: var(--accent-blue); color: white; cursor: pointer; font-weight: 600;">Ion Scan (∞)</button>
         </div>
       </div>
     `;
@@ -61,20 +69,27 @@ export class PuzzleView {
       gameState.undo();
     };
 
-    this.container.querySelector('#reset-btn').onclick = () => {
-      window.dispatchEvent(new CustomEvent('show-modal', {
-        detail: {
-          title: "Reset Trajectory",
-          body: "Purge all coordinates?",
-          confirmText: "Purge",
-          onConfirm: () => gameState.resetLevel()
-        }
-      }));
-    };
+    const resetBtn = this.container.querySelector('#reset-btn');
+    if (resetBtn) {
+      resetBtn.onclick = () => {
+        window.dispatchEvent(new CustomEvent('show-modal', {
+          detail: {
+            title: "Reset Trajectory",
+            body: "Purge all coordinates?",
+            confirmText: "Purge",
+            onConfirm: () => gameState.resetLevel()
+          }
+        }));
+      };
+    }
 
-    this.container.querySelector('#next-btn').onclick = () => {
-      this.goToNext();
-    };
+    const nextBtn = this.container.querySelector('#next-btn');
+    if (nextBtn) {
+      nextBtn.onclick = (e) => {
+        e.stopPropagation();
+        this.goToNext();
+      };
+    }
 
     const shareBtn = this.container.querySelector('#share-btn');
     if (shareBtn) {
@@ -111,12 +126,14 @@ export class PuzzleView {
     const statusEl = this.container.querySelector('#status');
     if (statusEl) statusEl.innerText = "Trajectory Locked";
     
+    const isDaily = this.currentLevel && this.currentLevel.sector === 'Daily Static';
+    
     const shareBtn = this.container.querySelector('#share-btn');
-    if (shareBtn) shareBtn.style.display = 'block';
+    if (shareBtn && isDaily) shareBtn.style.display = 'block';
     
     const nextBtn = this.container.querySelector('#next-btn');
-    if (nextBtn) {
-      nextBtn.style.display = 'block';
+    if (nextBtn && !isDaily) {
+      nextBtn.style.display = 'inline-block';
       nextBtn.classList.add('glow');
     }
     
@@ -128,7 +145,10 @@ export class PuzzleView {
     this.updateUI();
     this.checkWin(true);
     const nextBtn = this.container.querySelector('#next-btn');
-    if (nextBtn) nextBtn.classList.remove('glow');
+    if (nextBtn) {
+      nextBtn.classList.remove('glow');
+      nextBtn.style.display = 'none';
+    }
     
     const overrideBtn = this.container.querySelector('#override-btn');
     if (overrideBtn) overrideBtn.style.display = 'block';
@@ -228,9 +248,6 @@ export class PuzzleView {
 
     if (solved) {
       if (!silent) {
-        if (window.confetti) {
-          window.confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#4dabf7', '#40c057', '#fab005'] });
-        }
         gameState.markCompleted(this.currentLevel.id);
       } else {
         this.onLevelCompleted();
@@ -243,10 +260,38 @@ export class PuzzleView {
 
   async goToNext() {
     const manifest = await this.levelLoader.fetchManifest();
+    
+    const currentId = this.props.levelId;
+    
+    // Ensure we have the sector data
+    if (!this.currentLevel.sector) {
+      const entry = manifest.find(l => l.id === currentId);
+      if (entry) this.currentLevel.sector = entry.sector;
+    }
+
     const sectorLevels = manifest.filter(l => l.sector === this.currentLevel.sector);
-    const localIdx = sectorLevels.findIndex(l => l.id === this.currentLevel.id);
+    const localIdx = sectorLevels.findIndex(l => l.id === currentId);
+    
     if (localIdx !== -1) {
-      const nextId = sectorLevels[(localIdx + 1) % sectorLevels.length].id;
+      // Find the next level that isn't finished
+      let nextIdx = (localIdx + 1) % sectorLevels.length;
+      let iterations = 0;
+      
+      while (iterations < sectorLevels.length) {
+        const candidate = sectorLevels[nextIdx];
+        if (!gameState.completed.includes(candidate.id)) {
+          break;
+        }
+        nextIdx = (nextIdx + 1) % sectorLevels.length;
+        iterations++;
+      }
+
+      // If we've looped through everything and all are completed, just go to the next one in sequence
+      if (iterations === sectorLevels.length) {
+        nextIdx = (localIdx + 1) % sectorLevels.length;
+      }
+
+      const nextId = sectorLevels[nextIdx].id;
       window.dispatchEvent(new CustomEvent('load-level', { detail: { id: nextId } }));
     }
   }
@@ -272,11 +317,30 @@ export class PuzzleView {
     const text = `Proxima 8: ${this.currentLevel.name}\nTrajectory Locked\n\n${window.location.href}`;
     if (navigator.share) navigator.share({ title: 'Proxima 8', text }).catch(() => { });
     else {
-      navigator.clipboard.writeText(text);
-      window.dispatchEvent(new CustomEvent('show-modal', {
-        detail: { title: "Copied", body: "Result copied to clipboard.", confirmText: "OK", hideCancel: true }
-      }));
+      this.fallbackCopyTextToClipboard(text);
     }
+  }
+
+  fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-999999px";
+    textArea.style.top = "-999999px";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      document.execCommand('copy');
+      window.dispatchEvent(new CustomEvent('show-modal', {
+        detail: { title: "Copied", body: `Result copied to clipboard:\n\n${text}`, confirmText: "OK", hideCancel: true }
+      }));
+    } catch (err) {
+      console.error('Fallback: Oops, unable to copy', err);
+    }
+
+    document.body.removeChild(textArea);
   }
 
   destroy() {

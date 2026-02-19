@@ -39,6 +39,10 @@ export class GalaxyMap {
                 }).join('')}
             </div>
 
+            <div id="daily-breach-container" style="position: absolute; bottom: 40px; width: 100%; display: flex; justify-content: center; z-index: 100;">
+                <button id="daily-breach-btn" style="padding: 12px 24px; border-radius: 30px; border: 1px solid var(--accent-yellow); background: rgba(0,0,0,0.6); color: var(--accent-yellow); cursor: pointer; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; font-size: 12px; backdrop-filter: blur(4px);">Daily Static Breach</button>
+            </div>
+
             <div id="system-view">
                 <div class="sun-halo" id="system-halo"></div>
                 <div class="central-sun" id="system-sun"></div>
@@ -60,6 +64,16 @@ export class GalaxyMap {
         this.zoomTo(config.x, config.y, name, config.color);
       };
     });
+
+    const dailyBtn = this.container.querySelector('#daily-breach-btn');
+    if (dailyBtn) {
+      dailyBtn.onclick = (e) => {
+        e.stopPropagation();
+        const now = new Date();
+        const dateId = now.toISOString().split('T')[0];
+        window.dispatchEvent(new CustomEvent('load-level', { detail: { id: dateId } }));
+      };
+    }
 
     this.container.querySelector('#system-view').onclick = () => this.zoomOut();
     this.container.querySelector('#back-to-galaxy').onclick = (e) => {
@@ -143,6 +157,9 @@ export class GalaxyMap {
 
     this.renderSystem(name);
     this.container.querySelector('#back-to-galaxy').style.display = 'block';
+    
+    const dailyContainer = this.container.querySelector('#daily-breach-container');
+    if (dailyContainer) dailyContainer.style.display = 'none';
 
     window.dispatchEvent(new CustomEvent('view-changed', { detail: { view: 'system', sector: name, x, y, color } }));
   }
@@ -184,6 +201,8 @@ export class GalaxyMap {
   zoomOut() {
     document.body.classList.remove('zoomed');
     this.container.querySelector('#back-to-galaxy').style.display = 'none';
+    const dailyContainer = this.container.querySelector('#daily-breach-container');
+    if (dailyContainer) dailyContainer.style.display = 'flex';
     this.updateSectorStatus();
     window.dispatchEvent(new CustomEvent('view-changed', { detail: { view: 'galaxy' } }));
   }

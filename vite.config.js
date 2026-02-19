@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
+  base: '/proxima8/',
   root: './', // Root is where index.html stays for now
   publicDir: 'public',
   build: {
