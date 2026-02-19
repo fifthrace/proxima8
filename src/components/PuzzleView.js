@@ -35,9 +35,12 @@ export class PuzzleView {
             <span id="reset-btn" class="text-btn" style="display:${isDaily ? 'none' : 'inline-block'};">↺ <span class="btn-text">Clear</span></span>
             <span id="next-btn" class="text-btn ${isCompleted ? 'glow' : ''}" style="display:${isDaily ? 'none' : 'inline-block'}; cursor: pointer;"><span class="btn-text">Next</span> →</span>
         </div>
-        <h1 id="game-header" style="font-weight: 200; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;">
-            ${this.currentLevel ? this.currentLevel.name : 'Sector Node'}
-        </h1>
+        <div style="text-align: center;">
+            <h1 id="game-header" style="font-weight: 200; letter-spacing: 2px; text-transform: uppercase; margin-bottom: ${isDaily ? '5px' : '10px'};">
+                ${isDaily ? 'Daily Static Breach' : (this.currentLevel ? this.currentLevel.name : 'Sector Node')}
+            </h1>
+            ${isDaily ? `<div id="game-subheader" style="font-size: 12px; opacity: 0.6; letter-spacing: 1px; margin-bottom: 15px;">${this.currentLevel.id}</div>` : ''}
+        </div>
         <div id="grid"></div>
         <div id="status" style="margin-top: 20px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; font-size: 14px;">
             ${isCompleted ? 'Trajectory Locked' : 'Map the Sector'}
