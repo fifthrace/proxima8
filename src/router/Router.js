@@ -10,7 +10,7 @@ export class Router {
     window.addEventListener('popstate', (e) => this.handleRoute(e.state));
     window.addEventListener('view-changed', (e) => this.updateURL(e.detail));
     window.addEventListener('load-level', (e) => this.navigate('game', { node: e.detail.id }));
-    window.addEventListener('exit-game', () => this.navigate('galaxy'));
+    window.addEventListener('exit-game', () => this.handleExit());
   }
 
   init() {
@@ -43,12 +43,37 @@ export class Router {
     }
   }
 
+  handleExit() {
+    // If we're coming from a level, we want to go back to the sector we were in.
+    // We check the history state to see if we have sector info.
+    if (window.history.state && window.history.state.sector) {
+        window.history.back();
+    } else {
+        this.navigate('galaxy');
+    }
+  }
+
   navigate(view, params = {}) {
     const url = new URL(window.location);
     if (view === 'game') {
       url.searchParams.set('node', params.node);
       url.searchParams.delete('sector');
-      window.history.pushState({ view: 'game', id: params.node }, '', url);
+      
+      // Inherit sector info for the back button to work correctly
+      const currentSector = window.history.state?.sector || null;
+      const currentX = window.history.state?.x || 0;
+      const currentY = window.history.state?.y || 0;
+      const currentColor = window.history.state?.color || null;
+
+      window.history.pushState({ 
+        view: 'game', 
+        id: params.node,
+        sector: currentSector,
+        x: currentX,
+        y: currentY,
+        color: currentColor
+      }, '', url);
+      
       this.renderView('game', { levelId: params.node });
     } else {
       url.searchParams.delete('node');

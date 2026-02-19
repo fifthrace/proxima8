@@ -53,6 +53,16 @@ export class GalaxyMap {
     `;
     this.initEvents();
     await this.updateSectorStatus();
+
+    // Check if we initialized with a sector/system in props
+    if (this.props.sector) {
+        const config = this.sectorConfigs[this.props.sector];
+        if (config) {
+            this.performZoomIn(config.x, config.y, this.props.sector, config.color);
+        }
+    } else if (this.props.x !== undefined) {
+        this.performZoomIn(this.props.x, this.props.y, this.props.sector, this.props.color);
+    }
   }
 
   initEvents() {
@@ -144,6 +154,11 @@ export class GalaxyMap {
       gameState.setGalaxyUnlocked(true);
     }
 
+    window.history.pushState({ view: 'system', sector: name, x, y, color }, '', `?sector=${name.replace(/ /g, '_')}`);
+    this.performZoomIn(x, y, name, color);
+  }
+
+  performZoomIn(x, y, name, color) {
     const isLandscape = window.innerWidth > window.innerHeight;
     document.body.style.setProperty('--zoom-x', (isLandscape ? x * 0.8 : x) + '%');
     document.body.style.setProperty('--zoom-y', (isLandscape ? y * 0.5 : y) + '%');
@@ -156,9 +171,6 @@ export class GalaxyMap {
 
     this.renderSystem(name);
     this.container.querySelector('#back-to-galaxy').style.display = 'block';
-    
-    // In system view, the container remains at the top, and we show the back button.
-    // The Daily Breach button will stay visible at the top, just below the back button.
 
     window.dispatchEvent(new CustomEvent('view-changed', { detail: { view: 'system', sector: name, x, y, color } }));
   }
