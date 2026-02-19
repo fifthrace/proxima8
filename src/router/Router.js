@@ -9,12 +9,15 @@ export class Router {
     // Bind event listeners
     window.addEventListener('popstate', (e) => this.handleRoute(e.state));
     window.addEventListener('view-changed', (e) => this.updateURL(e.detail));
-    window.addEventListener('load-level', (e) => this.navigate('game', { node: e.detail.id }));
+    window.addEventListener('load-level', (e) => {
+        // If we're already in a game, replace the state instead of pushing
+        const shouldReplace = window.history.state?.view === 'game';
+        this.navigate('game', { node: e.detail.id, replace: shouldReplace });
+    });
     window.addEventListener('exit-game', () => this.handleExit());
   }
 
   init() {
-    // Initial route based on URL params
     const params = new URLSearchParams(window.location.search);
     const node = params.get('node');
     const sector = params.get('sector');
@@ -44,10 +47,10 @@ export class Router {
   }
 
   handleExit() {
-    // If we're coming from a level, we want to go back to the sector we were in.
-    // We check the history state to see if we have sector info.
-    if (window.history.state && window.history.state.sector) {
-        window.history.back();
+    const state = window.history.state;
+    if (state && state.sector) {
+        // We navigate back to the system view using the preserved state
+        this.navigate('galaxy', { sector: state.sector, replace: false });
     } else {
         this.navigate('galaxy');
     }
@@ -55,17 +58,18 @@ export class Router {
 
   navigate(view, params = {}) {
     const url = new URL(window.location);
+    const historyMethod = params.replace ? 'replaceState' : 'pushState';
+
     if (view === 'game') {
       url.searchParams.set('node', params.node);
       url.searchParams.delete('sector');
       
-      // Inherit sector info for the back button to work correctly
       const currentSector = window.history.state?.sector || null;
       const currentX = window.history.state?.x || 0;
       const currentY = window.history.state?.y || 0;
       const currentColor = window.history.state?.color || null;
 
-      window.history.pushState({ 
+      window.history[historyMethod]({ 
         view: 'game', 
         id: params.node,
         sector: currentSector,
@@ -79,11 +83,25 @@ export class Router {
       url.searchParams.delete('node');
       if (params.sector) {
         url.searchParams.set('sector', params.sector.replace(/ /g, '_'));
+        
+        // Find config for sector
+        const galaxy = new GalaxyMap(null);
+        const config = galaxy.sectorConfigs[params.sector];
+
+        window.history[historyMethod]({ 
+            view: 'system', 
+            sector: params.sector,
+            x: config?.x || 0,
+            y: config?.y || 0,
+            color: config?.color || null
+        }, '', url);
+        
+        this.renderView('galaxy', { sector: params.sector });
       } else {
         url.searchParams.delete('sector');
+        window.history[historyMethod]({ view: 'galaxy' }, '', url);
+        this.renderView('galaxy');
       }
-      window.history.pushState({ view: 'galaxy' }, '', url);
-      this.renderView('galaxy');
     }
   }
 
