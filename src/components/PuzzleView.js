@@ -301,7 +301,7 @@ export class PuzzleView {
     let text = "";
     if (isDaily && stats) {
         const timeStr = new Date(stats.time * 1000).toISOString().substr(14, 5);
-        text = `Proxima 8: Daily Challenge ${this.currentLevel.id}\nAccuracy: ${stats.accuracy}%\nTime: ${timeStr}\n\n${window.location.origin}/proxima8/`;
+        text = `Proxima 8 Daily Static Breach ${this.currentLevel.id}\n\nAccuracy: ${stats.accuracy}%\nTime: ${timeStr}`;
     } else {
         text = `Proxima 8: ${this.currentLevel.name}\nTrajectory Locked\n\n${window.location.href}`;
     }
