@@ -20,7 +20,7 @@ export default defineConfig({
         background_color: '#0b0e14',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/index.html',
+        start_url: '/proxima8/index.html',
         icons: [
           {
             src: 'assets/icon_192.png',

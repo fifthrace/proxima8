@@ -27,8 +27,6 @@ export class PuzzleView {
     const isCompleted = gameState.completed.includes(this.props.levelId);
     const isDaily = this.currentLevel && this.currentLevel.sector === 'Daily Static';
 
-    console.log('[PuzzleView] Rendering level:', this.props.levelId, 'isCompleted:', isCompleted, 'isDaily:', isDaily);
-
     this.container.innerHTML = `
       <div id="game-overlay" style="display: flex;">
         <div style="display: flex; gap: 20px; margin-bottom: 20px; margin-top: 20px;">
