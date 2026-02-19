@@ -39,8 +39,9 @@ export class GalaxyMap {
                 }).join('')}
             </div>
 
-            <div id="daily-breach-container" style="position: absolute; bottom: 40px; width: 100%; display: flex; justify-content: center; z-index: 100;">
-                <button id="daily-breach-btn" style="padding: 12px 24px; border-radius: 30px; border: 1px solid var(--accent-yellow); background: rgba(0,0,0,0.6); color: var(--accent-yellow); cursor: pointer; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; font-size: 12px; backdrop-filter: blur(4px);">Daily Static Breach</button>
+            <div id="daily-breach-container" style="position: absolute; top: 30px; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 100; pointer-events: none;">
+                <button id="back-to-galaxy" style="display:none; pointer-events: all; position: static;">← Galactic Chart</button>
+                <button id="daily-breach-btn" style="padding: 12px 24px; border-radius: 30px; border: 1px solid var(--accent-yellow); background: rgba(0,0,0,0.6); color: var(--accent-yellow); cursor: pointer; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; font-size: 12px; backdrop-filter: blur(4px); pointer-events: all;">Daily Static Breach</button>
             </div>
 
             <div id="system-view">
@@ -48,8 +49,6 @@ export class GalaxyMap {
                 <div class="central-sun" id="system-sun"></div>
                 <div id="planet-container"></div>
             </div>
-
-            <button id="back-to-galaxy" style="display:none;">← Galactic Chart</button>
         </div>
     `;
     this.initEvents();
@@ -158,8 +157,8 @@ export class GalaxyMap {
     this.renderSystem(name);
     this.container.querySelector('#back-to-galaxy').style.display = 'block';
     
-    const dailyContainer = this.container.querySelector('#daily-breach-container');
-    if (dailyContainer) dailyContainer.style.display = 'none';
+    // In system view, the container remains at the top, and we show the back button.
+    // The Daily Breach button will stay visible at the top, just below the back button.
 
     window.dispatchEvent(new CustomEvent('view-changed', { detail: { view: 'system', sector: name, x, y, color } }));
   }
@@ -201,8 +200,6 @@ export class GalaxyMap {
   zoomOut() {
     document.body.classList.remove('zoomed');
     this.container.querySelector('#back-to-galaxy').style.display = 'none';
-    const dailyContainer = this.container.querySelector('#daily-breach-container');
-    if (dailyContainer) dailyContainer.style.display = 'flex';
     this.updateSectorStatus();
     window.dispatchEvent(new CustomEvent('view-changed', { detail: { view: 'galaxy' } }));
   }
