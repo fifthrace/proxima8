@@ -47,13 +47,8 @@ export class Router {
   }
 
   handleExit() {
-    const state = window.history.state;
-    if (state && state.sector) {
-        // We navigate back to the system view using the preserved state
-        this.navigate('galaxy', { sector: state.sector, replace: false });
-    } else {
-        this.navigate('galaxy');
-    }
+    // Force return to the galaxy view when exiting a puzzle
+    this.navigate('galaxy');
   }
 
   navigate(view, params = {}) {
@@ -79,9 +74,8 @@ export class Router {
       }, '', url);
       
       this.renderView('game', { levelId: params.node });
-    } else {
-      url.searchParams.delete('node');
-      if (params.sector) {
+    } else if (view === 'system') {
+        url.searchParams.delete('node');
         url.searchParams.set('sector', params.sector.replace(/ /g, '_'));
         
         // Find config for sector
@@ -97,11 +91,12 @@ export class Router {
         }, '', url);
         
         this.renderView('galaxy', { sector: params.sector });
-      } else {
-        url.searchParams.delete('sector');
-        window.history[historyMethod]({ view: 'galaxy' }, '', url);
-        this.renderView('galaxy');
-      }
+    } else {
+      // Return to full Galaxy view
+      url.searchParams.delete('node');
+      url.searchParams.delete('sector');
+      window.history[historyMethod]({ view: 'galaxy' }, '', url);
+      this.renderView('galaxy');
     }
   }
 
