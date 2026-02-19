@@ -33,7 +33,7 @@ export class PuzzleView {
             <span id="exit-btn" class="text-btn">← <span class="btn-text">Exit</span></span>
             <span id="undo-btn" class="text-btn">↩ <span class="btn-text">Undo</span></span>
             <span id="reset-btn" class="text-btn" style="display:${isDaily ? 'none' : 'inline-block'};">↺ <span class="btn-text">Clear</span></span>
-            <span id="next-btn" class="text-btn" style="display:${(isCompleted && !isDaily) ? 'inline-block' : 'none'}; cursor: pointer;"><span class="btn-text">Next</span> →</span>
+            <span id="next-btn" class="text-btn ${isCompleted ? 'glow' : ''}" style="display:${isDaily ? 'none' : 'inline-block'}; cursor: pointer;"><span class="btn-text">Next</span> →</span>
         </div>
         <h1 id="game-header" style="font-weight: 200; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;">
             ${this.currentLevel ? this.currentLevel.name : 'Sector Node'}
@@ -131,7 +131,6 @@ export class PuzzleView {
     
     const nextBtn = this.container.querySelector('#next-btn');
     if (nextBtn && !isDaily) {
-      nextBtn.style.display = 'inline-block';
       nextBtn.classList.add('glow');
     }
     
@@ -145,7 +144,6 @@ export class PuzzleView {
     const nextBtn = this.container.querySelector('#next-btn');
     if (nextBtn) {
       nextBtn.classList.remove('glow');
-      nextBtn.style.display = 'none';
     }
     
     const isDaily = this.currentLevel && this.currentLevel.sector === 'Daily Static';
@@ -272,24 +270,8 @@ export class PuzzleView {
     const localIdx = sectorLevels.findIndex(l => l.id === currentId);
     
     if (localIdx !== -1) {
-      // Find the next level that isn't finished
-      let nextIdx = (localIdx + 1) % sectorLevels.length;
-      let iterations = 0;
-      
-      while (iterations < sectorLevels.length) {
-        const candidate = sectorLevels[nextIdx];
-        if (!gameState.completed.includes(candidate.id)) {
-          break;
-        }
-        nextIdx = (nextIdx + 1) % sectorLevels.length;
-        iterations++;
-      }
-
-      // If we've looped through everything and all are completed, just go to the next one in sequence
-      if (iterations === sectorLevels.length) {
-        nextIdx = (localIdx + 1) % sectorLevels.length;
-      }
-
+      // Just go to the next puzzle in sequence (clockwise order)
+      const nextIdx = (localIdx + 1) % sectorLevels.length;
       const nextId = sectorLevels[nextIdx].id;
       window.dispatchEvent(new CustomEvent('load-level', { detail: { id: nextId } }));
     }
