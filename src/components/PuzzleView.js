@@ -45,7 +45,7 @@ export class PuzzleView {
         
         <div id="action-row" style="margin-top: 25px; display: flex; gap: 15px;">
             <button id="share-btn" style="display:${(isCompleted && isDaily) ? 'block' : 'none'}; padding: 10px 20px; border-radius: 20px; border: 1px solid var(--accent-blue); background: transparent; color: var(--accent-blue); cursor: pointer; font-weight: 600;">Share Mapping</button>
-            <button id="override-btn" style="display:${isCompleted ? 'none' : 'block'}; padding: 10px 20px; border-radius: 20px; border: none; background: var(--accent-blue); color: white; cursor: pointer; font-weight: 600;">Ion Scan (∞)</button>
+            <button id="override-btn" style="display:${(isCompleted || isDaily) ? 'none' : 'block'}; padding: 10px 20px; border-radius: 20px; border: none; background: var(--accent-blue); color: white; cursor: pointer; font-weight: 600;">Ion Scan (∞)</button>
         </div>
       </div>
     `;
@@ -148,8 +148,9 @@ export class PuzzleView {
       nextBtn.style.display = 'none';
     }
     
+    const isDaily = this.currentLevel && this.currentLevel.sector === 'Daily Static';
     const overrideBtn = this.container.querySelector('#override-btn');
-    if (overrideBtn) overrideBtn.style.display = 'block';
+    if (overrideBtn && !isDaily) overrideBtn.style.display = 'block';
   }
 
   createGrid() {
