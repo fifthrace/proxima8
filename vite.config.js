@@ -9,6 +9,9 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true,
   },
+  server: {
+    allowedHosts: ['baxmain.tail929299.ts.net', 'localhost', '127.0.0.1', '192.168.50.76']
+  },
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
