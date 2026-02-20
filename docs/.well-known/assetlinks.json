@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "io.bajo.proxima8",
+    "sha256_cert_fingerprints": [
+      "EF:1F:0C:85:AB:FE:93:AA:8E:88:52:6F:D8:63:7D:30:C1:EE:CD:42:1F:36:76:36:67:8F:75:BB:16:FA:DD:C9"
+    ]
+  }
+}]
