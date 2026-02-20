@@ -10,11 +10,12 @@ export class Router {
     window.addEventListener('popstate', (e) => this.handleRoute(e.state));
     window.addEventListener('view-changed', (e) => this.updateURL(e.detail));
     window.addEventListener('load-level', (e) => {
-        // Replace state when moving between puzzles to keep history flat
         const shouldReplace = window.history.state?.view === 'game';
         this.navigate('game', { node: e.detail.id, replace: shouldReplace });
     });
     window.addEventListener('exit-game', () => this.handleExit());
+    window.addEventListener('navigate-to-sector', (e) => this.navigate('system', { sector: e.detail.sector }));
+    window.addEventListener('exit-sector', () => this.navigate('galaxy'));
   }
 
   init() {
@@ -48,7 +49,6 @@ export class Router {
 
   handleExit() {
     const state = window.history.state;
-    // Always return to the specific system view if we have the metadata
     if (state && state.sector) {
         this.navigate('system', { sector: state.sector });
     } else {
@@ -83,11 +83,12 @@ export class Router {
         url.searchParams.delete('node');
         url.searchParams.set('sector', params.sector.replace(/ /g, '_'));
         
+        // Find config for sector
         const galaxy = new GalaxyMap(null);
         const config = galaxy.sectorConfigs[params.sector];
 
-        // Replace if coming from a game to keep the back button pointing to galaxy
-        const method = (window.history.state?.view === 'game') ? 'replaceState' : 'pushState';
+        // Replace if already in a system or coming from a game to maintain flat history
+        const method = (window.history.state?.view === 'system' || window.history.state?.view === 'game') ? 'replaceState' : 'pushState';
 
         window.history[method]({ 
             view: 'system', 
@@ -99,10 +100,28 @@ export class Router {
         
         this.renderView('galaxy', { sector: params.sector });
     } else {
+      // Return to full Galaxy view
       url.searchParams.delete('node');
       url.searchParams.delete('sector');
+      
+      // If we are already at the root, don't push a redundant state
+      if (!window.location.search && window.history.state?.view === 'galaxy') return;
+
       window.history[historyMethod]({ view: 'galaxy' }, '', url);
       this.renderView('galaxy');
+    }
+  }
+
+  updateURL(detail) {
+    const url = new URL(window.location);
+    if (detail.view === 'system') {
+      url.searchParams.set('sector', detail.sector.replace(/ /g, '_'));
+      url.searchParams.delete('node');
+      window.history.replaceState(detail, '', url);
+    } else if (detail.view === 'galaxy') {
+      url.searchParams.delete('sector');
+      url.searchParams.delete('node');
+      window.history.replaceState(detail, '', url);
     }
   }
 
@@ -111,10 +130,7 @@ export class Router {
       this.currentView.destroy();
     }
 
-    // CRITICAL: Always reset the 'zoomed' state on the body before switching views.
-    // This prevents the blurry background bug when transitioning.
     document.body.classList.remove('zoomed');
-
     this.container.innerHTML = '';
     
     if (viewName === 'game') {

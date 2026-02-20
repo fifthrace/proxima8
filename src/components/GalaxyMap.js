@@ -58,10 +58,8 @@ export class GalaxyMap {
     if (this.props.sector) {
         const config = this.sectorConfigs[this.props.sector];
         if (config) {
-            this.performZoomIn(config.x, config.y, this.props.sector, config.color);
+            this.performZoomIn(config.x, config.y, this.props.sector, config.color, true);
         }
-    } else if (this.props.x !== undefined) {
-        this.performZoomIn(this.props.x, this.props.y, this.props.sector, this.props.color);
     }
   }
 
@@ -69,8 +67,7 @@ export class GalaxyMap {
     this.container.querySelectorAll('.cluster').forEach(el => {
       el.onclick = () => {
         const name = el.getAttribute('data-sector');
-        const config = this.sectorConfigs[name];
-        this.zoomTo(config.x, config.y, name, config.color);
+        window.dispatchEvent(new CustomEvent('navigate-to-sector', { detail: { sector: name } }));
       };
     });
 
@@ -134,49 +131,31 @@ export class GalaxyMap {
     });
   }
 
-  zoomTo(x, y, name, color) {
-    const alphaLevels = this.levelLoader.getLevelsInSector('Alpha Sector');
-    const alphaCompleted = alphaLevels.length > 0 && alphaLevels.every(l => gameState.getProgress(l.id).completed);
-
-    if (name !== 'Alpha Sector' && !gameState.galaxyUnlocked && !alphaCompleted) {
-      window.dispatchEvent(new CustomEvent('show-modal', {
-        detail: {
-          title: "Access Denied",
-          body: "Alpha Sector stabilization required for further travel.",
-          confirmText: "Acknowledge",
-          hideCancel: true
-        }
-      }));
-      return;
-    }
-
-    if (alphaCompleted && !gameState.galaxyUnlocked) {
-      gameState.setGalaxyUnlocked(true);
-    }
-
-    window.history.pushState({ view: 'system', sector: name, x, y, color }, '', `?sector=${name.replace(/ /g, '_')}`);
-    this.performZoomIn(x, y, name, color);
-  }
-
-  performZoomIn(x, y, name, color) {
+  performZoomIn(x, y, name, color, silent = false) {
     const isLandscape = window.innerWidth > window.innerHeight;
     document.body.style.setProperty('--zoom-x', (isLandscape ? x * 0.8 : x) + '%');
     document.body.style.setProperty('--zoom-y', (isLandscape ? y * 0.5 : y) + '%');
     document.body.classList.add('zoomed');
 
     const sun = this.container.querySelector('#system-sun');
-    sun.style.background = color;
-    sun.style.boxShadow = `0 0 80px ${color}aa, inset 0 0 20px rgba(255,255,255,0.5)`;
-    this.container.querySelector('#system-halo').style.background = color;
+    if (sun) {
+        sun.style.background = color;
+        sun.style.boxShadow = `0 0 80px ${color}aa, inset 0 0 20px rgba(255,255,255,0.5)`;
+    }
+    const halo = this.container.querySelector('#system-halo');
+    if (halo) halo.style.background = color;
 
     this.renderSystem(name);
     this.container.querySelector('#back-to-galaxy').style.display = 'block';
 
-    window.dispatchEvent(new CustomEvent('view-changed', { detail: { view: 'system', sector: name, x, y, color } }));
+    if (!silent) {
+        window.dispatchEvent(new CustomEvent('view-changed', { detail: { view: 'system', sector: name, x, y, color } }));
+    }
   }
 
   async renderSystem(sectorName) {
     const container = this.container.querySelector('#planet-container');
+    if (!container) return;
     container.innerHTML = '';
 
     const sectorLevels = this.levelLoader.getLevelsInSector(sectorName);
@@ -210,9 +189,6 @@ export class GalaxyMap {
   }
 
   zoomOut() {
-    document.body.classList.remove('zoomed');
-    this.container.querySelector('#back-to-galaxy').style.display = 'none';
-    this.updateSectorStatus();
-    window.dispatchEvent(new CustomEvent('view-changed', { detail: { view: 'galaxy' } }));
+    window.dispatchEvent(new CustomEvent('exit-sector'));
   }
 }
