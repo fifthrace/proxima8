@@ -10,7 +10,8 @@ export class Router {
     window.addEventListener('popstate', (e) => this.handleRoute(e.state));
     window.addEventListener('view-changed', (e) => this.updateURL(e.detail));
     window.addEventListener('load-level', (e) => {
-        // If we're already in a game, replace the state instead of pushing
+        // Always replace state when moving between puzzles to prevent 
+        // puzzles from stacking in history.
         const shouldReplace = window.history.state?.view === 'game';
         this.navigate('game', { node: e.detail.id, replace: shouldReplace });
     });
@@ -48,8 +49,9 @@ export class Router {
 
   handleExit() {
     const state = window.history.state;
-    // Check if we have sector info to return to a specific system
-    if (state && state.view === 'game' && state.sector) {
+    // When exiting a puzzle, we always go to the system view.
+    // If we have sector info, we use it.
+    if (state && state.sector) {
         this.navigate('system', { sector: state.sector });
     } else {
         this.navigate('galaxy');
@@ -87,7 +89,11 @@ export class Router {
         const galaxy = new GalaxyMap(null);
         const config = galaxy.sectorConfigs[params.sector];
 
-        window.history[historyMethod]({ 
+        // Ensure we replace state when entering a system view if we are already in one
+        // or coming back from a puzzle, to prevent redundant history entries.
+        const method = (window.history.state?.view === 'system' || window.history.state?.view === 'game') ? 'replaceState' : 'pushState';
+
+        window.history[method]({ 
             view: 'system', 
             sector: params.sector,
             x: config?.x || 0,
