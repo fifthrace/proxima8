@@ -64,6 +64,7 @@ export class GameState extends EventTarget {
    */
   loadLevel(levelData) {
     this.currentLevel = levelData;
+    this.currentLevel.isDaily = /^\d{4}-\d{2}-\d{2}$/.test(levelData.id);
     this.history = [];
     this.overridePending = [];
     
@@ -88,7 +89,14 @@ export class GameState extends EventTarget {
    * Toggles a cell state (0 -> 1 -> 0) and handles persistence.
    */
   toggleCell(x, y) {
-    if (!this.currentLevel || this.state[y][x] === 2) return;
+    if (!this.currentLevel) return;
+
+    if (this.state[y][x] === 2) {
+      // If marked, toggleCell just removes the mark or clears override
+      this.overridePending = this.overridePending.filter(p => p.x !== x || p.y !== y);
+      this.emit('state-updated', { x, y, value: this.state[y][x], state: this.state });
+      return;
+    }
 
     this.history.push(JSON.stringify(this.state));
     
@@ -113,8 +121,14 @@ export class GameState extends EventTarget {
   /**
    * Marks a cell (0 -> 2 -> 0) for user notation.
    */
+  /**
+   * Marks a cell (0 -> 2 -> 0) for user notation.
+   */
   markCell(x, y) {
     if (!this.currentLevel || this.state[y][x] === 1) return;
+
+    // Clear override if the cell is manually marked/unmarked
+    this.overridePending = this.overridePending.filter(p => p.x !== x || p.y !== y);
 
     this.history.push(JSON.stringify(this.state));
     this.state[y][x] = this.state[y][x] === 2 ? 0 : 2;
@@ -138,26 +152,61 @@ export class GameState extends EventTarget {
    * Marks a level as completed.
    */
   markCompleted(id) {
+    const endTime = Date.now();
+    const durationMs = endTime - this.startTime;
+    const accuracy = this.moveCount > 0
+      ? Math.max(0, Math.floor(((this.moveCount - this.incorrectClicks) / this.moveCount) * 100))
+      : 100;
+
     if (!this.completed.includes(id)) {
       this.completed.push(id);
       
-      // Calculate final stats upon first completion
-      const endTime = Date.now();
-      const durationSeconds = Math.floor((endTime - this.startTime) / 1000);
-      const accuracy = this.moveCount > 0 
-        ? Math.max(0, Math.floor(((this.moveCount - this.incorrectClicks) / this.moveCount) * 100))
-        : 100;
-
       this.stats[id] = {
-        time: durationSeconds,
+        time: Math.floor(durationMs / 1000),
         accuracy: accuracy,
         completedAt: new Date().toISOString()
       };
 
       this._saveStats();
       this._saveCompleted();
-      this.emit('level-completed', { id, stats: this.stats[id] });
     }
+
+    // Daily History Logic
+    if (this.currentLevel && this.currentLevel.isDaily) {
+      this._updateDailyHistory(id, accuracy, durationMs);
+    }
+
+    this.emit('level-completed', { id, stats: this.stats[id] || { time: Math.floor(durationMs / 1000), accuracy: accuracy, completedAt: new Date().toISOString() } });
+  }
+
+  _updateDailyHistory(puzzleId, accuracy, timeMs) {
+    const historyKey = 'p8_daily_history';
+    let history;
+    try {
+      history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+    } catch (e) {
+      history = [];
+    }
+    const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+    const existingEntryIndex = history.findIndex(entry => entry.puzzleId === puzzleId);
+
+    const newEntry = {
+      date,
+      puzzleId,
+      accuracy,
+      timeMs,
+      completedAt: new Date().toISOString()
+    };
+
+    if (existingEntryIndex !== -1) {
+      // First score counts only. Do not update once recorded.
+      return;
+    } else {
+      history.push(newEntry);
+    }
+
+    localStorage.setItem(historyKey, JSON.stringify(history));
   }
 
   getPerformanceStats(id) {
