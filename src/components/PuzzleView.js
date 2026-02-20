@@ -316,6 +316,16 @@ export class PuzzleView {
     else {
       this.fallbackCopyTextToClipboard(text);
     }
+    
+    // Public Social Sharing Handlers
+    window.shareToX = () => {
+        const url = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+    };
+    window.shareToFacebook = () => {
+        const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+    };
   }
 
   fallbackCopyTextToClipboard(text) {
@@ -331,7 +341,15 @@ export class PuzzleView {
     try {
       document.execCommand('copy');
       window.dispatchEvent(new CustomEvent('show-modal', {
-        detail: { title: "Copied", body: `Result copied to clipboard:\n\n${text}`, confirmText: "OK", hideCancel: true }
+        detail: { 
+            title: "Copied", 
+            body: `Result copied to clipboard:\n\n${text}\n\nShare to:`, 
+            confirmText: "Share to X", 
+            onConfirm: () => window.shareToX(),
+            hideCancel: false,
+            cancelText: "Share to FB",
+            onCancel: () => window.shareToFacebook()
+        }
       }));
     } catch (err) {
       console.error('Fallback: Oops, unable to copy', err);
