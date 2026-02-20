@@ -21,7 +21,10 @@ export class GalaxyMap {
 
   async render() {
     this.container.innerHTML = `
-        <div id="viewport">
+        <div id="viewport" onclick="window.closeAllPanels()">
+            <div id="help-toggle" style="position: absolute; top: 30px; right: 70px; cursor: pointer; font-size: 20px; opacity: 0.4; color: var(--text-color); z-index: 100;" onclick="event.stopPropagation(); window.toggleHelp()">?</div>
+            <div id="settings-toggle" style="position: absolute; top: 30px; right: 30px; cursor: pointer; font-size: 20px; opacity: 0.4; color: var(--text-color); z-index: 100;" onclick="event.stopPropagation(); window.toggleSettings()">⚙</div>
+
             <div id="universe">
                 ${this.sectorNames.map(name => {
                   const idSafe = name.replace(/ /g, '-');

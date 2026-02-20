@@ -28,25 +28,28 @@ export class PuzzleView {
     const isDaily = this.currentLevel && this.currentLevel.sector === 'Daily Static';
 
     this.container.innerHTML = `
-      <div id="game-overlay" style="display: flex;">
-        <div style="display: flex; gap: 20px; margin-bottom: 20px; margin-top: 20px;">
+      <div id="game-overlay" style="display: flex;" onclick="window.closeAllPanels()">
+        <div id="help-toggle-game" style="position: absolute; top: 30px; right: 70px; cursor: pointer; font-size: 20px; opacity: 0.4; z-index: 100;" onclick="event.stopPropagation(); window.toggleHelp()">?</div>
+        <div id="settings-toggle-game" style="position: absolute; top: 30px; right: 30px; cursor: pointer; font-size: 20px; opacity: 0.4; z-index: 100;" onclick="event.stopPropagation(); window.toggleSettings()">⚙</div>
+
+        <div style="display: flex; gap: 20px; margin-bottom: 20px; margin-top: 20px;" onclick="event.stopPropagation()">
             <span id="exit-btn" class="text-btn">← <span class="btn-text">Exit</span></span>
             <span id="undo-btn" class="text-btn">↩ <span class="btn-text">Undo</span></span>
             <span id="reset-btn" class="text-btn" style="display:${isDaily ? 'none' : 'inline-block'};">↺ <span class="btn-text">Clear</span></span>
             <span id="next-btn" class="text-btn ${isCompleted ? 'glow' : ''}" style="display:${isDaily ? 'none' : 'inline-block'}; cursor: pointer;"><span class="btn-text">Next</span> →</span>
         </div>
-        <div style="text-align: center;">
+        <div style="text-align: center;" onclick="event.stopPropagation()">
             <h1 id="game-header" style="font-weight: 200; letter-spacing: 2px; text-transform: uppercase; margin-bottom: ${isDaily ? '5px' : '10px'};">
                 ${isDaily ? 'Daily Static Breach' : (this.currentLevel ? this.currentLevel.name : 'Sector Node')}
             </h1>
             ${isDaily ? `<div id="game-subheader" style="font-size: 12px; opacity: 0.6; letter-spacing: 1px; margin-bottom: 15px;">${this.currentLevel.id}</div>` : ''}
         </div>
-        <div id="grid"></div>
-        <div id="status" style="margin-top: 20px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; font-size: 14px;">
+        <div id="grid" onclick="event.stopPropagation()"></div>
+        <div id="status" style="margin-top: 20px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; font-size: 14px;" onclick="event.stopPropagation()">
             ${isCompleted ? 'Trajectory Locked' : 'Map the Sector'}
         </div>
         
-        <div id="action-row" style="margin-top: 25px; display: flex; gap: 15px;">
+        <div id="action-row" style="margin-top: 25px; display: flex; gap: 15px;" onclick="event.stopPropagation()">
             <button id="share-btn" style="display:${(isCompleted && isDaily) ? 'block' : 'none'}; padding: 10px 20px; border-radius: 20px; border: 1px solid var(--accent-blue); background: transparent; color: var(--accent-blue); cursor: pointer; font-weight: 600;">Share Mapping</button>
             <button id="override-btn" style="display:${(isCompleted || isDaily) ? 'none' : 'block'}; padding: 10px 20px; border-radius: 20px; border: none; background: var(--accent-blue); color: white; cursor: pointer; font-weight: 600;">Ion Scan (∞)</button>
         </div>
@@ -133,7 +136,7 @@ export class PuzzleView {
     if (shareBtn && isDaily) shareBtn.style.display = 'block';
     
     const nextBtn = this.container.querySelector('#next-btn');
-    if (nextBtn) {
+    if (nextBtn && !isDaily) {
       nextBtn.classList.add('glow');
     }
     

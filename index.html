@@ -11,8 +11,8 @@
 <body>
     <div id="app"></div>
 
-    <div id="help-panel" onclick="event.stopPropagation()" style="display: none; position: absolute; top: 70px; left: 30px; background: var(--panel-bg); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 3000; width: 85%; max-width: 350px; font-size: 14px; line-height: 1.6; color: var(--text-color); overflow-y: auto; max-height: 80vh;">
-        <div style="position: absolute; top: 15px; right: 15px; cursor: pointer; font-size: 18px; opacity: 0.3;" onclick="toggleHelp()">✕</div>
+    <div id="help-panel" onclick="event.stopPropagation()">
+        <div style="position: absolute; top: 15px; right: 15px; cursor: pointer; font-size: 18px; opacity: 0.3;" onclick="window.toggleHelp()">✕</div>
         <h3 style="margin-top: 0; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-yellow);">Operation Proxima</h3>
         <p style="font-style: italic; opacity: 0.8; font-size: 13px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 15px;">
             For eons, the Proxima expanse was connected by vast sub-space beacons. Then, the Great Static hit, plunging the systems into darkness. As a Pilot of the Reclamation Fleet, you must travel from system to system, identifying original coordinate patterns to stabilize the network.
@@ -38,9 +38,15 @@
                 <div style="width: 20px; height: 20px; border: 2px solid #fa5252; border-radius: 4px; flex-shrink: 0;"></div>
                 <span><strong>Over-saturated:</strong> Too many nearby nodes. Exceeds parameters.</span>
             </li>
-            <li style="display: flex; align-items: center; gap: 10px;">
+            <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
                 <div style="width: 20px; height: 20px; border: 2px solid #888; border-radius: 4px; flex-shrink: 0;"></div>
                 <span><strong>Under-saturated:</strong> Needs more active nodes. Presence required.</span>
+            </li>
+            <li style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 20px; height: 20px; position: relative; border: 1px solid var(--border-color); border-radius: 4px; flex-shrink: 0;">
+                    <div style="position: absolute; top: 2px; left: 2px; right: 2px; bottom: 2px; border: 2px dotted rgba(255,255,255,0.4); border-radius: 2px;"></div>
+                </div>
+                <span><strong>Marking:</strong> Long-press or right-click to mark a cell as confirmed inactive.</span>
             </li>
         </ul>
         <p style="font-size: 12px; opacity: 0.7;">Stabilizing all nodes in a sector will clear the static and lock the trajectory, allowing for deeper exploration.</p>
@@ -48,19 +54,19 @@
 
     <div id="settings-panel" onclick="event.stopPropagation()">
         <h3 style="margin-top: 0; font-weight: 300; letter-spacing: 1px;">SYSTEM SETTINGS</h3>
-        <button onclick="exportData()">Export Data</button>
+        <button onclick="window.exportData()">Export Data</button>
         <button onclick="document.getElementById('import-file').click()">Import Data</button>
-        <input type="file" id="import-file" style="display: none" accept=".json" onchange="importData(event)">
+        <input type="file" id="import-file" style="display: none" accept=".json" onchange="window.importData(event)">
         <div id="offline-status">Checking Archives...</div>
-        <button onclick="toggleSettings()" style="background: var(--cell-bg); color: var(--text-color); margin-top: 20px;">Close</button>
+        <button onclick="window.toggleSettings()" style="background: var(--cell-bg); color: var(--text-color); margin-top: 20px;">Close</button>
     </div>
 
-    <div id="modal-overlay" onclick="if(event.target === this) closeModal()">
+    <div id="modal-overlay" onclick="if(event.target === this) window.closeModal()">
         <div id="modal">
             <h3 id="modal-title" style="margin-top: 0; font-weight: 300;">Confirm</h3>
             <p id="modal-body" style="font-size: 14px; opacity: 0.8; line-height: 1.4;"></p>
             <div class="modal-buttons">
-                <button id="modal-cancel-btn" class="modal-cancel" onclick="closeModal()">Cancel</button>
+                <button id="modal-cancel-btn" class="modal-cancel" onclick="window.closeModal()">Cancel</button>
                 <button id="modal-confirm-btn" class="modal-confirm">Confirm</button>
             </div>
         </div>

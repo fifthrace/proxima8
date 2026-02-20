@@ -1,0 +1,52 @@
+#help-panel {
+    display: none;
+    position: absolute;
+    top: 70px;
+    left: 30px;
+    background: var(--panel-bg);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    z-index: 3000;
+    width: 85%;
+    max-width: 350px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-color);
+    overflow-y: auto;
+    max-height: 80vh;
+}
+
+#settings-panel {
+    display: none;
+    position: absolute;
+    top: 70px;
+    right: 30px;
+    background: var(--panel-bg);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    z-index: 3000;
+    width: 220px;
+}
+
+#settings-panel button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    background: var(--accent-blue);
+    color: white;
+}
+
+#offline-status {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.5;
+    margin-top: 15px;
+    text-align: center;
+}
