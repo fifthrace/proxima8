@@ -47,8 +47,13 @@ export class Router {
   }
 
   handleExit() {
-    // Force return to the galaxy view when exiting a puzzle
-    this.navigate('galaxy');
+    const state = window.history.state;
+    // Check if we have sector info to return to a specific system
+    if (state && state.view === 'game' && state.sector) {
+        this.navigate('system', { sector: state.sector });
+    } else {
+        this.navigate('galaxy');
+    }
   }
 
   navigate(view, params = {}) {
