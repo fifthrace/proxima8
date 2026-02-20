@@ -58,15 +58,11 @@ function closeAllPanels() {
 }
 
 function exportData() {
-  const data = { 
-    completed: JSON.parse(localStorage.getItem('zen_completed') || '[]'), 
-    states: JSON.parse(localStorage.getItem('proxima_states') || '{}'),
-    stats: JSON.parse(localStorage.getItem('proxima_stats') || '{}')
-  };
-  const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+  const json = gameState.exportState();
+  const blob = new Blob([json], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `proxima8_save.json`;
+  a.download = `proxima8_save_${new Date().toISOString().split('T')[0]}.json`;
   a.click();
 }
 
@@ -75,11 +71,13 @@ function importData(e) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = (ev) => {
-    const d = JSON.parse(ev.target.result);
-    if (d.completed) localStorage.setItem('zen_completed', JSON.stringify(d.completed));
-    if (d.states) localStorage.setItem('proxima_states', JSON.stringify(d.states));
-    if (d.stats) localStorage.setItem('proxima_stats', JSON.stringify(d.stats));
-    location.reload();
+    const success = gameState.importState(ev.target.result);
+    if (success) {
+      alert("Save data imported successfully.");
+      location.reload();
+    } else {
+      alert("Failed to import save data. Invalid format.");
+    }
   };
   reader.readAsText(file);
 }
