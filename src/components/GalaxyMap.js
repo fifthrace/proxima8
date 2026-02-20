@@ -146,7 +146,11 @@ export class GalaxyMap {
     if (halo) halo.style.background = color;
 
     this.renderSystem(name);
+    
+    // UI Cleanup: Show back button, hide daily button in system view
     this.container.querySelector('#back-to-galaxy').style.display = 'block';
+    const dailyBtn = this.container.querySelector('#daily-breach-btn');
+    if (dailyBtn) dailyBtn.style.display = 'none';
 
     if (!silent) {
         window.dispatchEvent(new CustomEvent('view-changed', { detail: { view: 'system', sector: name, x, y, color } }));
@@ -189,6 +193,10 @@ export class GalaxyMap {
   }
 
   zoomOut() {
+    // Restore Daily button visibility when returning to galaxy chart
+    const dailyBtn = this.container.querySelector('#daily-breach-btn');
+    if (dailyBtn) dailyBtn.style.display = 'block';
+    
     window.dispatchEvent(new CustomEvent('exit-sector'));
   }
 }
