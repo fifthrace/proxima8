@@ -10,8 +10,7 @@ export class Router {
     window.addEventListener('popstate', (e) => this.handleRoute(e.state));
     window.addEventListener('view-changed', (e) => this.updateURL(e.detail));
     window.addEventListener('load-level', (e) => {
-        // Always replace state when moving between puzzles to prevent 
-        // puzzles from stacking in history.
+        // Replace state when moving between puzzles to keep history flat
         const shouldReplace = window.history.state?.view === 'game';
         this.navigate('game', { node: e.detail.id, replace: shouldReplace });
     });
@@ -49,8 +48,7 @@ export class Router {
 
   handleExit() {
     const state = window.history.state;
-    // When exiting a puzzle, we always go to the system view.
-    // If we have sector info, we use it.
+    // Always return to the specific system view if we have the metadata
     if (state && state.sector) {
         this.navigate('system', { sector: state.sector });
     } else {
@@ -85,13 +83,11 @@ export class Router {
         url.searchParams.delete('node');
         url.searchParams.set('sector', params.sector.replace(/ /g, '_'));
         
-        // Find config for sector
         const galaxy = new GalaxyMap(null);
         const config = galaxy.sectorConfigs[params.sector];
 
-        // Ensure we replace state when entering a system view if we are already in one
-        // or coming back from a puzzle, to prevent redundant history entries.
-        const method = (window.history.state?.view === 'system' || window.history.state?.view === 'game') ? 'replaceState' : 'pushState';
+        // Replace if coming from a game to keep the back button pointing to galaxy
+        const method = (window.history.state?.view === 'game') ? 'replaceState' : 'pushState';
 
         window.history[method]({ 
             view: 'system', 
@@ -103,7 +99,6 @@ export class Router {
         
         this.renderView('galaxy', { sector: params.sector });
     } else {
-      // Return to full Galaxy view
       url.searchParams.delete('node');
       url.searchParams.delete('sector');
       window.history[historyMethod]({ view: 'galaxy' }, '', url);
@@ -111,23 +106,14 @@ export class Router {
     }
   }
 
-  updateURL(detail) {
-    const url = new URL(window.location);
-    if (detail.view === 'system') {
-      url.searchParams.set('sector', detail.sector.replace(/ /g, '_'));
-      url.searchParams.delete('node');
-      window.history.replaceState(detail, '', url);
-    } else if (detail.view === 'galaxy') {
-      url.searchParams.delete('sector');
-      url.searchParams.delete('node');
-      window.history.replaceState(detail, '', url);
-    }
-  }
-
   renderView(viewName, props = {}) {
     if (this.currentView && typeof this.currentView.destroy === 'function') {
       this.currentView.destroy();
     }
+
+    // CRITICAL: Always reset the 'zoomed' state on the body before switching views.
+    // This prevents the blurry background bug when transitioning.
+    document.body.classList.remove('zoomed');
 
     this.container.innerHTML = '';
     
