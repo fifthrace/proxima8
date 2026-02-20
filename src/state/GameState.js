@@ -245,6 +245,61 @@ export class GameState extends EventTarget {
     this.emit('state-updated', { state: this.state, isUndo: true });
   }
 
+  // --- Import / Export ---
+
+  /**
+   * Exports the current game state to a JSON string.
+   */
+  exportState() {
+    const dailyHistory = JSON.parse(localStorage.getItem('p8_daily_history') || '[]');
+    const exportData = {
+      version: 1,
+      timestamp: new Date().toISOString(),
+      completed: this.completed,
+      states: this.states,
+      stats: this.stats,
+      galaxyUnlocked: this.galaxyUnlocked,
+      dailyHistory: dailyHistory
+    };
+    return JSON.stringify(exportData);
+  }
+
+  /**
+   * Imports game state from a JSON string.
+   * @param {string} jsonString - The JSON string to import.
+   * @returns {boolean} True if import succeeded, false otherwise.
+   */
+  importState(jsonString) {
+    try {
+      const data = JSON.parse(jsonString);
+      
+      if (!data.version || !data.completed || !data.states) {
+        throw new Error("Invalid save file format");
+      }
+
+      this.completed = data.completed;
+      this.states = data.states;
+      this.stats = data.stats || {};
+      this.galaxyUnlocked = !!data.galaxyUnlocked;
+      
+      this._saveCompleted();
+      this._saveStates();
+      this._saveStats();
+      this._saveGalaxyUnlocked();
+      
+      if (data.dailyHistory) {
+        localStorage.setItem('p8_daily_history', JSON.stringify(data.dailyHistory));
+      }
+
+      this.emit('state-imported', { success: true });
+      return true;
+    } catch (e) {
+      console.error("Import failed:", e);
+      this.emit('state-imported', { success: false, error: e.message });
+      return false;
+    }
+  }
+
   /**
    * Sets the galaxy unlocked status.
    */
