@@ -180,7 +180,7 @@ export class GalaxyMap {
 
       const physSize = 12 + (l.width * 2.2);
       const type = this.pTypes[i % this.pTypes.length];
-      const angle = (i * (360 / sectorLevels.length)) * (Math.PI / 180);
+      const angle = (i * (360 / sectorLevels.length) - 90) * (Math.PI / 180);
 
       wrapper.style.transform = `translate(${Math.cos(angle) * baseR}px, ${Math.sin(angle) * baseR}px)`;
       wrapper.innerHTML = `
