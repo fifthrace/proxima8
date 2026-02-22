@@ -91,10 +91,16 @@ window.exportData = exportData;
 window.importData = importData;
 
 // Initialize Router
-document.addEventListener('DOMContentLoaded', () => {
+function initApp() {
   const appContainer = document.getElementById('app') || document.body;
   const router = new Router(appContainer);
   router.init();
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
 
 console.log('Proxima 8: Vite environment active with Engine, State, and Router modules.');
