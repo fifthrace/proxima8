@@ -15,7 +15,6 @@ export class GameState extends EventTarget {
     this.states = this._loadStates();
     this.stats = this._loadStats(); // Persistent stats for daily/accuracy/time
     this.galaxyUnlocked = this._loadGalaxyUnlocked();
-    this.ionScans = this._loadIonScans();
     
     // Performance tracking
     this.startTime = 0;
