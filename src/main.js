@@ -49,12 +49,37 @@ function toggleSettings() {
   if (!p) return;
   const isHidden = p.style.display !== 'block';
   p.style.display = isHidden ? 'block' : 'none';
-  if (isHidden) document.getElementById('help-panel').style.display = 'none';
+  if (isHidden) {
+    document.getElementById('help-panel').style.display = 'none';
+    document.getElementById('store-panel').style.display = 'none';
+  }
 }
+
+function toggleStore() {
+  const p = document.getElementById('store-panel');
+  if (!p) return;
+  const isHidden = p.style.display !== 'block';
+  p.style.display = isHidden ? 'block' : 'none';
+  if (isHidden) {
+    document.getElementById('help-panel').style.display = 'none';
+    document.getElementById('settings-panel').style.display = 'none';
+    
+    // Update balance display when store opens
+    const balanceEl = document.getElementById('store-ion-scans');
+    if (balanceEl) balanceEl.innerText = gameState.ionScans;
+  }
+}
+
+// Global listener for Ion Scan updates to keep Store panel in sync
+gameState.addEventListener('ion-scans-updated', (e) => {
+  const balanceEl = document.getElementById('store-ion-scans');
+  if (balanceEl) balanceEl.innerText = e.detail.count;
+});
 
 function closeAllPanels() {
   document.getElementById('settings-panel').style.display = 'none';
   document.getElementById('help-panel').style.display = 'none';
+  document.getElementById('store-panel').style.display = 'none';
 }
 
 function exportData() {
@@ -86,6 +111,7 @@ function importData(e) {
 window.closeModal = closeModal;
 window.toggleHelp = toggleHelp;
 window.toggleSettings = toggleSettings;
+window.toggleStore = toggleStore;
 window.closeAllPanels = closeAllPanels;
 window.exportData = exportData;
 window.importData = importData;

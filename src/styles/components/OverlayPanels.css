@@ -30,6 +30,23 @@
     width: 220px;
 }
 
+#store-panel {
+    display: none;
+    position: absolute;
+    top: 70px;
+    right: 30px;
+    background: var(--panel-bg);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    z-index: 3000;
+    width: 85%;
+    max-width: 320px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
 #settings-panel button {
     width: 100%;
     margin-top: 10px;

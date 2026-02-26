@@ -61,6 +61,21 @@
         <button onclick="window.toggleSettings()" style="background: var(--cell-bg); color: var(--text-color); margin-top: 20px;">Close</button>
     </div>
 
+    <div id="store-panel" onclick="event.stopPropagation()">
+        <div style="position: absolute; top: 15px; right: 15px; cursor: pointer; font-size: 18px; opacity: 0.3;" onclick="window.toggleStore()">✕</div>
+        <h3 style="margin-top: 0; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-blue);">Supply Depot</h3>
+        <p style="font-size: 14px; opacity: 0.8; margin-bottom: 25px;">Acquire essential resources to aid in network reclamation.</p>
+        
+        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; text-align: center; border: 1px dashed rgba(255,255,255,0.1);">
+            <div style="font-size: 32px; margin-bottom: 10px;">⌬</div>
+            <div id="store-balance-display" style="font-size: 16px; margin-bottom: 10px; font-weight: 500;">Ion Scan Balance: <span id="store-ion-scans" style="color: var(--accent-blue);">--</span></div>
+            <div style="font-weight: bold; letter-spacing: 1px; color: var(--accent-blue);">COMING SOON</div>
+            <p style="font-size: 12px; opacity: 0.6; margin-top: 5px;">Depot initialization in progress. Check back once local sector stability increases.</p>
+        </div>
+
+        <button onclick="window.toggleStore()" style="background: var(--cell-bg); color: var(--text-color); margin-top: 30px; width: 100%;">Return to Bridge</button>
+    </div>
+
     <div id="modal-overlay" onclick="if(event.target === this) window.closeModal()">
         <div id="modal">
             <h3 id="modal-title" style="margin-top: 0; font-weight: 300;">Confirm</h3>

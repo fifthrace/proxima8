@@ -14,6 +14,7 @@ export class GameState extends EventTarget {
     this.completed = this._loadCompleted();
     this.states = this._loadStates();
     this.stats = this._loadStats(); // Persistent stats for daily/accuracy/time
+    this.ionScans = this._loadIonScans();
     this.galaxyUnlocked = this._loadGalaxyUnlocked();
     
     // Performance tracking
@@ -46,6 +47,22 @@ export class GameState extends EventTarget {
 
   _saveStats() {
     localStorage.setItem('proxima_stats', JSON.stringify(this.stats));
+  }
+
+  _loadIonScans() {
+    const stored = localStorage.getItem('proxima_ion_scans');
+    if (stored === null) {
+      // New install gets 10 initial scans
+      this._saveIonScans(10);
+      return 10;
+    }
+    return parseInt(stored, 10);
+  }
+
+  _saveIonScans(count) {
+    this.ionScans = count;
+    localStorage.setItem('proxima_ion_scans', count.toString());
+    this.emit('ion-scans-updated', { count: this.ionScans });
   }
 
   _loadGalaxyUnlocked() {
@@ -245,6 +262,27 @@ export class GameState extends EventTarget {
     this.emit('state-updated', { state: this.state, isUndo: true });
   }
 
+  /**
+   * Consumes an ion scan if available.
+   * @returns {boolean} True if a scan was consumed, false otherwise.
+   */
+  consumeIonScan() {
+    if (this.ionScans > 0) {
+      this._saveIonScans(this.ionScans - 1);
+      // this.emit('ion-scans-updated', { count: this.ionScans }); // _saveIonScans now emits
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Adds ion scans.
+   */
+  addIonScans(count) {
+    this._saveIonScans(this.ionScans + count);
+    // this.emit('ion-scans-updated', { count: this.ionScans }); // _saveIonScans now emits
+  }
+
   // --- Import / Export ---
 
   /**
@@ -258,6 +296,7 @@ export class GameState extends EventTarget {
       completed: this.completed,
       states: this.states,
       stats: this.stats,
+      ionScans: this.ionScans,
       galaxyUnlocked: this.galaxyUnlocked,
       dailyHistory: dailyHistory
     };
@@ -280,11 +319,13 @@ export class GameState extends EventTarget {
       this.completed = data.completed;
       this.states = data.states;
       this.stats = data.stats || {};
+      this.ionScans = typeof data.ionScans === 'number' ? data.ionScans : this.ionScans;
       this.galaxyUnlocked = !!data.galaxyUnlocked;
       
       this._saveCompleted();
       this._saveStates();
       this._saveStats();
+      this._saveIonScans(this.ionScans);
       this._saveGalaxyUnlocked();
       
       if (data.dailyHistory) {

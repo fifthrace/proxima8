@@ -14,6 +14,7 @@ export class PuzzleView {
     this.onStateUpdated = this.onStateUpdated.bind(this);
     this.onLevelCompleted = this.onLevelCompleted.bind(this);
     this.onLevelReset = this.onLevelReset.bind(this);
+    this.onIonScansUpdated = this.onIonScansUpdated.bind(this);
   }
 
   async render() {
@@ -29,7 +30,8 @@ export class PuzzleView {
 
     this.container.innerHTML = `
       <div id="game-overlay" style="display: flex;" onclick="window.closeAllPanels()">
-        <div id="help-toggle-game" style="position: absolute; top: 30px; right: 70px; cursor: pointer; font-size: 20px; opacity: 0.4; z-index: 100;" onclick="event.stopPropagation(); window.toggleHelp()">?</div>
+        <div id="help-toggle-game" style="position: absolute; top: 30px; right: 100px; cursor: pointer; font-size: 20px; opacity: 0.4; z-index: 100;" onclick="event.stopPropagation(); window.toggleHelp()">?</div>
+        <div id="store-toggle-game" style="position: absolute; top: 29px; right: 65px; cursor: pointer; font-size: 22px; opacity: 0.4; z-index: 100;" onclick="event.stopPropagation(); window.toggleStore()">⌬</div>
         <div id="settings-toggle-game" style="position: absolute; top: 30px; right: 30px; cursor: pointer; font-size: 20px; opacity: 0.4; z-index: 100;" onclick="event.stopPropagation(); window.toggleSettings()">⚙</div>
 
         <div style="display: flex; gap: 20px; margin-bottom: 20px; margin-top: 20px;" onclick="event.stopPropagation()">
@@ -51,7 +53,7 @@ export class PuzzleView {
         
         <div id="action-row" style="margin-top: 25px; display: flex; gap: 15px;" onclick="event.stopPropagation()">
             <button id="share-btn" style="display:${(isCompleted && isDaily) ? 'block' : 'none'}; padding: 10px 20px; border-radius: 20px; border: 1px solid var(--accent-blue); background: transparent; color: var(--accent-blue); cursor: pointer; font-weight: 600;">Share Mapping</button>
-            <button id="override-btn" style="display:${(isCompleted || isDaily) ? 'none' : 'block'}; padding: 10px 20px; border-radius: 20px; border: none; background: var(--accent-blue); color: white; cursor: pointer; font-weight: 600;">Ion Scan (∞)</button>
+            <button id="override-btn" style="display:${(isCompleted || isDaily) ? 'none' : 'block'}; padding: 10px 20px; border-radius: 20px; border: none; background: var(--accent-blue); color: white; cursor: pointer; font-weight: 600;">Ion Scan (${gameState.ionScans})</button>
         </div>
       </div>
     `;
@@ -114,6 +116,7 @@ export class PuzzleView {
     gameState.addEventListener('state-updated', this.onStateUpdated);
     gameState.addEventListener('level-completed', this.onLevelCompleted);
     gameState.addEventListener('level-reset', this.onLevelReset);
+    gameState.addEventListener('ion-scans-updated', this.onIonScansUpdated);
   }
 
   onLevelLoaded(e) {
@@ -155,6 +158,13 @@ export class PuzzleView {
     const isDaily = this.currentLevel && this.currentLevel.sector === 'Daily Static';
     const overrideBtn = this.container.querySelector('#override-btn');
     if (overrideBtn && !isDaily) overrideBtn.style.display = 'block';
+  }
+
+  onIonScansUpdated(e) {
+    const overrideBtn = this.container.querySelector('#override-btn');
+    if (overrideBtn) {
+      overrideBtn.innerText = `Ion Scan (${e.detail.count})`;
+    }
   }
 
   createGrid() {
@@ -284,6 +294,18 @@ export class PuzzleView {
   }
 
   requestOverride() {
+    if (gameState.ionScans <= 0) {
+      window.dispatchEvent(new CustomEvent('show-modal', {
+        detail: {
+          title: "Insufficient Energy",
+          body: "No Ion Scans remaining in reserve. Wait for recharge or obtain more in the Store.",
+          confirmText: "Go to Store",
+          onConfirm: () => window.toggleStore()
+        }
+      }));
+      return;
+    }
+
     const { width, height, solution } = this.currentLevel;
     const { state } = gameState;
     const cells = [];
@@ -293,11 +315,14 @@ export class PuzzleView {
       }
     }
     if (!cells.length) return;
-    const chosen = [];
-    for (let i = 0; i < Math.min(3, cells.length); i++) {
-      chosen.push(cells.splice(Math.floor(Math.random() * cells.length), 1)[0]);
+    
+    if (gameState.consumeIonScan()) {
+      const chosen = [];
+      for (let i = 0; i < Math.min(3, cells.length); i++) {
+        chosen.push(cells.splice(Math.floor(Math.random() * cells.length), 1)[0]);
+      }
+      gameState.addOverride(chosen);
     }
-    gameState.addOverride(chosen);
   }
 
   shareResult() {
@@ -363,5 +388,6 @@ export class PuzzleView {
     gameState.removeEventListener('state-updated', this.onStateUpdated);
     gameState.removeEventListener('level-completed', this.onLevelCompleted);
     gameState.removeEventListener('level-reset', this.onLevelReset);
+    gameState.removeEventListener('ion-scans-updated', this.onIonScansUpdated);
   }
 }
